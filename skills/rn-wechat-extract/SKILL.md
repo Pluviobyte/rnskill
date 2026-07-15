@@ -18,10 +18,14 @@ This skill sends HTTP requests with a genuine WeChat iOS WebView User-Agent and 
 **Extracts:** title, author, publish time, and body text as Markdown.
 
 **Limitations:**
-- Images are not downloaded (WeChat uses lazy-loaded `data-src`)
 - Some heavily JS-rendered articles may return partial content
 - Rapid successive calls from the same IP may trigger CAPTCHA (wait and retry)
 - Does not work on login-gated or paid articles
+
+**Enhanced Version (with images):**
+- `fetch_wechat_with_images.py` - Downloads images and embeds them in Markdown
+- Images saved to `{title}_images/` directory
+- Markdown references updated to local paths
 
 ## Locate The Skill
 
@@ -76,6 +80,8 @@ export WX_HOME
 
 ## Command Reference
 
+### Basic Version (text only)
+
 ```
 fetch_wechat.py <url> [options]
 
@@ -86,6 +92,32 @@ Options:
   --output-dir <dir>     Output directory (default: current directory)
   --raw                  Also save the raw HTML alongside the Markdown
   --doctor               Check dependencies and exit
+```
+
+### Enhanced Version (with images)
+
+```
+fetch_wechat_with_images.py <url> [options]
+
+Arguments:
+  url                    mp.weixin.qq.com article URL
+
+Options:
+  --output-dir <dir>     Output directory (default: current directory)
+  --no-images            Skip image download
+  --raw                  Also save the raw HTML alongside the Markdown
+  --doctor               Check dependencies and exit
+```
+
+**Output structure:**
+```
+output/
+├── 2026-07-15-article-title.md
+├── 2026-07-15-article-title.raw.html  (if --raw)
+└── 2026-07-15-article-title_images/
+    ├── image_01.jpg
+    ├── image_02.jpg
+    └── ...
 ```
 
 No external dependencies — Python stdlib only (`urllib`, `re`, `html`, `json`).
@@ -100,3 +132,32 @@ This skill provides text for any downstream content workflow:
 | Save article as topic idea | rn-wechat-extract → topic management |
 | Read and discuss an article | rn-wechat-extract (standalone) |
 | Turn article into image cards | rn-wechat-extract → content adaptation |
+| Extract article with images | rn-wechat-extract (enhanced) |
+
+## Enhanced Version
+
+The enhanced version (`fetch_wechat_with_images.py`) adds image download support:
+
+### Features
+- Downloads images from WeChat articles
+- Saves images to `{title}_images/` directory
+- Updates Markdown references to local paths
+- Filters out non-content images (avatars, QR codes, etc.)
+
+### Usage
+
+```bash
+# With images
+python3 "$WX_HOME/scripts/fetch_wechat_with_images.py" "<url>" --output-dir "./output"
+
+# Without images (same as original)
+python3 "$WX_HOME/scripts/fetch_wechat_with_images.py" "<url>" --output-dir "./output" --no-images
+```
+
+### Technical Details
+
+WeChat uses lazy-loaded `data-src` attributes for images. The enhanced script:
+1. Extracts image URLs from `data-src` attributes
+2. Downloads images with WeChat User-Agent headers
+3. Updates Markdown to reference local image files
+4. Creates a separate `{title}_images/` directory
