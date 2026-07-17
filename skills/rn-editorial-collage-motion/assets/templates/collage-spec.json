@@ -1,0 +1,44 @@
+{
+  "medium": "halftone print collage",
+  "craft_style": "editorial halftone paper collage on a flat color field",
+  "aspect_ratio": "9:16",
+  "style_signature": "flat cobalt field, black-and-white halftone cut-outs, crisp white keylines, soft low-opacity shadows, one clear editorial idea",
+  "color_field": {
+    "background_hex": "#1F3FB0",
+    "evenness": "perfectly flat, no gradient",
+    "paper_grain": "fine uncoated-paper fiber"
+  },
+  "elements": [
+    {
+      "id": "subject",
+      "what": "replace with the primary subject",
+      "role": "primary subject",
+      "halftone": "fine round-dot, approximately 70 lpi, black-and-white",
+      "cut_edge": "crisp machine-cut with a thin white paper keyline",
+      "drop_shadow": "6px down-right, soft, 30 percent opacity",
+      "color_treatment": "black-and-white halftone",
+      "placement": "upper-right, clear of reserved areas"
+    }
+  ],
+  "palette_hex": ["#1F3FB0", "#0A0A0A", "#FFFFFF"],
+  "composition": {
+    "layout": "asymmetric rule of thirds",
+    "depth_layers": "field, supporting pieces, primary subject, label",
+    "negative_space": "generous space around the primary subject",
+    "balance": "visual weight high and right",
+    "reserved_areas": ["lower-left quarter reserved for avatar"]
+  },
+  "idea": "replace with one visual idea",
+  "label": {
+    "present": true,
+    "content": "替换标签",
+    "font_character": "bold geometric sans",
+    "weight": "heavy",
+    "placement": "upper-left",
+    "treatment": "editable white paper text layer",
+    "editable": true
+  },
+  "mood": "clear, premium, energetic",
+  "references_era": "contemporary editorial print collage",
+  "negative_prompt": "no gradient, no gloss, no 3D render, no busy background, no camera wobble"
+}

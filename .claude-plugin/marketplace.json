@@ -1,8 +1,8 @@
 {
   "name": "rnskill",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "owner": "Pluviobyte",
-  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 动效制作 + 参考复刻 + 全帧质检",
+  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 内容提取 + 图像生成 + 动效制作 + 参考复刻 + 全帧质检",
   "repository": "https://github.com/Pluviobyte/rnskill",
   "license": "CC-BY-NC-4.0",
   "plugins": [
@@ -27,6 +27,16 @@
       "skills": ["./skills/rn-motion-director"]
     },
     {
+      "name": "rn-ian-xiaohei-cat-illustrations",
+      "description": "Ian 小黑猫怪诞正文配图。把中文文章中的判断、流程和隐喻转成 16:9 白底手绘插图，固定使用小黑猫 IP。改编自 Ian 的原版 Xiaohei Skill。\nIan-style Xiaohei Cat article illustrations with sparse hand-drawn 16:9 compositions and recurring character consistency.\nTrigger: /rn-ian-xiaohei-cat-illustrations, 小黑猫, 黑猫配图, 正文配图, 文章插图, 怪诞手绘, shot list",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "image-generation",
+      "keywords": ["小黑猫", "正文配图", "文章插图", "手绘", "shot list", "xiaohei", "illustration"],
+      "skills": ["./skills/rn-ian-xiaohei-cat-illustrations"]
+    },
+    {
       "name": "rn-motion-replica",
       "description": "把获授权的参考片段拆成视觉证据，并制作成原创、可编辑、可验证的 HyperFrames 动效工程。\nOriginal editable motion study from an authorized reference range, with analysis evidence and final-MP4 QC.\nTrigger: /rn-motion-replica, 参考这个视频做同款动效, 复刻前N秒方框连线动画",
       "source": "./",
@@ -35,6 +45,16 @@
       "category": "video-production",
       "keywords": ["参考视频", "动效复刻", "HyperFrames", "motion", "replica", "editable"],
       "skills": ["./skills/rn-motion-replica"]
+    },
+    {
+      "name": "rn-editorial-collage-motion",
+      "description": "半色调纸张拼贴动效。参考拆解 → 可编辑 JSON 规范 → Codex 静帧审批 → 本地逐层组装动画，无需 Arcads MCP。\nHalftone paper-collage motion with Codex-generated stills and local assemble-from-empty rendering. No Arcads MCP required.\nTrigger: /rn-editorial-collage-motion, 半色调拼贴, 纸张拼贴, 拼贴动效, 从无到有, editorial collage, halftone collage, animate this",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "video-production",
+      "keywords": ["半色调拼贴", "纸张拼贴", "拼贴动效", "从无到有", "halftone", "collage", "motion"],
+      "skills": ["./skills/rn-editorial-collage-motion"]
     },
     {
       "name": "rn-replica-qc",
