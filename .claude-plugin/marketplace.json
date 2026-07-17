@@ -1,8 +1,8 @@
 {
   "name": "rnskill",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "owner": "Pluviobyte",
-  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 动效制作 + 参考复刻 + 全帧质检",
+  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 内容提取 + 动效制作 + 参考复刻 + 全帧质检",
   "repository": "https://github.com/Pluviobyte/rnskill",
   "license": "CC-BY-NC-4.0",
   "plugins": [
@@ -35,6 +35,16 @@
       "category": "video-production",
       "keywords": ["参考视频", "动效复刻", "HyperFrames", "motion", "replica", "editable"],
       "skills": ["./skills/rn-motion-replica"]
+    },
+    {
+      "name": "rn-editorial-collage-motion",
+      "description": "半色调纸张拼贴动效。参考拆解 → 可编辑 JSON 规范 → Codex 静帧审批 → 本地逐层组装动画，无需 Arcads MCP。\nHalftone paper-collage motion with Codex-generated stills and local assemble-from-empty rendering. No Arcads MCP required.\nTrigger: /rn-editorial-collage-motion, 半色调拼贴, 纸张拼贴, 拼贴动效, 从无到有, editorial collage, halftone collage, animate this",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "video-production",
+      "keywords": ["半色调拼贴", "纸张拼贴", "拼贴动效", "从无到有", "halftone", "collage", "motion"],
+      "skills": ["./skills/rn-editorial-collage-motion"]
     },
     {
       "name": "rn-replica-qc",
