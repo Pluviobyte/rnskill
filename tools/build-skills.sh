@@ -15,6 +15,7 @@ group_for() {
     rn-dark-saas-video)     echo "02-video-production" ;;
     rn-bw-text-opener)      echo "02-video-production" ;;
     rn-replica-qc)          echo "03-quality-control" ;;
+    rn-ian-xiaohei-cat-illustrations) echo "04-image-generation" ;;
     *)                      echo "99-other" ;;
   esac
 }
@@ -65,6 +66,7 @@ Packed $COUNT skills. Drag individual ZIPs into Trae Solo or extract manually.
 - 01-writing: 写作精修
 - 02-video-production: 视频制作
 - 03-quality-control: 视频质检
+- 04-image-generation: 图像生成
 EOF
 
 (cd "$DIST" && zip -qr "../rnskill-${VERSION}.zip" .)

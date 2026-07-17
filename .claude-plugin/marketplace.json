@@ -2,7 +2,7 @@
   "name": "rnskill",
   "version": "1.2.0",
   "owner": "Pluviobyte",
-  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 内容提取 + 动效制作 + 参考复刻 + 全帧质检",
+  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 内容提取 + 图像生成 + 动效制作 + 参考复刻 + 全帧质检",
   "repository": "https://github.com/Pluviobyte/rnskill",
   "license": "CC-BY-NC-4.0",
   "plugins": [
@@ -25,6 +25,16 @@
       "category": "video-production",
       "keywords": ["视频", "动效", "导演", "motion", "director", "video"],
       "skills": ["./skills/rn-motion-director"]
+    },
+    {
+      "name": "rn-ian-xiaohei-cat-illustrations",
+      "description": "Ian 小黑猫怪诞正文配图。把中文文章中的判断、流程和隐喻转成 16:9 白底手绘插图，固定使用小黑猫 IP。改编自 Ian 的原版 Xiaohei Skill。\nIan-style Xiaohei Cat article illustrations with sparse hand-drawn 16:9 compositions and recurring character consistency.\nTrigger: /rn-ian-xiaohei-cat-illustrations, 小黑猫, 黑猫配图, 正文配图, 文章插图, 怪诞手绘, shot list",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "image-generation",
+      "keywords": ["小黑猫", "正文配图", "文章插图", "手绘", "shot list", "xiaohei", "illustration"],
+      "skills": ["./skills/rn-ian-xiaohei-cat-illustrations"]
     },
     {
       "name": "rn-motion-replica",
