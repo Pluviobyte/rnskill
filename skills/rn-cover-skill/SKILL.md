@@ -65,7 +65,7 @@ Use `--subtitle`, `--italic-title-lines`, `--artwork-start`, or the grid/artwork
 ## Non-negotiable style
 
 - Fix the canvas background to `#FAF9F5`; never take the background color from ImageGen.
-- Draw any grid in SVG; vary its start and density to support the composition instead of copying one template.
+- Draw a visible but quiet square grid in SVG across the right visual field. Keep its start, density, and strength adaptable instead of copying one template; omit it only when the user explicitly asks for no grid.
 - Keep the diagram on the right while allowing it to approach the center or move farther right according to headline length.
 - Use charcoal diagram strokes and one restrained muted-coral signal; no broad orange fills.
 - Left typography expands horizontally; the illustration shrinks or moves right to yield space.
@@ -96,6 +96,6 @@ Vary visual family, topology, node count, connector route, central object, curve
 5. Confirm at least 4% canvas-width clearance between text and artwork.
 6. Confirm the left text group is vertically centered and has no decorative underline.
 7. Sample clean background pixels and confirm they are exactly `#FAF9F5`.
-8. Confirm the grid and right-side artwork are optically balanced rather than mechanically matched to a reference.
+8. Confirm the right-side grid remains perceptible at 25% scale without competing with the artwork, and that both are optically balanced rather than mechanically matched to a reference.
 9. Confirm SVG is editable/self-contained and PNG dimensions match.
 10. Report the final paths, the no-reference ImageGen prompt, and that built-in ImageGen was used.

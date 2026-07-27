@@ -15,9 +15,9 @@ import sys
 
 
 BACKGROUND_COLOR = "#FAF9F5"
-GRID_COLOR = "#ECEBE7"
-DEFAULT_GRID_START = 0.40
-DEFAULT_GRID_CELL_HEIGHT_RATIO = 0.09
+GRID_COLOR = "#E2E1DC"
+DEFAULT_GRID_CELL_HEIGHT_RATIO = 0.10
+DEFAULT_GRID_STROKE = 1.8
 
 
 def has_cjk(text: str) -> bool:
@@ -92,6 +92,12 @@ def resolve_artwork_start(title: str, requested: float | None) -> float:
         return 0.50
     units = visual_units(title, cjk=True)
     return min(0.72, max(0.54, 0.54 + max(0.0, units - 6.5) * 0.02))
+
+
+def resolve_grid_start(artwork_start: float, requested: float | None) -> float:
+    if requested is not None:
+        return requested
+    return min(0.58, max(0.38, artwork_start - 0.16))
 
 
 def parse_italic_lines(value: str, line_count: int) -> set[int]:
@@ -354,7 +360,7 @@ def build_svg(args: argparse.Namespace) -> str:
         for index, line in enumerate(subtitle_lines)
     )
     artwork = data_uri(args.artwork)
-    grid_start = width * args.grid_start
+    grid_start = width * resolve_grid_start(artwork_start, args.grid_start)
     grid_cell = height * args.grid_cell_ratio
     artwork_x = width * artwork_start
     artwork_y = height * args.artwork_y
@@ -387,7 +393,7 @@ def build_svg(args: argparse.Namespace) -> str:
   <defs>
     <pattern id="editorial-grid" width="{grid_cell:.1f}" height="{grid_cell:.1f}" patternUnits="userSpaceOnUse">
       <path d="M {grid_cell:.1f} 0 L 0 0 0 {grid_cell:.1f}" fill="none"
-            stroke="{args.grid_color}" stroke-width="{1 * scale:.1f}"/>
+            stroke="{args.grid_color}" stroke-width="{args.grid_stroke * scale:.1f}"/>
     </pattern>
   </defs>
   <style>
@@ -455,8 +461,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--grid-start",
         type=float,
-        default=DEFAULT_GRID_START,
-        help="Grid x-position as a canvas fraction.",
+        help="Grid x-position as a canvas fraction; defaults adapt to the text/artwork split.",
     )
     parser.add_argument(
         "--grid-cell-ratio",
@@ -468,6 +473,12 @@ def parse_args() -> argparse.Namespace:
         "--grid-color",
         default=GRID_COLOR,
         help="Grid stroke color as a hex value.",
+    )
+    parser.add_argument(
+        "--grid-stroke",
+        type=float,
+        default=DEFAULT_GRID_STROKE,
+        help="Grid stroke width at the default 3000 × 1200 canvas.",
     )
     parser.add_argument("--no-grid", action="store_true", help="Disable the grid.")
     parser.add_argument(
@@ -496,7 +507,7 @@ def parse_args() -> argparse.Namespace:
         parser.error("Use a landscape canvas of at least 1200 × 480 and ratio >= 1.8:1.")
     if args.artwork_start is not None and not 0.48 <= args.artwork_start <= 0.75:
         parser.error("--artwork-start must be between 0.48 and 0.75.")
-    if not 0.30 <= args.grid_start <= 0.65:
+    if args.grid_start is not None and not 0.30 <= args.grid_start <= 0.65:
         parser.error("--grid-start must be between 0.30 and 0.65.")
     if not 0.045 <= args.grid_cell_ratio <= 0.16:
         parser.error("--grid-cell-ratio must be between 0.045 and 0.16.")
@@ -506,6 +517,8 @@ def parse_args() -> argparse.Namespace:
         and all(char in "0123456789abcdefABCDEF" for char in args.grid_color[1:])
     ):
         parser.error("--grid-color must be a six-digit hex color.")
+    if not 0.5 <= args.grid_stroke <= 4.0:
+        parser.error("--grid-stroke must be between 0.5 and 4.0.")
     if not 0.0 <= args.artwork_y <= 0.30:
         parser.error("--artwork-y must be between 0 and 0.30.")
     if not 0.45 <= args.artwork_height <= 1.0:

@@ -9,9 +9,10 @@ Keep only these invariants:
 - Foreground: near-black typography and restrained charcoal linework.
 - Accent: one small muted-coral focal signal.
 - Structure: strong left typography, an original conceptual visual on the right, and generous negative space.
+- Spatial texture: a faint square drafting grid across the right visual field.
 - Decoration: no underline, divider, rule, or decorative line beneath the text.
 
-Never accept a model-generated background as final. Generate only isolated right-side artwork; let `compose_cover.py` draw the fixed background, optional grid, placement, and real text.
+Never accept a model-generated background as final. Generate only isolated right-side artwork; let `compose_cover.py` draw the fixed background, controlled grid, placement, and real text.
 
 ## Aesthetic relationships
 
@@ -22,7 +23,7 @@ Use relationships rather than fixed coordinates:
 - Keep at least one comfortable headline-sized gap between text and actual diagram marks.
 - Align the two sides by optical center, not merely by bounding-box center.
 - Let the diagram feel substantial enough to be a second subject, but never let it overpower the headline.
-- A grid may begin in the transition zone, farther right, or be omitted when the diagram is already structured.
+- Let the grid begin in the transition zone or farther right according to the text width. It should remain faintly legible at thumbnail size, then recede behind the diagram at full size.
 - Use negative space as active rhythm. Avoid both a cramped center seam and an empty gulf between the two sides.
 
 The reference image suggests a useful family resemblance—editorial serif, large type, faint geometry, delicate paths—but its exact node count, loop, labels, line breaks, grid origin, and distances are not a template.
@@ -32,12 +33,14 @@ The reference image suggests a useful family resemblance—editorial serif, larg
 Use these only as starting ranges:
 
 - Left text origin: roughly `5–8%` of canvas width.
-- Grid transition: roughly `35–55%`, or omit it.
+- Grid transition: roughly `35–58%`, moving right as the headline grows.
 - Right artwork start: roughly `48–72%`, depending on text length.
 - Right artwork height: roughly `55–88%`, depending on the visual family.
 - Outer breathing room: visually consistent on all sides, without forcing equal numeric margins.
 
 Move outside these ranges when the title or concept benefits and the hierarchy remains intact.
+
+The grid is part of the visual identity, but its geometry is not locked: vary its starting edge, cell size, and contrast to suit the composition. Omit it only when the user explicitly requests a clean background.
 
 ## Typography
 

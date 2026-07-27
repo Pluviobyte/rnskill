@@ -22,7 +22,7 @@ General-purpose coding skills, more coming soon.
 
 - Exact `#FAF9F5` warm-white canvas with Chinese and mixed-language headline priority
 - Vertically centered left text block; the right visual yields to headline length
-- Adjustable grid, visual start, density, and height instead of one locked template
+- A thumbnail-visible fine grid anchors the right field; its start, spacing, strength, and artwork position remain adjustable
 - Fresh isolated artwork per cover, delivered as self-contained SVG and PNG
 
 Example:
