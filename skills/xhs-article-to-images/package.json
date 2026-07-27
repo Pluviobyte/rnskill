@@ -1,0 +1,52 @@
+{
+  "name": "xhs-article-to-images",
+  "version": "0.1.0",
+  "description": "Agent-assisted Markdown article to Xiaohongshu 3:4 image cards workflow.",
+  "license": "MIT",
+  "author": "Bozhou",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bozhouDev/xhs-article-to-images.git"
+  },
+  "homepage": "https://github.com/bozhouDev/xhs-article-to-images#readme",
+  "bugs": {
+    "url": "https://github.com/bozhouDev/xhs-article-to-images/issues"
+  },
+  "type": "commonjs",
+  "bin": {
+    "xhs-init": "./scripts/init-task.cjs",
+    "xhs-render": "./scripts/render.cjs"
+  },
+  "scripts": {
+    "init:task": "node scripts/init-task.cjs",
+    "render": "node scripts/render.cjs",
+    "render:preview": "node scripts/render.cjs preview",
+    "verify": "npm run render:preview"
+  },
+  "files": [
+    "SKILL.md",
+    "assets",
+    "references",
+    "scripts",
+    "preview/index.html",
+    "preview/assets",
+    "preview/styles.css",
+    "preview/styles-d.css",
+    "preview/styles-e.css",
+    "preview/output"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  },
+  "keywords": [
+    "xiaohongshu",
+    "rednote",
+    "markdown",
+    "playwright",
+    "agent-skill",
+    "carousel"
+  ]
+}

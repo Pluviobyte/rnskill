@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频标题 Skill"
+  short_description: "基于视频主题和对标共性生成两段式标题并写入成片目录"
+  default_prompt: "Use $ra-video-title to generate theme-first two-part candidate titles for this finished video, choose the best one, and write 视频标题.md next to the final MP4."

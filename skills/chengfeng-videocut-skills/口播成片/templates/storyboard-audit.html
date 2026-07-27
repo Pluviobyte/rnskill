@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PROJECT_TITLE}} 分镜核对工作台</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f5f1e8;
+  --panel: #fffdf8;
+  --panel-2: #fbf7ee;
+  --ink: #171714;
+  --muted: #666158;
+  --subtle: #8b8378;
+  --line: #d7cdbd;
+  --line-strong: #bfb19d;
+  --accent: #145f56;
+  --accent-weak: #e6f0ed;
+  --warn: #a9442b;
+  --shadow: 0 12px 34px rgba(28, 22, 14, .08);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--line);
+  background: rgba(245, 241, 232, .94);
+  backdrop-filter: blur(12px);
+}
+.bar {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 16px 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.kicker {
+  color: var(--muted);
+  font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 5px 0 0;
+  font-size: 24px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+.stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 6px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.stat::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--subtle);
+}
+.stat.primary {
+  border-color: rgba(20, 95, 86, .28);
+  background: var(--accent-weak);
+  color: var(--accent);
+}
+.stat.primary::before { background: var(--accent); }
+main {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 22px 24px 42px;
+}
+.notice {
+  border: 1px solid var(--line);
+  background: #fff8dc;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  color: #4c3b10;
+  font-size: 14px;
+}
+.flow-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.flow-step {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  border: 1px solid rgba(20, 95, 86, .22);
+  border-radius: 8px;
+  background: rgba(255, 253, 248, .72);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 228px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.shot-rail {
+  position: sticky;
+  top: 88px;
+  max-height: calc(100vh - 112px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.shot-rail-title {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+.shot-rail-list {
+  display: grid;
+  gap: 6px;
+}
+.shot-link {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+}
+.shot-link:hover,
+.shot-link.active {
+  border-color: rgba(20, 95, 86, .34);
+  background: var(--accent-weak);
+  color: var(--accent);
+}
+.shot-index {
+  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.shot-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+}
+.shot-list {
+  min-width: 0;
+}
+.segment {
+  display: grid;
+  grid-template-columns: minmax(420px, 1fr) minmax(360px, 440px);
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 92px;
+}
+.segment.active-section .visual-card,
+.segment.active-section .detail {
+  border-color: rgba(20, 95, 86, .55);
+  box-shadow: 0 16px 36px rgba(20, 95, 86, .12);
+}
+.visual-card, .detail {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.visual-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.visual-head {
+  width: 100%;
+  min-height: 38px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.frame {
+  width: min(100%, 420px);
+  aspect-ratio: 3 / 4;
+  background: #ece5d8;
+  padding: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.frame img,
+.frame iframe,
+.frame video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  object-fit: contain;
+  background: var(--panel);
+  border-radius: 4px;
+  box-shadow: 0 8px 20px rgba(20, 16, 10, .12);
+}
+.frame video { background: #101114; }
+.pin {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  right: 16px;
+  border-radius: 8px;
+  background: rgba(255, 253, 248, .92);
+  border: 1px solid rgba(215, 205, 189, .8);
+  padding: 9px 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.detail { padding: 16px; }
+.detail h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border-radius: 12px;
+  padding: 3px 9px;
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+.tag.warn { background: #f6e4dc; color: var(--warn); }
+dl {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 8px 10px;
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+dt { color: var(--muted); }
+dd { margin: 0; min-width: 0; }
+.transcript {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.transcript h3 { margin: 0 0 7px; color: var(--muted); font-size: 13px; }
+.transcript p { margin: 0; font-size: 14px; line-height: 1.72; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+@media (max-width: 920px) {
+  .bar { flex-direction: column; align-items: flex-start; }
+  .stats { justify-content: flex-start; }
+  .workspace { grid-template-columns: 1fr; }
+  .shot-rail {
+    position: static;
+    max-height: none;
+  }
+  .shot-rail-list {
+    grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+  }
+  .segment { grid-template-columns: 1fr; }
+  .frame { width: min(100%, 360px); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div>
+      <div class="kicker">STORYBOARD CHECK · 口播分镜核对工作台</div>
+      <h1>{{PROJECT_TITLE}} 分镜核对</h1>
+    </div>
+    <div class="stats">
+      <span class="stat primary" id="segmentCount">-- 分镜段</span>
+      <span class="stat" id="subtitleCount">-- 字幕</span>
+      <span class="stat" id="assetCount">-- 素材</span>
+      <span class="stat" id="videoCount">-- 段源片</span>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="notice">
+    这页只解决一件事：字幕段如何落到画面。先按分镜核对画面任务、素材来源、镜头动作和完整口播；方向确认后，再进入时间线预览。
+    <div class="flow-strip">
+      <span class="flow-step">字幕段</span>
+      <span class="flow-step">画面任务</span>
+      <span class="flow-step">素材来源</span>
+      <span class="flow-step">镜头动作</span>
+      <span class="flow-step">完整口播</span>
+    </div>
+  </section>
+  <div class="workspace">
+    <nav class="shot-rail" aria-label="分镜目录">
+      <div class="shot-rail-title">分镜目录</div>
+      <div class="shot-rail-list" id="shotRail"></div>
+    </nav>
+    <div class="shot-list" id="shotList"></div>
+  </div>
+</main>
+<script>
+const SEGMENTS = {{SEGMENTS_JSON}};
+
+function pad(value) { return String(value).padStart(2, '0'); }
+function htmlEscape(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function visualType(visual) {
+  if (!visual) return '素材';
+  if (visual.kind === 'video') return '原视频素材';
+  if (visual.kind === 'iframe') return 'HTML 画面';
+  return '图片素材';
+}
+function renderVisual(segment) {
+  const visual = segment.visual || {};
+  const src = htmlEscape(visual.src || '');
+  if (visual.kind === 'video') {
+    const poster = visual.poster ? ` poster="${htmlEscape(visual.poster)}"` : '';
+    return `<video src="${src}"${poster} preload="metadata" muted playsinline></video>`;
+  }
+  if (visual.kind === 'iframe') {
+    return `<iframe src="${src}" loading="lazy"></iframe>`;
+  }
+  return `<img src="${src}" alt="${htmlEscape(segment.title || '')}">`;
+}
+function renderSegments() {
+  const list = document.getElementById('shotList');
+  list.innerHTML = SEGMENTS.map(segment => {
+    const index = pad(segment.index ?? segment.id);
+    const tags = [
+      segment.subtitles ? `字幕 ${segment.subtitles}` : '',
+      segment.time || (segment.start != null && segment.end != null ? `${segment.start}-${segment.end}` : ''),
+      segment.type || visualType(segment.visual)
+    ].filter(Boolean);
+    return `
+      <section class="segment" id="s${htmlEscape(segment.id)}">
+        <div class="visual-card">
+          <div class="visual-head"><span>${index} · ${htmlEscape(segment.title || '')}</span><span>${htmlEscape(segment.type || visualType(segment.visual))}</span></div>
+          <div class="frame">
+            ${renderVisual(segment)}
+            ${segment.pin ? `<div class="pin">${htmlEscape(segment.pin)}</div>` : ''}
+          </div>
+        </div>
+        <div class="detail">
+          <h2>${htmlEscape(segment.headline || segment.title || '')}</h2>
+          <div class="tags">${tags.map(tag => `<span class="tag">${htmlEscape(tag)}</span>`).join('')}</div>
+          <dl>
+            <dt>画面任务</dt><dd>${htmlEscape(segment.task || '')}</dd>
+            <dt>素材来源</dt><dd>${htmlEscape(segment.source || '')}</dd>
+            <dt>镜头动作</dt><dd>${htmlEscape(segment.action || '')}</dd>
+          </dl>
+          <div class="transcript"><h3>完整口播</h3><p>${htmlEscape(segment.transcript || '')}</p></div>
+        </div>
+      </section>
+    `;
+  }).join('');
+}
+function renderRail() {
+  const rail = document.getElementById('shotRail');
+  rail.innerHTML = SEGMENTS.map(segment => `
+    <button class="shot-link" type="button" data-target="s${htmlEscape(segment.id)}">
+      <span class="shot-index">${pad(segment.index ?? segment.id)}</span>
+      <span class="shot-title">${htmlEscape(segment.title || '')}</span>
+    </button>
+  `).join('');
+  rail.querySelectorAll('.shot-link').forEach(button => {
+    button.addEventListener('click', () => document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  });
+}
+function setActiveShot(id) {
+  document.querySelectorAll('.segment').forEach(section => section.classList.toggle('active-section', section.id === id));
+  document.querySelectorAll('.shot-link').forEach(button => button.classList.toggle('active', button.dataset.target === id));
+}
+function observeShots() {
+  const sections = Array.from(document.querySelectorAll('.segment')).filter(section => section instanceof Element);
+  if (!sections.length) return;
+  setActiveShot(sections[0].id);
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver(entries => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) setActiveShot(visible.target.id);
+  }, { rootMargin: '-22% 0px -64% 0px', threshold: [0.12, 0.28, 0.5] });
+  sections.forEach(section => {
+    try {
+      observer.observe(section);
+    } catch (_error) {}
+  });
+}
+function updateSummary() {
+  document.getElementById('segmentCount').textContent = `${SEGMENTS.length} 分镜段`;
+  const subtitleTotal = SEGMENTS.reduce((sum, segment) => {
+    const text = String(segment.subtitles || '');
+    if (!text) return sum;
+    const matched = text.match(/\d+/g);
+    return sum + (matched ? matched.length : 1);
+  }, 0);
+  document.getElementById('subtitleCount').textContent = `${subtitleTotal || '--'} 字幕`;
+  document.getElementById('assetCount').textContent = `${SEGMENTS.filter(segment => segment.visual?.kind !== 'video').length} 素材段`;
+  document.getElementById('videoCount').textContent = `${SEGMENTS.filter(segment => segment.visual?.kind === 'video').length} 段源片`;
+}
+renderSegments();
+renderRail();
+observeShots();
+updateSummary();
+</script>
+</body>
+</html>

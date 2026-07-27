@@ -1,0 +1,6 @@
+interface:
+  display_name: "ra-hook（钩子）"
+  short_description: "短视频钩子类型速查与决策"
+  default_prompt: "Use $ra-hook to pick the right hook type for this video topic and draft the opening sentences."
+policy:
+  allow_implicit_invocation: true

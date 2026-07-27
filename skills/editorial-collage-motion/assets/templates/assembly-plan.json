@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "provenance": {
+    "actual_still_provider": "codex-image-gen",
+    "actual_motion_provider": "local-ffmpeg",
+    "external_uploads": false,
+    "compatible_render": true,
+    "compatible_with": "editorial-collage-motion visual contract"
+  },
+  "scenes": [
+    {
+      "id": "scene-01",
+      "duration_s": 3.0,
+      "background_hex": "#1F3FB0",
+      "mode": "layered",
+      "pieces": [
+        {
+          "source": "assets/pieces/scene-01-label.png",
+          "x": 80,
+          "y": 120,
+          "entry": {
+            "from": "left",
+            "start_s": 0.1,
+            "end_s": 0.55,
+            "distance_px": 900
+          }
+        },
+        {
+          "source": "assets/pieces/scene-01-subject.png",
+          "x": 420,
+          "y": 330,
+          "entry": {
+            "from": "right",
+            "start_s": 0.45,
+            "end_s": 1.25,
+            "distance_px": 1200
+          }
+        }
+      ]
+    }
+  ]
+}

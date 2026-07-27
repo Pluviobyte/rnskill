@@ -1,0 +1,25 @@
+.caption {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  z-index: 30;
+  width: max-content;
+  max-width: 1240px;
+  padding: 14px 28px 16px;
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  border: 1px solid rgba(21, 32, 42, 0.10);
+  border-radius: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(247, 250, 251, 0.84)
+  );
+  box-shadow: 0 12px 34px rgba(64, 93, 112, 0.14);
+  color: #15202a;
+  font-size: 44px;
+  line-height: 1.22;
+  font-weight: 900;
+  text-align: center;
+  white-space: normal;
+}

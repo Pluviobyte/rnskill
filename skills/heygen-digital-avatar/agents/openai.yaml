@@ -1,0 +1,4 @@
+interface:
+  display_name: "HeyGen 数字人口播"
+  short_description: "生成并自动居中合成 Pluviobyte 圆形数字人视频"
+  default_prompt: "Use $heygen-digital-avatar to create a face-centered video with the standard Pluviobyte digital-human layout."

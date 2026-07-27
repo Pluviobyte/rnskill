@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3168" height="1267" viewBox="0 0 3168 1267">
+  <defs>
+    <radialGradient id="paperGlow" cx="52%" cy="46%" r="78%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.09"/>
+      <stop offset="70%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#5b5144" stop-opacity="0.055"/>
+    </radialGradient>
+    <filter id="paperGrain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.011 0.018" numOctaves="3" seed="17" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="grayNoise"/>
+      <feComponentTransfer in="grayNoise" result="faintNoise">
+        <feFuncA type="table" tableValues="0 0.045"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="faintNoise" mode="multiply"/>
+    </filter>
+    <style>
+      .label {
+        fill: #050505;
+        font-family: &#x27;Roboto Slab&#x27;, Rockwell, &#x27;Noto Serif&#x27;, serif;
+        font-weight: 900;
+        letter-spacing: -0.035em;
+      }
+      .title {
+        fill: #050505;
+        font-family: YouSheBiaoTiHei, &#x27;ZCOOL KuaiLe&#x27;, &#x27;Alimama ShuHeiTi&#x27;, &#x27;Source Han Sans SC&#x27;, &#x27;PingFang SC&#x27;, &#x27;Microsoft YaHei&#x27;, sans-serif;
+        font-weight: 900;
+        letter-spacing: -0.055em;
+      }
+      .dots {
+        fill: none;
+        stroke: #050505;
+        stroke-width: 10;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 1 18;
+      }
+      .perforation { fill: #050505; }
+    </style>
+  </defs>
+
+  <rect width="3168" height="1267" fill="#D6D0C5"/>
+  <rect width="3168" height="1267" fill="url(#paperGlow)" filter="url(#paperGrain)"/>
+
+  <g aria-label="cover text">
+    <text x="171.1" y="576.2" class="label" font-size="145.0">Codex + Hyperframes:</text>
+    <text x="171.1" y="772.9" class="title" font-size="147.6">拆解抖音爆款·吃上自媒体这碗饭!</text>
+  </g>
+
+  <g aria-label="dotted analysis pictogram" transform="translate(2713.1 633.5) scale(0.9883) translate(-305 -250)">
+    <path class="dots" d="M34 118 H170 V356 H34 Z"/>
+    <path class="dots" d="M440 118 H576 V356 H440 Z"/>
+    <path class="dots" d="M34 154 H170 M34 320 H170 M440 154 H576 M440 320 H576"/>
+
+    <g class="perforation">
+      <circle cx="62" cy="136" r="5"/><circle cx="100" cy="136" r="5"/><circle cx="138" cy="136" r="5"/>
+      <circle cx="62" cy="338" r="5"/><circle cx="100" cy="338" r="5"/><circle cx="138" cy="338" r="5"/>
+      <circle cx="468" cy="136" r="5"/><circle cx="506" cy="136" r="5"/><circle cx="544" cy="136" r="5"/>
+      <circle cx="468" cy="338" r="5"/><circle cx="506" cy="338" r="5"/><circle cx="544" cy="338" r="5"/>
+    </g>
+
+    <circle class="dots" cx="305" cy="226" r="151"/>
+    <circle class="dots" cx="305" cy="226" r="118"/>
+    <path class="dots" d="M244 226 A61 61 0 0 1 305 165"/>
+    <path class="dots" d="M414 335 L535 456 Q551 472 566 456 Q581 441 565 425 L444 304"/>
+  </g>
+</svg>

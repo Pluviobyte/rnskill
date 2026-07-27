@@ -1,0 +1,24 @@
+.caption {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  z-index: 30;
+  width: max-content;
+  max-width: 1500px;
+  padding: 22px;
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 16px;
+  background: rgba(45, 51, 50, 0.8353);
+  box-shadow: none;
+  color: rgb(252, 252, 249);
+  font-family: "STHeiti Medium", "PingFang SC", sans-serif;
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: center;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  white-space: normal;
+}

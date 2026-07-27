@@ -1,0 +1,4 @@
+interface:
+  display_name: "点阵编辑风封面"
+  short_description: "生成暖灰留白、粗排版与点阵图标组合的编辑风横幅封面"
+  default_prompt: "使用 $editorial-dot-cover 根据我的标题制作一张点阵编辑风横幅封面。"

@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+*.log
+dist/
+coverage/
+tmp/
+output/
+**/output/
+!preview/output/
+!preview/output/*.png

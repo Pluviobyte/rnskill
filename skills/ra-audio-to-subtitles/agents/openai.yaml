@@ -1,0 +1,4 @@
+interface:
+  display_name: "真实时间戳字幕"
+  short_description: "用最终音频生成火山逐字时间戳、SRT、VTT 与渲染数据"
+  default_prompt: "Use $ra-audio-to-subtitles to generate synchronized subtitle artifacts from the final audio."

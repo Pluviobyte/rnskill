@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{PROJECT_TITLE}} 时间线工作台</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --panel: #fffdf8;
+      --panel-2: #fbf7ee;
+      --line: #d7cdbd;
+      --line-strong: #bfb19d;
+      --text: #171714;
+      --muted: #666158;
+      --subtle: #8b8378;
+      --accent: #145f56;
+      --accent-ink: #fffdf8;
+      --danger: #a9442b;
+      --blue: #2d6686;
+      --violet: #705489;
+      --radius: 8px;
+      --shadow: 0 12px 34px rgba(28, 22, 14, .08);
+      --frame-width: 1080px;
+      --frame-height: 1440px;
+      --frame-ratio: 3 / 4;
+      --stage-scale: 1;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      padding: clamp(14px, 1.6vw, 22px);
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      letter-spacing: 0;
+    }
+
+    .app {
+      width: min(100%, 1500px);
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 0 4px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(20, 95, 86, .32);
+      flex: none;
+    }
+
+    .kicker {
+      color: var(--subtle);
+      font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 7px 0 0;
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .stats {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 32px;
+      padding: 7px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .stat .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--subtle);
+      flex: none;
+    }
+
+    .stat.primary {
+      color: var(--accent);
+      background: #e6f0ed;
+      border-color: rgba(20, 95, 86, .28);
+    }
+
+    .stat.primary .dot { background: var(--accent); }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: minmax(320px, min(36vw, 520px)) minmax(420px, 1fr);
+      gap: clamp(14px, 1.4vw, 20px);
+      align-items: start;
+    }
+
+    .stage-column {
+      min-width: 0;
+      position: sticky;
+      top: clamp(12px, 1.5vw, 22px);
+      align-self: start;
+    }
+
+    .stage-shell {
+      position: relative;
+      width: min(100%, 520px, calc((100vh - 154px) * .75));
+      min-width: 0;
+      margin: 0 auto;
+      aspect-ratio: var(--frame-ratio);
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #ece5d8;
+      box-shadow: var(--shadow);
+    }
+
+    .stage-badges {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: calc(100% - 24px);
+    }
+
+    .badge {
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      max-width: 190px;
+      padding: 0 9px;
+      border-radius: 6px;
+      border: 1px solid rgba(215, 205, 189, .9);
+      background: rgba(255, 253, 248, .94);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge.active {
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    #stage {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #ece5d8;
+    }
+
+    .stage-shell.video-window-mode #stage {
+      align-items: start;
+      background:
+        linear-gradient(180deg, #111719, #070809);
+      padding-top: 9%;
+    }
+
+    .recording-window {
+      width: 76%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border: 1px solid rgba(255, 253, 248, .34);
+      border-radius: 10px;
+      background: #101114;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .30);
+    }
+
+    .recording-window video,
+    .recording-window canvas {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      object-fit: contain;
+      background: #101114;
+    }
+
+    #stage video,
+    #stage canvas,
+    #stage iframe,
+    #stage img {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fffdf8;
+    }
+
+    #stage video,
+    #stage canvas {
+      object-fit: contain;
+      background: #101114;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .stage-shell.module-render-mode #stage {
+      overflow: hidden;
+      background: #fffdf8;
+    }
+
+    .stage-shell.module-render-mode #stage iframe {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: var(--frame-width);
+      height: var(--frame-height);
+      max-width: none;
+      max-height: none;
+      transform: scale(var(--stage-scale));
+      transform-origin: 0 0;
+    }
+
+    #stage img {
+      width: calc(100% - 32px);
+      height: calc(100% - 32px);
+      object-fit: contain;
+      background: #fffdf8;
+    }
+
+    .stage-shell.image-small-mode #stage {
+      padding: 10%;
+      background: #f4efe6;
+    }
+
+    .stage-shell.image-small-mode #stage img {
+      width: 72%;
+      height: auto;
+      max-height: 72%;
+      border-radius: 10px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, .20);
+      background: #fffdf8;
+    }
+
+    .stage-shell.image-side-border-mode #stage img {
+      width: calc(100% - 32px);
+      height: auto;
+      max-height: calc(100% - 32px);
+      border-left: 3px solid rgba(255, 253, 248, .82);
+      border-right: 3px solid rgba(255, 253, 248, .82);
+      border-radius: 8px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .16);
+      background: #fffdf8;
+    }
+
+    .cue-card {
+      width: min(100%, 520px, calc((100vh - 154px) * .75));
+      margin: 12px auto 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      min-height: 42px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff8dc;
+      color: #6f4b16;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .cue-card .dot {
+      width: 7px;
+      height: 7px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: #c28b39;
+      flex: none;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .detail-panel {
+      padding: 22px 26px 24px;
+      align-self: start;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+      container-type: inline-size;
+    }
+
+    .detail-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .detail-head > div:first-child {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .meta {
+      color: var(--accent);
+      font: 700 12px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .04em;
+    }
+
+    .detail-panel h2 {
+      margin: 8px 0 0;
+      color: var(--text);
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .task {
+      margin: 16px 0 0;
+      padding: 11px 14px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: #e6f0ed;
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr) 84px minmax(0, 1fr);
+      gap: 11px 16px;
+      margin: 17px 0 0;
+      padding: 15px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .label {
+      color: var(--subtle);
+    }
+
+    .value {
+      color: var(--text);
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .wide {
+      grid-column: span 3;
+    }
+
+    .review-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+      gap: 16px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .transcript-title,
+    .note-title {
+      margin: 0 0 10px;
+      color: var(--subtle);
+      font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .transcript-text {
+      margin: 0;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 2.05;
+      letter-spacing: 0;
+    }
+
+    .clause {
+      padding: 2px 6px;
+      border-radius: 5px;
+      color: var(--muted);
+      transition: color .15s ease, background .15s ease;
+    }
+
+    .clause-time {
+      margin-right: 6px;
+      color: var(--subtle);
+      font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: nowrap;
+    }
+
+    .clause.past {
+      color: var(--text);
+    }
+
+    .clause.active {
+      color: var(--text);
+      background: #e6f0ed;
+      box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    textarea {
+      width: 100%;
+      height: 124px;
+      resize: vertical;
+      padding: 11px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      outline: none;
+      background: #fffdf8;
+      color: var(--text);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(20, 95, 86, .12);
+    }
+
+    .timeline-panel {
+      margin-top: 18px;
+      padding: 16px clamp(14px, 1.6vw, 20px) 20px;
+    }
+
+    .segment-tabs {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .tab {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      max-width: 180px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      border-color: var(--accent);
+      background: #e6f0ed;
+      color: var(--accent);
+    }
+
+    .tab-index {
+      color: inherit;
+      opacity: .7;
+      font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .tab-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .transport {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 13px;
+      min-width: 0;
+    }
+
+    #playButton {
+      height: 38px;
+      min-width: 96px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .time {
+      color: var(--accent);
+      font: 800 15px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .total {
+      color: var(--subtle);
+      font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .transport-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .mini-label {
+      margin: 0 2px 0 8px;
+      color: var(--subtle);
+      font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .speed-btn {
+      height: 28px;
+      min-width: 40px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .speed-btn.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    #volume {
+      width: 78px;
+      accent-color: var(--accent);
+    }
+
+    .ruler {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 1px 7px;
+      color: var(--subtle);
+      font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .track {
+      position: relative;
+      height: 48px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .block {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border: 1.5px solid transparent;
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding-left: 9px;
+      pointer-events: none;
+    }
+
+    .block.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(20, 95, 86, .18);
+    }
+
+    .block span {
+      color: rgba(255, 255, 255, .78);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cue-node {
+      position: absolute;
+      top: -7px;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--accent);
+      transform: translateX(-50%) rotate(45deg);
+      pointer-events: none;
+      opacity: .85;
+    }
+
+    .cue-node.active {
+      background: var(--text);
+      box-shadow: 0 0 0 3px rgba(20, 95, 86, .16);
+    }
+
+    .playhead {
+      position: absolute;
+      top: -8px;
+      bottom: -8px;
+      width: 2px;
+      background: var(--text);
+      box-shadow: 0 0 0 3px rgba(20, 95, 86, .12);
+      transform: translateX(-1px);
+      pointer-events: none;
+    }
+
+    #scrubber {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      pointer-events: none;
+    }
+
+    #clock {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @container (max-width: 620px) {
+      .review-body { grid-template-columns: 1fr; }
+      .fields { grid-template-columns: 78px minmax(0, 1fr); }
+      .wide { grid-column: auto; }
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 16px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .stats { justify-content: flex-start; }
+      .workbench { grid-template-columns: 1fr; }
+      .stage-column { position: static; }
+      .stage-shell,
+      .cue-card {
+        width: min(100%, 480px, calc((100vh - 140px) * .75));
+        max-width: 480px;
+      }
+      .detail-panel {
+        max-height: none;
+        overflow: visible;
+      }
+      .review-body { grid-template-columns: 1fr; }
+      .fields { grid-template-columns: 78px minmax(0, 1fr); }
+      .wide { grid-column: auto; }
+      .transport { align-items: flex-start; flex-direction: column; }
+      .transport-right { margin-left: 0; justify-content: flex-start; }
+    }
+
+    @media (max-width: 680px) {
+      .segment-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .tab {
+        flex: 0 0 auto;
+        max-width: 156px;
+      }
+      .timeline-panel {
+        overflow-x: auto;
+      }
+      .ruler,
+      .track {
+        min-width: 620px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body { padding: 14px; }
+      h1 { font-size: 21px; }
+      .stage-shell,
+      .cue-card { width: 100%; }
+      .detail-panel { padding: 20px; }
+      .detail-head { flex-direction: column; }
+      .detail-panel h2 { font-size: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <video id="clock" preload="auto"></video>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="pulse"></span>
+        <div>
+          <div class="kicker">TIMELINE PREVIEW · 口播时间线工作台</div>
+          <h1>{{PROJECT_TITLE}}</h1>
+        </div>
+      </div>
+      <div class="stats">
+        <span class="stat"><span class="dot"></span><span id="totalCount">-- 段</span></span>
+        <span class="stat primary"><span class="dot"></span><span id="durationCount">-- 时长</span></span>
+        <span class="stat"><span class="dot"></span><span id="cueCount">-- 动画 cue</span></span>
+        <span class="stat"><span class="dot"></span><span id="sourceVideoCount">-- 段源片</span></span>
+      </div>
+    </header>
+
+    <main class="workbench">
+      <section class="stage-column">
+        <div class="stage-shell">
+          <div class="stage-badges">
+            <span class="badge active" id="stageIndex">01</span>
+            <span class="badge" id="stageKind">-</span>
+          </div>
+          <div id="stage"></div>
+        </div>
+        <div class="cue-card">
+          <span class="dot"></span>
+          <span id="stageCue">-</span>
+        </div>
+      </section>
+
+      <section class="panel detail-panel">
+        <div class="detail-head">
+          <div>
+            <div class="meta"><span id="segmentId">-</span> · <span id="segmentTime">-</span></div>
+            <h2 id="segmentTitle">-</h2>
+          </div>
+        </div>
+
+        <div class="task" id="segmentTask">-</div>
+
+        <div class="fields">
+          <div class="label">字幕</div><div class="value wide" id="segmentSubtitle">-</div>
+          <div class="label">画面类型</div><div class="value" id="segmentType">-</div>
+          <div class="label">镜头动作</div><div class="value" id="segmentMotion">-</div>
+          <div class="label">素材来源</div><div class="value wide" id="segmentSource">-</div>
+        </div>
+
+        <div class="review-body">
+          <div>
+            <h3 class="transcript-title">完整口播 · 跟随播放高亮</h3>
+            <p class="transcript-text" id="segmentTranscript">-</p>
+          </div>
+          <div>
+            <h3 class="note-title">分镜备注</h3>
+            <textarea id="segmentNote" placeholder="记录这一段需要核对的画面点..."></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="panel timeline-panel">
+      <div class="segment-tabs" id="segmentTabs"></div>
+      <div class="transport">
+        <button id="playButton">播放</button>
+        <div class="time" id="timeNow">00:00.00</div>
+        <div class="total">/ <span id="timeTotal">02:29.23</span></div>
+        <div class="transport-right">
+          <span class="mini-label">速度</span>
+          <button class="speed-btn active" data-speed="1">1x</button>
+          <button class="speed-btn" data-speed="1.25">1.25x</button>
+          <button class="speed-btn" data-speed="1.5">1.5x</button>
+          <button class="speed-btn" data-speed="2">2x</button>
+          <span class="mini-label">音量</span>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
+        </div>
+      </div>
+      <div class="ruler" id="ruler"></div>
+      <div class="track" id="track">
+        <div id="blocks"></div>
+        <div id="cueNodes"></div>
+        <div class="playhead" id="playhead"></div>
+        <input id="scrubber" type="range" min="0" max="{{TOTAL_DURATION}}" step="0.01" value="0">
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const VIDEO_SRC = "{{SOURCE_VIDEO}}";
+    const totalDuration = Number("{{TOTAL_DURATION}}");
+    const NOTE_KEY = "{{NOTE_KEY}}";
+    const FRAME_WIDTH = Number("{{FRAME_WIDTH}}") || 1080;
+    const FRAME_HEIGHT = Number("{{FRAME_HEIGHT}}") || 1440;
+    document.documentElement.style.setProperty("--frame-width", `${FRAME_WIDTH}px`);
+    document.documentElement.style.setProperty("--frame-height", `${FRAME_HEIGHT}px`);
+    document.documentElement.style.setProperty("--frame-ratio", `${FRAME_WIDTH} / ${FRAME_HEIGHT}`);
+    const CLIP_COLORS = ["#2f6f66", "#705c3a", "#446b89", "#755b81", "#8a5d55", "#5f7448"];
+
+    const scenes = {{SCENES_JSON}};
+
+    const clock = document.getElementById("clock");
+    const stage = document.getElementById("stage");
+    const playButton = document.getElementById("playButton");
+    const scrubber = document.getElementById("scrubber");
+    const track = document.getElementById("track");
+    const volume = document.getElementById("volume");
+    const timeNow = document.getElementById("timeNow");
+    const timeTotal = document.getElementById("timeTotal");
+    const stageIndex = document.getElementById("stageIndex");
+    const stageKind = document.getElementById("stageKind");
+    const stageCue = document.getElementById("stageCue");
+    const segmentTabs = document.getElementById("segmentTabs");
+    const blocks = document.getElementById("blocks");
+    const cueNodes = document.getElementById("cueNodes");
+    const playhead = document.getElementById("playhead");
+    const ruler = document.getElementById("ruler");
+    const segmentNote = document.getElementById("segmentNote");
+    const totalCount = document.getElementById("totalCount");
+    const durationCount = document.getElementById("durationCount");
+    const cueCount = document.getElementById("cueCount");
+    const sourceVideoCount = document.getElementById("sourceVideoCount");
+    const detail = {
+      id: document.getElementById("segmentId"),
+      time: document.getElementById("segmentTime"),
+      title: document.getElementById("segmentTitle"),
+      task: document.getElementById("segmentTask"),
+      subtitle: document.getElementById("segmentSubtitle"),
+      type: document.getElementById("segmentType"),
+      source: document.getElementById("segmentSource"),
+      motion: document.getElementById("segmentMotion"),
+      transcript: document.getElementById("segmentTranscript")
+    };
+
+    let currentScene = null;
+    let stageVideo = null;
+    let stageCanvas = null;
+    let stageCanvasContext = null;
+    let stageFrame = null;
+    let raf = null;
+    let displayTime = 0;
+    let isScrubbing = false;
+    let resumeAfterScrub = false;
+    let noteState = loadNoteState();
+
+    clock.src = VIDEO_SRC;
+    clock.volume = Number(volume.value);
+    scrubber.max = String(totalDuration);
+    timeTotal.textContent = formatTime(totalDuration);
+    updateSummary();
+
+    function loadNoteState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(NOTE_KEY) || "{}");
+        return saved && typeof saved === "object" ? saved : {};
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveNoteState() {
+      try {
+        localStorage.setItem(NOTE_KEY, JSON.stringify(noteState));
+      } catch (error) {
+        // localStorage may be unavailable in some file:// contexts.
+      }
+    }
+
+    function formatTime(seconds) {
+      const safe = Math.max(0, Number(seconds || 0));
+      const m = Math.floor(safe / 60);
+      const rest = (safe - m * 60).toFixed(2).padStart(5, "0");
+      return `${String(m).padStart(2, "0")}:${rest}`;
+    }
+
+    function activeSceneAt(time) {
+      return scenes.find(scene => time >= scene.start && time < scene.end) ||
+        [...scenes].reverse().find(scene => time >= scene.start) ||
+        scenes[0];
+    }
+
+    function timelineControlledUrl(url) {
+      if (!url) return "";
+      const [withoutHash, hash = ""] = String(url).split("#");
+      const [path, query = ""] = withoutHash.split("?");
+      const params = new URLSearchParams(query);
+      params.delete("play");
+      params.delete("static");
+      params.set("timeline", "1");
+      params.set("render", "1");
+      const nextQuery = params.toString();
+      return `${path}${nextQuery ? `?${nextQuery}` : ""}${hash ? `#${hash}` : ""}`;
+    }
+
+    function sceneUrl(scene) {
+      const url = scene.src || scene.module || "";
+      if (scene.kind === "module" || scene.kind === "iframe") return timelineControlledUrl(url);
+      return url;
+    }
+
+    function splitTranscript(scene) {
+      const parts = scene.transcript
+        .split(/(?<=[。！？；，])/)
+        .map(item => item.trim())
+        .filter(Boolean);
+      return parts.length ? parts : [scene.transcript];
+    }
+
+    function timedTranscriptParts(scene) {
+      const cues = (scene.stepCues || [])
+        .filter(cue => cue.text && !/段落收束/.test(cue.text));
+      if (cues.length) {
+        return cues.map((cue, index) => ({
+          text: cue.text,
+          start: cue.at,
+          end: cues[index + 1]?.at ?? scene.end
+        }));
+      }
+      const parts = splitTranscript(scene);
+      const duration = Math.max(.1, scene.end - scene.start);
+      const each = duration / parts.length;
+      return parts.map((text, index) => ({
+        text,
+        start: scene.start + each * index,
+        end: index === parts.length - 1 ? scene.end : scene.start + each * (index + 1)
+      }));
+    }
+
+    function renderTranscript(scene, time) {
+      const parts = timedTranscriptParts(scene);
+      detail.transcript.innerHTML = "";
+      parts.forEach(part => {
+        const span = document.createElement("span");
+        span.className = "clause";
+        if (time >= part.start && time < part.end) span.classList.add("active");
+        else if (time >= part.end) span.classList.add("past");
+        const timeLabel = document.createElement("span");
+        timeLabel.className = "clause-time";
+        timeLabel.textContent = formatTime(part.start);
+        span.appendChild(timeLabel);
+        span.append(part.text);
+        detail.transcript.appendChild(span);
+      });
+    }
+
+    function currentStepCue(scene, time) {
+      if (!scene.stepCues || !scene.stepCues.length) return null;
+      let current = scene.stepCues[0];
+      for (const cue of scene.stepCues) {
+        if (time >= cue.at) current = cue;
+        else break;
+      }
+      return current;
+    }
+
+    function dynamicCue(scene, time) {
+      const stepCue = currentStepCue(scene, time);
+      if (stepCue) return `${formatTime(stepCue.at)} · ${stepCue.text || scene.cue}`;
+      if ((scene.kind === "module" || scene.kind === "iframe") && (scene.steps || 1) > 1) {
+        return `当前动画 step ${stepForScene(scene, time)} · ${scene.cue}`;
+      }
+      return scene.cue;
+    }
+
+    function countCueNodes() {
+      let count = 0;
+      for (const scene of scenes) {
+        if (scene.stepCues && scene.stepCues.length) count += scene.stepCues.length;
+        else if ((scene.steps || 1) > 1) count += scene.steps;
+      }
+      return count;
+    }
+
+    function updateSummary() {
+      totalCount.textContent = `${scenes.length} 段`;
+      durationCount.textContent = `${formatTime(totalDuration)} 时长`;
+      cueCount.textContent = `${countCueNodes()} 动画 cue`;
+      sourceVideoCount.textContent = `${scenes.filter(scene => scene.kind === "video").length} 段源片`;
+    }
+
+    function updateNote(scene) {
+      segmentNote.value = noteState[scene.id] || "";
+    }
+
+    function resizeModuleFrame() {
+      const stageShell = document.querySelector(".stage-shell");
+      if (!stageShell) return;
+      const scale = Math.min(stageShell.clientWidth / FRAME_WIDTH, stageShell.clientHeight / FRAME_HEIGHT);
+      stageShell.style.setProperty("--stage-scale", String(Number.isFinite(scale) && scale > 0 ? scale : 1));
+    }
+
+    window.addEventListener("resize", resizeModuleFrame);
+
+    function renderStage(scene) {
+      if (currentScene && currentScene.id === scene.id) return;
+      currentScene = scene;
+      stage.innerHTML = "";
+      stageVideo = null;
+      stageCanvas = null;
+      stageCanvasContext = null;
+      stageFrame = null;
+      const stageShell = document.querySelector(".stage-shell");
+      const useVideoWindow = scene.kind === "video" && scene.videoLayout === "window";
+      const isModuleScene = scene.kind === "module" || scene.kind === "iframe";
+      stageShell.classList.toggle("video-window-mode", useVideoWindow);
+      stageShell.classList.toggle("image-small-mode", scene.kind === "image" && scene.imageLayout === "small");
+      stageShell.classList.toggle("image-side-border-mode", scene.kind === "image" && scene.imageLayout === "side-border");
+      stageShell.classList.toggle("module-render-mode", isModuleScene);
+      resizeModuleFrame();
+
+      if (scene.kind === "video") {
+        stageCanvas = document.createElement("canvas");
+        stageCanvas.className = "source-frame";
+        if (scene.poster) stageCanvas.style.backgroundImage = `url("${scene.poster}")`;
+        stageCanvasContext = stageCanvas.getContext("2d");
+        if (useVideoWindow) {
+          const recordingWindow = document.createElement("div");
+          recordingWindow.className = "recording-window";
+          recordingWindow.appendChild(stageCanvas);
+          stage.appendChild(recordingWindow);
+        } else {
+          stage.appendChild(stageCanvas);
+        }
+        drawClockFrame();
+      } else if (scene.kind === "image") {
+        const image = document.createElement("img");
+        image.src = sceneUrl(scene);
+        image.alt = scene.title || "";
+        stage.appendChild(image);
+      } else {
+        stageFrame = document.createElement("iframe");
+        stageFrame.src = sceneUrl(scene);
+        stageFrame.title = scene.title;
+        stageFrame.addEventListener("load", () => {
+          resizeModuleFrame();
+          syncModuleFrame(scene, displayTime);
+        }, { once: true });
+        stage.appendChild(stageFrame);
+      }
+
+      stageIndex.textContent = scene.id;
+      stageKind.textContent = scene.type;
+      detail.id.textContent = `SEGMENT ${scene.id}`;
+      detail.time.textContent = `${formatTime(scene.start)}-${formatTime(scene.end)}`;
+      detail.title.textContent = scene.title;
+      detail.task.textContent = scene.cue;
+      detail.subtitle.textContent = scene.subtitle;
+      detail.type.textContent = scene.type;
+      detail.source.textContent = scene.source;
+      detail.motion.textContent = scene.motion;
+      updateNote(scene);
+      renderTabs(scene.id);
+      renderTrack(scene.id);
+    }
+
+    function drawClockFrame() {
+      if (!stageCanvas || !stageCanvasContext || clock.readyState < 2 || !clock.videoWidth || !clock.videoHeight) return;
+      if (stageCanvas.width !== clock.videoWidth || stageCanvas.height !== clock.videoHeight) {
+        stageCanvas.width = clock.videoWidth;
+        stageCanvas.height = clock.videoHeight;
+      }
+      try {
+        stageCanvasContext.clearRect(0, 0, stageCanvas.width, stageCanvas.height);
+        stageCanvasContext.drawImage(clock, 0, 0, stageCanvas.width, stageCanvas.height);
+      } catch (_) {}
+    }
+
+    function syncClockTo(time) {
+      const target = Math.max(0, Math.min(totalDuration, Number(time || 0)));
+      return new Promise(resolve => {
+        if (clock.readyState < 1) {
+          clock.addEventListener("loadedmetadata", () => syncClockTo(target).then(resolve), { once: true });
+          return;
+        }
+        const done = () => {
+          drawClockFrame();
+          resolve();
+        };
+        if (Math.abs(clock.currentTime - target) <= .08) {
+          done();
+          return;
+        }
+        const timeout = window.setTimeout(done, 1800);
+        clock.addEventListener("seeked", () => {
+          window.clearTimeout(timeout);
+          done();
+        }, { once: true });
+        try { clock.currentTime = target; } catch (_) { done(); }
+      });
+    }
+
+    function stepForScene(scene, time) {
+      if (scene.stepCues && scene.stepCues.length) {
+        let step = scene.stepCues[0].step || 0;
+        for (const cue of scene.stepCues) {
+          if (time >= cue.at) step = cue.step;
+          else break;
+        }
+        return step;
+      }
+      const progress = Math.max(0, Math.min(1, (time - scene.start) / Math.max(.1, scene.end - scene.start)));
+      return Math.min((scene.steps || 1) - 1, Math.floor(progress * (scene.steps || 1)));
+    }
+
+    function syncModuleFrame(scene, time) {
+      if (!(scene.kind === "module" || scene.kind === "iframe") || !stageFrame || !stageFrame.contentWindow) return;
+      const step = stepForScene(scene, time);
+      try { stageFrame.contentWindow.__VIDEO_CURRENT_TIME__ = time; } catch (_) {}
+      stageFrame.contentWindow.postMessage({ type: "set-step", step, time }, "*");
+    }
+
+    function syncStage(time) {
+      displayTime = Math.max(0, Math.min(totalDuration, Number(time || 0)));
+      time = displayTime;
+      const scene = activeSceneAt(time);
+      renderStage(scene);
+      stageCue.textContent = dynamicCue(scene, time);
+      renderTranscript(scene, time);
+      movePlayhead(time);
+      scrubber.value = time;
+      timeNow.textContent = formatTime(time);
+
+      if (scene.kind === "video") drawClockFrame();
+      syncModuleFrame(scene, time);
+      updateCueNodes(scene, time);
+    }
+
+    function tick() {
+      const time = !clock.paused && clock.readyState >= 1 ? clock.currentTime : displayTime;
+      syncStage(time);
+      raf = requestAnimationFrame(tick);
+    }
+
+    function seekTo(time) {
+      const nextTime = Math.max(0, Math.min(totalDuration, Number(time || 0)));
+      displayTime = nextTime;
+      syncClockTo(nextTime);
+      syncStage(nextTime);
+    }
+
+    function getInitialTime() {
+      const match = String(location.hash || "").match(/t=([0-9.]+)/);
+      if (!match) return scenes[0].start;
+      const value = Number(match[1]);
+      return Number.isFinite(value) ? value : scenes[0].start;
+    }
+
+    function renderTabs(activeId) {
+      segmentTabs.innerHTML = "";
+      for (const scene of scenes) {
+        const button = document.createElement("button");
+        button.className = "tab";
+        if (scene.id === activeId) button.classList.add("active");
+        button.innerHTML = `
+          <span class="tab-index">${scene.id}</span>
+          <span class="tab-label">${scene.title}</span>
+        `;
+        button.addEventListener("click", () => seekTo(scene.start + .01));
+        segmentTabs.appendChild(button);
+      }
+    }
+
+    function renderRuler() {
+      ruler.innerHTML = "";
+      const marks = [0, totalDuration * .25, totalDuration * .5, totalDuration * .75, totalDuration];
+      for (const mark of marks) {
+        const span = document.createElement("span");
+        span.textContent = formatTime(mark);
+        ruler.appendChild(span);
+      }
+    }
+
+    function renderTrack(activeId) {
+      blocks.innerHTML = "";
+      scenes.forEach((scene, index) => {
+        const block = document.createElement("div");
+        block.className = "block";
+        if (scene.id === activeId) block.classList.add("active");
+        const left = (scene.start / totalDuration) * 100;
+        const width = ((scene.end - scene.start) / totalDuration) * 100;
+        block.style.left = `${left}%`;
+        block.style.width = `${width}%`;
+        block.style.background = CLIP_COLORS[index % CLIP_COLORS.length];
+        block.innerHTML = `<span>${scene.id} ${scene.title}</span>`;
+        blocks.appendChild(block);
+      });
+      renderCueNodes();
+    }
+
+    function renderCueNodes() {
+      cueNodes.innerHTML = "";
+      for (const scene of scenes) {
+        if (scene.stepCues && scene.stepCues.length) {
+          for (const cue of scene.stepCues) {
+            const node = document.createElement("div");
+            node.className = "cue-node";
+            node.dataset.scene = scene.id;
+            node.dataset.step = String(cue.step);
+            node.dataset.at = String(cue.at);
+            node.style.left = `${(cue.at / totalDuration) * 100}%`;
+            cueNodes.appendChild(node);
+          }
+        } else if ((scene.steps || 1) > 1) {
+          for (let step = 0; step < scene.steps; step += 1) {
+            const at = scene.start + ((scene.end - scene.start) * step) / scene.steps;
+            const node = document.createElement("div");
+            node.className = "cue-node";
+            node.dataset.scene = scene.id;
+            node.dataset.step = String(step);
+            node.style.left = `${(at / totalDuration) * 100}%`;
+            cueNodes.appendChild(node);
+          }
+        }
+      }
+    }
+
+    function updateCueNodes(scene, time) {
+      const activeStep = stepForScene(scene, time);
+      const activeCue = currentStepCue(scene, time);
+      document.querySelectorAll(".cue-node").forEach(node => {
+        const isCueMatch = activeCue && node.dataset.at && Number(node.dataset.at) === activeCue.at;
+        const isStepMatch = !activeCue && Number(node.dataset.step) === activeStep;
+        node.classList.toggle("active", node.dataset.scene === scene.id && (isCueMatch || isStepMatch));
+      });
+    }
+
+    function movePlayhead(time) {
+      playhead.style.left = `${(time / totalDuration) * 100}%`;
+    }
+
+    playButton.addEventListener("click", async () => {
+      if (clock.paused) {
+        await syncClockTo(displayTime);
+        await clock.play();
+        playButton.textContent = "暂停";
+      } else {
+        clock.pause();
+        playButton.textContent = "播放";
+      }
+    });
+
+    function timeFromTrackPointer(event) {
+      const rect = track.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      return progress * totalDuration;
+    }
+
+    function scrubToPointer(event) {
+      seekTo(timeFromTrackPointer(event));
+    }
+
+    function beginScrub(event) {
+      isScrubbing = true;
+      resumeAfterScrub = !clock.paused;
+      clock.pause();
+      event.preventDefault();
+      scrubToPointer(event);
+    }
+
+    function moveScrub(event) {
+      if (!isScrubbing) return;
+      event.preventDefault();
+      scrubToPointer(event);
+    }
+
+    function endScrub() {
+      if (!isScrubbing) return;
+      isScrubbing = false;
+      if (resumeAfterScrub) syncClockTo(displayTime).then(() => clock.play().catch(() => {}));
+      resumeAfterScrub = false;
+    }
+
+    scrubber.addEventListener("input", () => seekTo(Number(scrubber.value)));
+    track.addEventListener("pointerdown", event => {
+      if (event.button !== undefined && event.button !== 0) return;
+      try { track.setPointerCapture?.(event.pointerId); } catch (_) {}
+      beginScrub(event);
+    });
+    track.addEventListener("pointermove", event => {
+      moveScrub(event);
+    });
+    function finishScrub(event) {
+      try { track.releasePointerCapture?.(event.pointerId); } catch (_) {}
+      endScrub();
+    }
+    track.addEventListener("pointerup", finishScrub);
+    track.addEventListener("pointercancel", finishScrub);
+    track.addEventListener("mousedown", event => {
+      if (event.button !== 0) return;
+      beginScrub(event);
+    });
+    window.addEventListener("mousemove", moveScrub);
+    window.addEventListener("mouseup", endScrub);
+    track.addEventListener("click", scrubToPointer);
+
+    volume.addEventListener("input", () => {
+      clock.volume = Number(volume.value);
+    });
+
+    document.querySelectorAll(".speed-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        const rate = Number(button.dataset.speed);
+        clock.playbackRate = rate;
+        document.querySelectorAll(".speed-btn").forEach(item => item.classList.toggle("active", item === button));
+      });
+    });
+
+    segmentNote.addEventListener("input", () => {
+      const scene = currentScene || scenes[0];
+      noteState[scene.id] = segmentNote.value;
+      saveNoteState();
+    });
+
+    clock.addEventListener("play", () => { playButton.textContent = "暂停"; });
+    clock.addEventListener("pause", () => {
+      playButton.textContent = "播放";
+    });
+    clock.addEventListener("loadedmetadata", () => seekTo(displayTime || getInitialTime()), { once: true });
+    clock.addEventListener("loadeddata", drawClockFrame);
+    clock.addEventListener("seeked", drawClockFrame);
+
+    window.addEventListener("keydown", event => {
+      const tag = document.activeElement?.tagName;
+      if (tag === "TEXTAREA" || tag === "INPUT") return;
+      if (event.code === "Space") {
+        event.preventDefault();
+        playButton.click();
+      }
+      if (event.key === "ArrowLeft") seekTo((clock.currentTime || 0) - 1);
+      if (event.key === "ArrowRight") seekTo((clock.currentTime || 0) + 1);
+    });
+
+    renderRuler();
+    renderTabs(scenes[0].id);
+    renderTrack(scenes[0].id);
+    seekTo(getInitialTime());
+    tick();
+  </script>
+</body>
+</html>

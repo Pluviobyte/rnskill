@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小黑漫画 SVG 动效样张</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  color-scheme: light;
+  --ink: #171717;
+  --muted: #6b6b6b;
+  --red: #d63a30;
+  --blue: #386fc2;
+  --orange: #ef6b1f;
+  --paper: #fff;
+  --line: #e7e0d5;
+}
+* { box-sizing: border-box; }
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #f6f4ef;
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+}
+main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 22px;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 760;
+}
+.note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+}
+button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffaf2;
+  padding: 0 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+button.active,
+button:hover {
+  border-color: var(--orange);
+  color: #9d3b08;
+}
+.frame {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  overflow: hidden;
+}
+svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #fff;
+}
+.line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.thin {
+  stroke-width: 2;
+}
+.soft {
+  stroke: rgba(23, 23, 23, .62);
+}
+.orange {
+  stroke: var(--orange);
+}
+.red {
+  stroke: var(--red);
+}
+.blue {
+  stroke: var(--blue);
+}
+.fill-white {
+  fill: #fff;
+}
+.fill-black {
+  fill: #050505;
+}
+.hand-text {
+  font-family: "Kaiti SC", "STKaiti", "PingFang SC", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.text-red {
+  fill: var(--red);
+}
+.text-blue {
+  fill: var(--blue);
+}
+.text-ink {
+  fill: var(--ink);
+}
+.small {
+  font-size: 24px;
+}
+.medium {
+  font-size: 32px;
+}
+.paper {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.draw {
+  stroke-dasharray: var(--len, 1);
+  stroke-dashoffset: var(--len, 1);
+}
+.scribble {
+  opacity: .92;
+}
+.motion-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (max-width: 760px) {
+  main { padding: 14px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <div>
+      <h1>小黑漫画 SVG 动效样张</h1>
+      <p class="note">把生图思路拆成可控 SVG 层：传送带、纸张、小黑、箱子、断点、批注都能单独动。</p>
+    </div>
+    <div class="controls">
+      <button id="play" class="active" type="button">播放</button>
+      <button id="pause" type="button">暂停</button>
+      <button id="static" type="button">静态审核</button>
+    </div>
+  </header>
+
+  <section class="frame">
+    <svg id="scene" viewBox="0 0 1600 900" aria-label="小黑漫画 SVG 动效样张">
+      <defs>
+        <marker id="orangeArrow" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+          <path d="M2 3L17 10L2 17Z" fill="#ef6b1f"></path>
+        </marker>
+        <marker id="redArrow" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+          <path d="M2 3L17 10L2 17Z" fill="#d63a30"></path>
+        </marker>
+      </defs>
+
+      <rect width="1600" height="900" fill="#fff"></rect>
+
+      <g id="annotations" class="scribble">
+      <g id="annTitle" class="annotation">
+        <text class="hand-text text-red medium" x="765" y="128">两个断点</text>
+        <path class="line red draw" d="M755 145C800 138 855 139 912 146"></path>
+      </g>
+      <g id="annBefore" class="annotation">
+        <text class="hand-text text-blue small" x="195" y="324">写之前</text>
+        <path class="line orange draw" marker-end="url(#orangeArrow)" d="M185 345C245 342 300 344 355 345"></path>
+      </g>
+      <g id="annAfter" class="annotation">
+        <text class="hand-text text-blue small" x="1110" y="324">写完之后</text>
+        <path class="line orange draw" marker-end="url(#orangeArrow)" d="M1100 345C1165 342 1224 344 1280 345"></path>
+      </g>
+      <g id="annDry" class="annotation">
+        <text class="hand-text text-red small" x="455" y="655">素材枯了</text>
+        <path class="line red draw" marker-end="url(#redArrow)" d="M540 635C560 618 574 594 584 570"></path>
+      </g>
+      <g id="annNoBridge" class="annotation">
+        <text class="hand-text text-red small" x="1275" y="476">没承接</text>
+        <path class="line red draw" marker-end="url(#redArrow)" d="M1294 488C1270 502 1248 520 1224 540"></path>
+      </g>
+      </g>
+
+      <g id="beltLeft">
+        <path class="line" d="M80 520C240 510 410 515 590 520"></path>
+        <path class="line" d="M80 565C240 555 410 560 590 565"></path>
+        <path class="line" d="M80 520L80 565"></path>
+        <path class="line" d="M590 520L590 565"></path>
+        <g class="rollers">
+          <circle class="line fill-white roller" cx="150" cy="543" r="14"></circle>
+          <circle class="line fill-white roller" cx="295" cy="542" r="14"></circle>
+          <circle class="line fill-white roller" cx="445" cy="543" r="14"></circle>
+          <circle class="line fill-white roller" cx="565" cy="543" r="14"></circle>
+          <path class="line thin" d="M143 543H157M150 536V550"></path>
+          <path class="line thin" d="M288 542H302M295 535V549"></path>
+          <path class="line thin" d="M438 543H452M445 536V550"></path>
+          <path class="line thin" d="M558 543H572M565 536V550"></path>
+        </g>
+      </g>
+
+      <g id="paperStack" class="motion-layer">
+        <path class="paper" d="M92 478L162 463L220 482L150 498Z"></path>
+        <path class="paper" d="M105 448L178 436L238 458L160 474Z"></path>
+        <path class="paper" d="M215 482L286 466L342 485L272 502Z"></path>
+        <path class="paper" d="M225 450L300 438L360 460L284 477Z"></path>
+      </g>
+
+      <g id="flyingPapers">
+        <path class="paper fly-paper" d="M0 0L34 -6L44 20L10 28Z"></path>
+        <path class="paper fly-paper" d="M0 0L30 -11L42 12L13 25Z"></path>
+        <path class="paper fly-paper" d="M0 0L36 -3L40 26L3 22Z"></path>
+      </g>
+
+      <g id="breakOne" class="motion-layer">
+        <path class="line" d="M590 506C603 518 610 536 606 560"></path>
+        <path class="line" d="M606 560C598 578 574 583 558 571"></path>
+      </g>
+
+      <g id="xiaohei" class="motion-layer">
+        <path class="fill-black" d="M654 412C690 378 749 385 773 429C792 464 784 536 759 567C730 603 675 598 650 560C626 522 625 440 654 412Z"></path>
+        <circle cx="690" cy="469" r="9" fill="#fff"></circle>
+        <circle cx="735" cy="471" r="9" fill="#fff"></circle>
+        <path id="leftArm" class="line" d="M662 433C640 397 620 370 608 330"></path>
+        <path id="rightArm" class="line" d="M763 435C785 398 801 365 812 329"></path>
+        <path class="line" d="M675 590C668 632 660 660 650 694"></path>
+        <path class="line" d="M742 590C746 630 752 660 764 696"></path>
+      </g>
+
+      <g id="box" class="motion-layer">
+        <path class="paper" d="M610 260L808 258L838 335L588 338Z"></path>
+        <path class="paper" d="M610 260L642 210L792 207L808 258Z"></path>
+        <path class="paper" d="M808 258L792 207L828 254L838 335Z"></path>
+        <text class="hand-text text-ink small" x="675" y="300">素材箱</text>
+      </g>
+
+      <g id="looseAroundBox">
+        <path class="paper loose" d="M530 390L560 374L580 402L548 417Z"></path>
+        <path class="paper loose" d="M585 435L625 425L637 455L598 466Z"></path>
+        <path class="paper loose" d="M820 380L860 368L875 398L833 412Z"></path>
+        <path class="paper loose" d="M535 485L577 470L590 502L548 517Z"></path>
+      </g>
+
+      <g id="beltRight">
+        <path class="line" d="M720 520C900 510 1062 515 1200 520"></path>
+        <path class="line" d="M720 565C900 555 1062 560 1200 565"></path>
+        <path class="line" d="M720 520L720 565"></path>
+        <path class="line" d="M1200 520L1200 565"></path>
+        <circle class="line fill-white roller" cx="815" cy="543" r="14"></circle>
+        <circle class="line fill-white roller" cx="965" cy="542" r="14"></circle>
+        <circle class="line fill-white roller" cx="1120" cy="543" r="14"></circle>
+        <path class="line thin" d="M808 543H822M815 536V550"></path>
+        <path class="line thin" d="M958 542H972M965 535V549"></path>
+        <path class="line thin" d="M1113 543H1127M1120 536V550"></path>
+      </g>
+
+      <g id="contentCard" class="motion-layer">
+        <path class="paper" d="M0 0L86 -2L92 54L5 58Z"></path>
+        <text class="hand-text text-ink small" x="20" y="37">内容</text>
+      </g>
+
+      <g id="gapTwo" class="motion-layer">
+        <path class="line" d="M1216 522C1236 514 1260 514 1280 522"></path>
+        <path class="line" d="M1218 563C1236 572 1260 572 1282 563"></path>
+      </g>
+
+      <g id="fallingCard" class="motion-layer">
+        <path class="paper" d="M0 0L78 -8L96 46L18 62Z"></path>
+        <text class="hand-text text-ink small" x="20" y="35">内容</text>
+      </g>
+
+      <g id="pit">
+        <ellipse class="line fill-white" cx="1370" cy="710" rx="150" ry="34"></ellipse>
+        <path class="fill-black" d="M1304 706C1342 682 1410 686 1438 714C1408 738 1338 737 1304 706Z"></path>
+        <circle cx="1370" cy="716" r="7" fill="#fff"></circle>
+        <circle cx="1405" cy="715" r="7" fill="#fff"></circle>
+        <path id="pitHand" class="line" d="M1322 702C1298 655 1278 616 1254 580"></path>
+      </g>
+
+      <g id="impactLines">
+        <path class="line thin soft draw" d="M1268 596L1244 568"></path>
+        <path class="line thin soft draw" d="M1290 584L1278 548"></path>
+        <path class="line thin soft draw" d="M1312 592L1330 562"></path>
+      </g>
+    </svg>
+  </section>
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script>
+const timeline = gsap.timeline({ repeat: -1, repeatDelay: 1.1, defaults: { ease: 'power2.out' } });
+
+function prepDraw(selector) {
+  document.querySelectorAll(selector).forEach(path => {
+    const len = path.getTotalLength();
+    path.style.setProperty('--len', len);
+  });
+}
+
+function placeFlyingPapers() {
+  const points = [
+    { x: 430, y: 410, r: -18 },
+    { x: 500, y: 450, r: 14 },
+    { x: 570, y: 400, r: -8 }
+  ];
+  gsap.set('.fly-paper', {
+    x: i => points[i].x,
+    y: i => points[i].y,
+    rotation: i => points[i].r,
+    transformOrigin: '50% 50%',
+    opacity: 0
+  });
+}
+
+function setup() {
+  prepDraw('.draw');
+  placeFlyingPapers();
+  gsap.set('#contentCard', { x: 770, y: 466, transformOrigin: '50% 50%' });
+  gsap.set('#fallingCard', { x: 1262, y: 552, rotation: 26, transformOrigin: '50% 50%', opacity: 0 });
+  gsap.set(['#box', '#xiaohei', '#paperStack'], { opacity: 1 });
+  gsap.set(['#annTitle', '#annBefore', '#annAfter', '#annDry', '#annNoBridge'], { opacity: 0 });
+  gsap.set(['#beltRight', '#gapTwo', '#pit'], { opacity: 0, y: 18 });
+  gsap.set(['#looseAroundBox', '#contentCard', '#impactLines'], { opacity: 0 });
+  gsap.set('.draw', { strokeDashoffset: i => document.querySelectorAll('.draw')[i].getTotalLength() });
+  ['xiaohei', 'looseAroundBox', 'box', 'annotations'].forEach(id => {
+    document.getElementById('scene').appendChild(document.getElementById(id));
+  });
+}
+
+setup();
+
+function revealAnnotation(group, at) {
+  timeline
+    .to(group, { opacity: 1, duration: .1 }, at)
+    .fromTo(`${group} .draw`, {
+      strokeDashoffset: (i, target) => target.getTotalLength()
+    }, {
+      strokeDashoffset: 0,
+      duration: .38,
+      stagger: .06
+    }, at + .04)
+    .from(`${group} text`, { opacity: 0, y: 8, duration: .22, stagger: .04 }, at + .02);
+}
+
+timeline
+  .addLabel('context', 0)
+  .from('#beltLeft', { opacity: 0, y: 16, duration: .45 }, 0)
+  .from('#xiaohei', { opacity: 0, scale: .9, y: 18, duration: .45 }, .12)
+  .from('#box', { opacity: 0, y: -28, rotation: -2, duration: .5 }, .22)
+  .from('#paperStack', { opacity: 0, x: -120, duration: .45 }, .45)
+  .addLabel('input', .82)
+  .to('#paperStack', { x: 220, duration: 1.1, ease: 'none' }, .82)
+  .to('#beltLeft .roller', { rotation: 250, transformOrigin: '50% 50%', duration: 1.1, ease: 'none' }, .82)
+  .addLabel('first-break', 1.65)
+  .to('#box', { y: -8, rotation: -1.5, duration: .35, yoyo: true, repeat: 1 }, 1.65)
+  .to('#xiaohei', { y: -8, duration: .3, yoyo: true, repeat: 1 }, 1.65)
+  .to('#looseAroundBox', { opacity: 1, duration: .18 }, 1.72)
+  .to('.fly-paper', {
+    opacity: 1,
+    x: i => [485, 565, 650][i],
+    y: i => [382, 430, 372][i],
+    rotation: i => [-8, -22, 16][i],
+    duration: .62,
+    stagger: .08
+  }, 1.78)
+  .addLabel('after-writing', 2.65)
+  .to(['#beltRight', '#gapTwo', '#pit'], { opacity: 1, y: 0, duration: .42, stagger: .08 }, 2.65)
+  .fromTo('#contentCard', { opacity: 0, x: 770, y: 482 }, { opacity: 1, x: 770, y: 466, duration: .28 }, 3.12)
+  .to('#contentCard', { x: 1085, duration: 1.05, ease: 'none' }, 3.38)
+  .to('#beltRight .roller', { rotation: 300, transformOrigin: '50% 50%', duration: 1.05, ease: 'none' }, 3.38)
+  .addLabel('second-break', 4.32)
+  .to('#contentCard', { opacity: 0, duration: .1 }, 4.32)
+  .set('#fallingCard', { opacity: 1, x: 1262, y: 552, rotation: 26 }, 4.32)
+  .to('#fallingCard', { x: 1340, y: 647, rotation: 48, duration: .58, ease: 'power2.in' }, 4.32)
+  .to('#impactLines', { opacity: 1, duration: .1 }, 4.72)
+  .fromTo('#impactLines .draw', {
+    strokeDashoffset: (i, target) => target.getTotalLength()
+  }, {
+    strokeDashoffset: 0,
+    duration: .22,
+    stagger: .04
+  }, 4.74)
+  .to('#pitHand', { rotation: -10, transformOrigin: '100% 100%', duration: .18, yoyo: true, repeat: 3 }, 4.76)
+  .to('#fallingCard', { opacity: 0, y: '+=30', duration: .24 }, 5.05)
+  .addLabel('summary', 5.25)
+  .to('#xiaohei', { y: 3, rotation: .8, duration: .25, yoyo: true, repeat: 3 }, 5.28);
+
+revealAnnotation('#annBefore', .58);
+revealAnnotation('#annDry', 2.08);
+revealAnnotation('#annAfter', 2.88);
+revealAnnotation('#annNoBridge', 4.84);
+revealAnnotation('#annTitle', 5.28);
+
+document.getElementById('play').addEventListener('click', () => {
+  timeline.restart();
+  document.getElementById('play').classList.add('active');
+  document.getElementById('static').classList.remove('active');
+});
+
+document.getElementById('pause').addEventListener('click', () => {
+  timeline.pause();
+  document.getElementById('play').classList.remove('active');
+});
+
+document.getElementById('static').addEventListener('click', () => {
+  timeline.time(timeline.duration()).pause();
+  document.getElementById('play').classList.remove('active');
+  document.getElementById('static').classList.add('active');
+});
+
+if (new URLSearchParams(window.location.search).has('static')) {
+  timeline.time(timeline.duration()).pause();
+  document.getElementById('static').classList.add('active');
+  document.getElementById('play').classList.remove('active');
+}
+</script>
+</body>
+</html>

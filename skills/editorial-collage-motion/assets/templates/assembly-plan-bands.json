@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "provenance": {
+    "actual_still_provider": "codex-image-gen",
+    "actual_motion_provider": "local-ffmpeg",
+    "external_uploads": false,
+    "compatible_render": true,
+    "compatible_with": "editorial-collage-motion visual contract"
+  },
+  "scenes": [
+    {
+      "id": "scene-01-preview",
+      "duration_s": 3.0,
+      "background_hex": "#1F3FB0",
+      "mode": "bands",
+      "still": "assets/stills/scene-01-finished.png",
+      "bands": 3,
+      "entry_s": 0.72,
+      "stagger_s": 0.18,
+      "first_from": "left"
+    }
+  ]
+}

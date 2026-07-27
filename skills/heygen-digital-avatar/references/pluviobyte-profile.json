@@ -1,0 +1,45 @@
+{
+  "_comment": "Template — replace with your own HeyGen avatar profile",
+  "profile_version": 6,
+  "avatar_group": {
+    "id": "<YOUR_AVATAR_GROUP_ID>",
+    "name": "<YOUR_AVATAR_NAME>"
+  },
+  "avatar_look": {
+    "id": "<YOUR_LOOK_ID>",
+    "name": "<YOUR_LOOK_NAME>",
+    "type": "digital_twin",
+    "preferred_orientation": "landscape",
+    "source_dimensions": "1280x720"
+  },
+  "authentication": {
+    "mode": "cli_oauth",
+    "billing_type": "subscription",
+    "plan": "creator",
+    "cli": "heygen",
+    "forbidden_default": "HEYGEN_API_KEY"
+  },
+  "generation": {
+    "engine": "avatar_iii",
+    "resolution": "1080p",
+    "aspect_ratio": "16:9",
+    "output_format": "mp4"
+  },
+  "voice": {
+    "provider": "IndexTTS2",
+    "voice_id": "<YOUR_VOICE_ID>",
+    "reference_wav": "<PATH_TO_YOUR_REFERENCE_WAV>",
+    "fallback_allowed": false
+  },
+  "default_layout": {
+    "name": "circle_bottom_left",
+    "crop_preset": "headroom_08",
+    "circle": {
+      "content_diameter": 240,
+      "white_border": 5,
+      "accent_border": 0,
+      "accent_color": "ffffff",
+      "border_style": "plain_white"
+    }
+  }
+}

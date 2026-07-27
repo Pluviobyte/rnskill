@@ -1,0 +1,40 @@
+{
+  "id": "perspective-grid-v5",
+  "status": "recommended",
+  "approvedDate": "2026-07-13",
+  "workspaceComponentDirectory": "05-视频组件/视频背景/透视网格背景",
+  "video": {
+    "path": "perspective-grid-v5-loop.mp4",
+    "sha256": "4aa1d98d5a00d4ce0039e8ec71cdae6fe3ecccfedcfa777ddf583df0489ad4cf",
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "frames": 219,
+    "durationSeconds": 7.3
+  },
+  "motion": {
+    "loopCells": 3,
+    "gridStepPx": 61.98664,
+    "measuredSpeedPxPerSecond": 25.4723,
+    "singleCellPeriodSeconds": 2.43349,
+    "playbackRate": 1
+  },
+  "locked": [
+    "perspective geometry",
+    "horizontal phase",
+    "asymmetric color plate",
+    "center fog",
+    "motion speed",
+    "seam timing"
+  ],
+  "editable": [
+    "foreground titles",
+    "cards",
+    "illustrations",
+    "captions"
+  ],
+  "sourceProject": "05-视频组件/视频背景/透视网格背景/工程",
+  "approvedArchive": "01-内容生产/视频工作台/已制作/7月上旬/2026-07-13-透视网格背景动效",
+  "sourceNote": "组件自包含：唯一源码真身在 05-视频组件 组件目录 工程/；本 assets 为同哈希只读镜像"
+}

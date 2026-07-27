@@ -1,0 +1,4 @@
+interface:
+  display_name: "半色调拼贴动效"
+  short_description: "参考图拆解、Codex 拼贴生图与本地逐层组装动画制作"
+  default_prompt: "Use $editorial-collage-motion to analyze this reference, generate approved halftone collage stills with Codex, and assemble the motion locally."

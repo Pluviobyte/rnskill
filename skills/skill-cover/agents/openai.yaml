@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill-封面"
+  short_description: "管理封面风格、数字人换脸换字与双比例独立排版"
+  default_prompt: "使用 $skill-cover 参考这张封面，替换为当前项目数字人和新文案，制作 3:4 与 4:3 两版。"

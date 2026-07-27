@@ -1,0 +1,17 @@
+{
+  "trend": {
+    "variant": "long-title",
+    "title_lines": ["热榜背后", "是同一个方向"],
+    "subtitle_lines": ["AI 先读规则、读项目、读调用关系", "再开始干活。"]
+  },
+  "handoff": {
+    "variant": "wide-visual",
+    "title_lines": ["好工具会留下", "下一步能用的产物"],
+    "subtitle_lines": ["UI、视频、文档生成", "都在靠近自动化链路。"]
+  },
+  "close": {
+    "variant": "close",
+    "title_lines": ["别只收藏工具", "先接一段流程"],
+    "subtitle_lines": ["找出最重复、最吃上下文", "最适合交给 AI 的那一段。"]
+  }
+}

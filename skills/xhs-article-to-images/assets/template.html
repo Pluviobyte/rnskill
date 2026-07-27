@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>小红书长文转图片 · 卡片模板</title>
+<!--
+  模板说明（给排版的 Agent 看，不会出现在截图里）：
+  · 卡片基准 1080 × 1440 (3:4)，每张卡是一个 <section class="card ...">、<section class="dcard ...">、<section class="ecard ..."> 或 <section class="femcard ...">
+  · 皮肤 A/B/C 共用一套页型骨架，切换皮肤 = 替换 skin-a / skin-b / skin-c 类名
+  · 皮肤 D（夜读鎏金）是独立体系，用 dcard 系列类名；皮肤 E（雅刊）也是独立体系，用 ecard 系列类名
+  · 女性向三主题（F 粉色王国 / G 乙游夜境 / H 吉卜力）是又一独立体系，用 femcard 系列类名；
+    三主题共用 femcard 骨架，切主题 = 替换 t-pink / t-otome / t-ghibli 类名 + 同步替换卡内 .fem-deco 装饰块（t-otome 还多一个 .fem-frame 边框）
+  · 以上四套类名体系（card / dcard / ecard / femcard）绝不混用，一组图只用一套
+  · 每张卡必须有唯一 id（建议 xhs-01 / xhs-02 ...），渲染脚本按 id 命名导出 PNG
+  · 设计稿中的 <image-slot> 在这里统一是 <img class="slot-img" src="assets/xxx.jpg">
+  · 品牌区默认"泊舟的AI思考 / AI · 阅读 · 认知"+ 头像图（skill assets/avatar.png，
+    需随 CSS 一起拷到任务目录 assets/），如用户要求可整体替换
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Newsreader:ital,opsz,wght@0,18..72,400;0,18..72,500;0,18..72,600;1,18..72,400;1,18..72,500&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles-d.css" />
+<link rel="stylesheet" href="styles-e.css" />
+<link rel="stylesheet" href="styles-fem.css" />
+</head>
+<body class="render-sheet">
+<main class="sheet">
+
+<!-- ════════════════════════════════════════════════════════════
+     皮肤 A/B/C 页型库（演示内容用 skin-a，换肤只改类名）
+     ════════════════════════════════════════════════════════════ -->
+
+<!-- 封面版式一（cover-a）：纯排版超大标题，无需配图 -->
+<section class="card cover cover-a skin-a" id="demo-a-cover">
+  <div class="cv-deco"></div>
+  <div class="card-body">
+    <div class="kicker cv-kicker"><span class="eng">BOOK LIST</span> · 破局书单</div>
+    <h1 class="cv-title">一定要<em>大量读书</em><br>人生破局<br>必读 <em>30</em> 本书</h1>
+    <p class="cv-sub">迷茫、内耗、想搞钱的时候，翻开一本，总能找到答案。</p>
+    <div class="cv-deco2"><i></i><i></i><i></i></div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 封面版式二（cover-b）：上图下文，需要一张 16:9 配图 -->
+<section class="card cover cover-b skin-b" id="demo-b-cover">
+  <div class="card-body">
+    <div class="cv-hero">
+      <img class="slot-img" src="assets/cover-hero.jpg" alt="" />
+    </div>
+    <div class="cv-textwrap">
+      <h1 class="cv-title">人生破局，<br>从<em>读书</em>开始</h1>
+      <p class="cv-sub">41 岁重新出发，是书带我走上不一样的路。</p>
+      <div class="cv-tagstrip">
+        <span># 认知觉醒</span><span># 财富思维</span><span># 自我疗愈</span>
+      </div>
+    </div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 封面版式三（cover-c）：编辑感细框 + 序号，无需配图 -->
+<section class="card cover cover-c skin-c" id="demo-c-cover">
+  <div class="cv-frame"></div>
+  <div class="card-body">
+    <div class="cv-no">No.01 — 破局书单</div>
+    <h1 class="cv-title">人生最低谷<br>是书带我<br>走出来</h1>
+    <div class="cv-rule"></div>
+    <p class="cv-sub">精心整理的 30 本「人生破局书单」，分为 6 大类。</p>
+    <div class="brand-big">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 金句 / 引言页（quote） -->
+<section class="card quote skin-a" id="demo-a-quote">
+  <div class="q-panel"></div>
+  <div class="card-body">
+    <div class="q-mark">“</div>
+    <p class="q-text">世界上任何一本书都不能带给你好运，但它们能让你<b>悄悄成为你自己</b>。</p>
+    <div class="q-by">作家 赫尔曼·黑塞</div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="brand-page"><b>02</b> / 08</div>
+  </div>
+</section>
+
+<!-- 正文页（body-pg） -->
+<section class="card body-pg skin-a" id="demo-a-body">
+  <div class="card-body">
+    <div class="bp-head">
+      <div class="kicker">写在前面</div>
+      <h2 class="bp-title">41 岁，我决定<br>重新沉下心读书</h2>
+    </div>
+    <div class="bp-flow">
+      <p>我今年 41 岁，杭州姑娘。这一路，摸爬滚打，跌跌撞撞，兜兜转转，做起自媒体，<span class="hl">重新开始</span>。</p>
+      <p>曾经我也在深夜焦虑到失眠，看着同龄人顺风顺水。但现在我发现，人生最低谷，是书带给我不一样的路。</p>
+      <div class="bp-callout">书籍，也许是门槛最低、后台最硬的那条后路。</div>
+    </div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="brand-page"><b>03</b> / 08</div>
+  </div>
+</section>
+
+<!-- 清单 / 书单页（list-pg），每条 list-item 可带 li-note 补充说明 -->
+<section class="card list-pg skin-a" id="demo-a-list">
+  <div class="card-body">
+    <div class="lp-head">
+      <div class="kicker">书单 · 6 大类</div>
+    </div>
+    <div class="lp-cat">
+      <div class="bar-title">一、认知觉醒类</div>
+    </div>
+    <div class="list-item">
+      <div class="li-no">01</div>
+      <div class="li-main">
+        <div class="li-title">《清醒地活》<span class="li-by">迈克尔·辛格</span></div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="li-no">02</div>
+      <div class="li-main">
+        <div class="li-title">《5% 的改变》<span class="li-by">李松蔚</span></div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="li-no">03</div>
+      <div class="li-main">
+        <div class="li-title">《思考，快与慢》<span class="li-by">丹尼尔·卡尼曼</span></div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="li-no">04</div>
+      <div class="li-main">
+        <div class="li-title">《最优解人生》<span class="li-by">比尔·帕金斯</span></div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div class="li-no">05</div>
+      <div class="li-main">
+        <div class="li-title">《将熟悉变为陌生》<span class="li-by">鲍曼</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="brand-page"><b>04</b> / 08</div>
+  </div>
+</section>
+
+<!-- 图文混排页（media-pg）：一张 16:9 配图 + 文字 -->
+<section class="card media-pg skin-a" id="demo-a-media">
+  <div class="card-body">
+    <div class="mp-head">
+      <div class="kicker">财富思维类</div>
+      <h2 class="bp-title" style="margin-top:20px; font-size:56px;">把复利，<br>用在认知上</h2>
+    </div>
+    <div class="mp-img">
+      <img class="slot-img" src="assets/media-1.jpg" alt="" />
+    </div>
+    <div class="mp-cap">图：长文里的插图，按 16:9 自动裁切</div>
+    <div class="mp-flow">
+      <p>《纳瓦尔宝典》告诉我们：<span class="hl">真正的财富</span>，是睡后也在增长的资产，而不是用时间换来的薪水。</p>
+    </div>
+  </div>
+  <div class="brand">
+    <div class="brand-id">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="brand-page"><b>05</b> / 08</div>
+  </div>
+</section>
+
+<!-- 结尾 / 号召页（ending） -->
+<section class="card ending skin-a" id="demo-a-ending">
+  <div class="ed-deco"><i></i><i></i></div>
+  <div class="card-body">
+    <div class="kicker ed-kicker">写在最后</div>
+    <h2 class="ed-title">不需要多<br>哪怕<em>每月一本</em><br>状态真的会不一样</h2>
+    <p class="ed-sub">2026 下半年，如果你也想换个活法，试着沉下心读几本书。</p>
+    <div class="ed-cta">点赞 · 收藏 · <span>关注我</span></div>
+    <div class="brand-big">
+      <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="brand-name">泊舟的AI思考</div>
+        <div class="brand-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     皮肤 D · 夜读鎏金（独立体系，dcard 系列类名）
+     ════════════════════════════════════════════════════════════ -->
+
+<!-- D 封面：纯排版 + 巨型水印字，无需配图 -->
+<section class="dcard d-cover" id="demo-d-cover">
+  <div class="d-frame"></div>
+  <div class="d-watermark">30</div>
+  <div class="d-top">
+    <div class="d-kicker"><span class="en">NIGHT READING</span> · 夜读</div>
+    <div class="d-idx"><b>壹</b> / 陆</div>
+  </div>
+  <div class="d-body">
+    <div class="cv-en">A booklist for breaking through.</div>
+    <h1 class="cv-title">大量<em>读书</em><br>人生破局</h1>
+    <div class="cv-rule"></div>
+    <p class="cv-sub">迷茫、内耗、想搞钱的时候，翻开一本，<br>总能在书里找到答案。</p>
+    <div class="d-brand-big">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- D 金句页 -->
+<section class="dcard d-quote" id="demo-d-quote">
+  <div class="d-frame"></div>
+  <div class="d-watermark">读</div>
+  <div class="d-body">
+    <div class="q-bigmark">“</div>
+    <p class="q-text">世界上任何一本书都不能带给你好运，但它们能让你<b>悄悄成为你自己</b>。</p>
+    <div class="q-by">作家 赫尔曼·黑塞</div>
+  </div>
+  <div class="d-brand">
+    <div class="d-bid">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="d-page"><b>02</b> / 08</div>
+  </div>
+</section>
+
+<!-- D 正文页：首段可加 dropcap 类做首字下沉 -->
+<section class="dcard d-body-pg" id="demo-d-body">
+  <div class="d-frame"></div>
+  <div class="d-body">
+    <div class="d-top">
+      <div class="d-kicker"><span class="en">PROLOGUE</span> · 写在前面</div>
+    </div>
+    <div class="bp-head">
+      <h2 class="bp-title">41 岁，我决定<br>重新沉下心读书</h2>
+    </div>
+    <div class="bp-flow">
+      <p class="dropcap">我今年 41 岁，杭州姑娘。这一路摸爬滚打、跌跌撞撞，做起自媒体，<span class="hl">重新开始</span>。</p>
+      <p>曾经我也在深夜焦虑到失眠，看着同龄人顺风顺水。但现在我发现，人生最低谷，是书带我走上不一样的路。</p>
+      <div class="bp-callout">书籍，也许是门槛最低、后台最硬的那条后路。</div>
+    </div>
+  </div>
+  <div class="d-brand">
+    <div class="d-bid">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="d-page"><b>03</b> / 08</div>
+  </div>
+</section>
+
+<!-- D 清单页 -->
+<section class="dcard d-list" id="demo-d-list">
+  <div class="d-frame"></div>
+  <div class="d-body">
+    <div class="d-top">
+      <div class="d-kicker"><span class="en">CHAPTER I</span> · 认知觉醒</div>
+      <div class="d-idx"><b>06</b> 类</div>
+    </div>
+    <div class="lp-head"><div class="lp-title">一、认知觉醒类</div></div>
+    <div class="d-li">
+      <div class="li-no">01</div>
+      <div><span class="li-t">《清醒地活》</span><span class="li-by">迈克尔·辛格</span></div>
+    </div>
+    <div class="d-li">
+      <div class="li-no">02</div>
+      <div><span class="li-t">《5% 的改变》</span><span class="li-by">李松蔚</span></div>
+    </div>
+    <div class="d-li">
+      <div class="li-no">03</div>
+      <div><span class="li-t">《思考，快与慢》</span><span class="li-by">丹尼尔·卡尼曼</span></div>
+    </div>
+    <div class="d-li">
+      <div class="li-no">04</div>
+      <div><span class="li-t">《最优解人生》</span><span class="li-by">比尔·帕金斯</span></div>
+    </div>
+    <div class="d-li">
+      <div class="li-no">05</div>
+      <div><span class="li-t">《将熟悉变为陌生》</span><span class="li-by">鲍曼</span></div>
+    </div>
+  </div>
+  <div class="d-brand">
+    <div class="d-bid">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="d-page"><b>04</b> / 08</div>
+  </div>
+</section>
+
+<!-- D 图文混排页 -->
+<section class="dcard d-media" id="demo-d-media">
+  <div class="d-frame"></div>
+  <div class="d-body">
+    <div class="d-top">
+      <div class="d-kicker"><span class="en">CHAPTER II</span> · 财富思维</div>
+    </div>
+    <div class="mp-head">
+      <h2 class="bp-title">把复利，<br>用在认知上</h2>
+    </div>
+    <div class="mp-frame">
+      <div class="mp-img">
+        <img class="slot-img" src="assets/media-1.jpg" alt="" />
+      </div>
+    </div>
+    <div class="mp-cap">FIG. 长文里的插图 · 按 16:9 自动裁切</div>
+    <div class="mp-flow">
+      <p>《纳瓦尔宝典》告诉我们：<span class="hl">真正的财富</span>，是睡后也在增长的资产，而非用时间换来的薪水。</p>
+    </div>
+  </div>
+  <div class="d-brand">
+    <div class="d-bid">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+    <div class="d-page"><b>05</b> / 08</div>
+  </div>
+</section>
+
+<!-- D 结尾页 -->
+<section class="dcard d-ending" id="demo-d-ending">
+  <div class="d-frame"></div>
+  <div class="d-watermark">终</div>
+  <div class="d-body">
+    <div class="d-top">
+      <div class="d-kicker"><span class="en">EPILOGUE</span> · 写在最后</div>
+    </div>
+    <div style="margin-top:40px;">
+      <h2 class="ed-title">不需要多<br>哪怕<em>每月一本</em><br>状态真的会不一样</h2>
+      <p class="ed-sub">2026 下半年，如果你也想换个活法，<br>试着沉下心，读几本书。</p>
+      <div class="ed-cta">点赞 · 收藏 · 关注我 →</div>
+    </div>
+    <div class="d-brand-big">
+      <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+      <div>
+        <div class="d-name">泊舟的AI思考</div>
+        <div class="d-tag">AI · 阅读 · 认知</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     皮肤 E · 雅刊 Editorial（默认皮肤；独立体系，ecard 系列类名）
+     暖白纸 + Newsreader 高对比衬线 · 作品集编辑感 · 极简留白
+     页型 = 基础 6 种 + 长文专用 3 种（大字陈述 / 要点正文 / 三观对比）
+     ════════════════════════════════════════════════════════════ -->
+
+<!-- E 封面：大标题 + 底部横幅配图（需要一张图，约 2.6:1 宽条裁切） -->
+<section class="ecard e-cover" id="demo-e-cover">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">ISSUE 01</div>
+  </div>
+  <div class="e-body">
+    <h1 class="e-title cv-title">一定要<br><em>大量读书</em></h1>
+    <div class="e-kicker cv-kicker"><span class="sq"></span>人生破局 · 必读 30 本书</div>
+    <p class="e-lead cv-lead">迷茫、内耗、想搞钱、想做自媒体的时候，翻开一本，总能在书里找到答案。</p>
+    <div class="e-img cv-img">
+      <img class="slot-img" src="assets/cover-hero.jpg" alt="" />
+    </div>
+  </div>
+</section>
+
+<!-- E 金句页 -->
+<section class="ecard e-quote" id="demo-e-quote">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">02 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="q-mark">“</div>
+    <p class="q-text">世界上任何一本书都不能带给你好运，但它们能让你<em>悄悄成为你自己</em>。</p>
+    <div class="q-by">— 赫尔曼·黑塞</div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 大字陈述页（长文专用：用一句反转/断言做节奏停顿） -->
+<section class="ecard e-statement" id="demo-e-statement">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">03 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="e-kicker"><span class="sq"></span>写在前面</div>
+    <div style="margin-top:40px;">
+      <div class="st-big">你以为它<em>记住了</em>，<br>其实它早忘了。</div>
+      <p class="st-sub">这不是 AI 笨——是它跟人记事的方式，根本就不一样。</p>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 正文页：段落 + 引言条（bp-pull 可换成 e-note 术语注解块：
+     <div class="e-note"><span class="lab">术语</span><p>这张书桌，技术上叫<em>「上下文窗口」</em>。</p></div> -->
+<section class="ecard e-body-pg" id="demo-e-body">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">04 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="bp-head">
+      <div class="e-kicker"><span class="sq"></span>写在前面</div>
+      <h2 class="bp-title">41 岁，我决定<br>重新沉下心读书</h2>
+    </div>
+    <div class="bp-flow">
+      <p>我今年 41 岁，杭州姑娘。这一路摸爬滚打、跌跌撞撞，做起自媒体，<span class="u">重新开始</span>。</p>
+      <div class="bp-pull">人生最低谷，是书带我走上了不一样的路。</div>
+      <p>书籍，也许是门槛最低、后台最硬的那条后路。</p>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 要点正文页（长文专用：段落 + 编辑式要点列表 + 结论行） -->
+<section class="ecard e-body-pg" id="demo-e-body-points">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">05 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="bp-head" style="margin:44px 0 36px;">
+      <div class="e-kicker"><span class="sq"></span>IDEA 01 · 思路一</div>
+      <h2 class="bp-title">把旧笔记<em>揉成纸团</em></h2>
+    </div>
+    <div class="bp-flow" style="gap:26px;">
+      <p>对话快占满桌面时，系统自动把前面的内容打包，让另一个 AI 写成摘要贴回去，原文永久删除。</p>
+      <div class="e-points">
+        <div class="pt"><span class="m">01</span><span class="t">摘要会<b>丢细节</b></span></div>
+        <div class="pt"><span class="m">02</span><span class="t">原件不可逆，<b>找不回</b></span></div>
+        <div class="pt"><span class="m">03</span><span class="t">越压越糊，成了「摘要的摘要」</span></div>
+      </div>
+      <div class="e-conc">能用，但聊得越久，丢得越多。</div>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 清单页：淡灰衬线名单，.on 高亮当前项 -->
+<section class="ecard e-list" id="demo-e-list">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">06 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="lp-head">
+      <div class="lp-cat">一、认知觉醒类</div>
+      <div class="lp-arrow">→</div>
+    </div>
+    <div class="e-li on">
+      <div class="li-no">01</div>
+      <div class="li-cell">
+        <div class="li-name">清醒地活</div>
+        <div class="li-by">迈克尔·辛格</div>
+      </div>
+      <div class="li-tail">→</div>
+    </div>
+    <div class="e-li">
+      <div class="li-no">02</div>
+      <div class="li-cell">
+        <div class="li-name">5% 的改变</div>
+        <div class="li-by">李松蔚</div>
+      </div>
+    </div>
+    <div class="e-li">
+      <div class="li-no">03</div>
+      <div class="li-cell">
+        <div class="li-name">思考，快与慢</div>
+        <div class="li-by">丹尼尔·卡尼曼</div>
+      </div>
+    </div>
+    <div class="e-li">
+      <div class="li-no">04</div>
+      <div class="li-cell">
+        <div class="li-name">最优解人生</div>
+        <div class="li-by">比尔·帕金斯</div>
+      </div>
+    </div>
+    <div class="e-li">
+      <div class="li-no">05</div>
+      <div class="li-cell">
+        <div class="li-name">将熟悉变为陌生</div>
+        <div class="li-by">鲍曼</div>
+      </div>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 三观对比页（长文专用：2–3 个关键词逐行对照） -->
+<section class="ecard e-views" id="demo-e-views">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">07 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="e-kicker"><span class="sq"></span>小结</div>
+    <div style="margin-top:20px;">
+      <h2 class="bp-title" style="margin-top:0;">三种思路<br>三种<em>记忆观</em></h2>
+      <div class="vw-rows">
+        <div class="vw-row">
+          <div class="vw-k">负担</div>
+          <div><div class="vw-lab">思路一</div><div class="vw-d">太多了，得想办法压缩掉</div></div>
+        </div>
+        <div class="vw-row">
+          <div class="vw-k">资产</div>
+          <div><div class="vw-lab">思路二</div><div class="vw-d">不能丢，得好好存起来</div></div>
+        </div>
+        <div class="vw-row">
+          <div class="vw-k"><em>能力</em></div>
+          <div><div class="vw-lab">思路三</div><div class="vw-d">会存、会用，还能不断进化</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 图文混排页 -->
+<section class="ecard e-media" id="demo-e-media">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">08 / 08</div>
+  </div>
+  <div class="e-body">
+    <div class="mp-head">
+      <div class="e-kicker"><span class="sq"></span>财富思维类</div>
+      <h2 class="bp-title" style="margin-top:20px; font-size:64px;">把复利，<br>用在认知上</h2>
+    </div>
+    <div class="mp-img">
+      <img class="slot-img" src="assets/media-1.jpg" alt="" />
+    </div>
+    <div class="mp-cap">FIG. 长文里的插图 · 按 16:9 自动裁切</div>
+    <div class="mp-flow">
+      <p>《纳瓦尔宝典》告诉我们：<span class="u">真正的财富</span>，是睡后也在增长的资产，而非用时间换来的薪水。</p>
+    </div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+<!-- E 结尾页 -->
+<section class="ecard e-ending" id="demo-e-ending">
+  <div class="e-top">
+    <div class="e-brand">
+      <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+      <div class="e-wordmark">泊舟的AI思考</div>
+    </div>
+    <div class="e-idx">ISSUE 01</div>
+  </div>
+  <div class="e-body">
+    <div class="e-kicker ed-kicker"><span class="sq"></span>写在最后</div>
+    <h2 class="ed-title">哪怕<em>每月一本</em><br>状态都会不一样</h2>
+    <p class="ed-sub">2026 下半年，如果你也想换个活法，试着沉下心，读几本书。</p>
+    <div><div class="ed-cta">点赞 · 收藏 · 关注我 <span class="arr">→</span></div></div>
+  </div>
+  <div class="e-foot">
+    <div>泊舟的AI思考</div>
+    <div>AI<span class="dot"></span>阅读<span class="dot"></span>认知</div>
+  </div>
+</section>
+
+
+
+<!-- ════════════════════════════════════════════════════════════
+     女性向三主题 · F 粉色王国 / G 乙游夜境 / H 吉卜力（独立体系，femcard 系列类名）
+     三主题共用 femcard 骨架；切主题 = 换 t-pink / t-otome / t-ghibli 类名
+     + 同步替换卡内 .fem-deco 装饰块（t-otome 另含 .fem-frame 边框）
+     页型：封面 cover / 大字陈述 statement / 正文 body-pg / 编辑式清单 list
+           / 要点正文(idea) / 三观对比 views / 图文混排 media / 结尾 ending
+     ════════════════════════════════════════════════════════════ -->
+
+<!-- ────────── 女性向 · F 粉色王国（童话甜粉） · 主题类名 t-pink ────────── -->
+<section class="femcard fem-cover t-pink" id="demo-pink-cover">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 01</div>
+  </div>
+  <div class="fem-body">
+    <h1 class="fem-title cv-title">聊久了 AI<br>为什么会<em>断片</em></h1>
+    <div class="cv-kick"><div class="fem-kick"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="dc-accent" style=""><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></span>AI 记忆 · 工程师手记</div></div>
+    <p class="fem-lead cv-lead">前面刚说好的需求，聊到后面它自己改回去了。这篇用大白话讲清：AI 到底怎么记忆。</p>
+    <div class="fem-img cv-img"><img class="slot-img" src="assets/cover-hero.jpg" alt=""></div>
+  </div>
+</section>
+
+<section class="femcard fem-statement t-pink" id="demo-pink-statement">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">02 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">写在前面</div>
+    <div style="margin-top:34px">
+      <div class="st-big">你以为它<em>记住了</em>，<br>其实它早忘了。</div>
+      <p class="st-sub">这不是 AI 笨——是它跟人记事的方式，根本就不一样。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-pink" id="demo-pink-body">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">03 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head">
+      <div class="fem-kick">CHAPTER 01 · 基础认知</div>
+      <h2 class="bp-title">AI 的脑子不是硬盘<br>是<em>一张书桌</em></h2>
+    </div>
+    <div class="bp-flow">
+      <p>你说的每句话、它回的每句话，都是摊在桌上的纸。<span class="hl">桌面一满，新的纸就放不下了。</span></p>
+      <div class="fem-note"><span class="lab">术语</span><p>这张书桌，技术上叫<em>「上下文窗口」</em>。</p></div>
+      <p>更要命的是，AI 没有抽屉——不在桌上的东西，对它就等于不存在。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-list t-pink" id="demo-pink-list">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">04 / 08</div>
+  </div>
+  <div class="fem-body"><div class="lp-head"><div class="lp-cat">桌面满了，怎么办？</div><div class="lp-arrow">→</div></div>
+    <div class="fem-li on"><div class="li-no">01</div><div class="li-cell"><div class="li-name">揉成纸团</div><div class="li-by">思路一 · 用「扔」</div></div><div class="li-tail">→</div></div>
+    <div class="fem-li"><div class="li-no">02</div><div class="li-cell"><div class="li-name">分层档案馆</div><div class="li-by">思路二 · 用「存」</div></div></div>
+    <div class="fem-li"><div class="li-no">03</div><div class="li-cell"><div class="li-name">按需检索</div><div class="li-by">思路三 · 用「取」</div></div></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-pink" id="demo-pink-idea">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">05 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head" style="margin:40px 0 30px">
+      <div class="fem-kick">IDEA 01 · 思路一</div>
+      <h2 class="bp-title">把旧笔记<em>揉成纸团</em></h2>
+    </div>
+    <div class="bp-flow" style="gap:22px">
+      <p>对话快满时，系统自动把前面打包成摘要贴回去，原文永久删除。</p>
+      <div class="fem-points">
+        <div class="pt"><span class="m">01</span><span class="t">摘要会<b>丢细节</b></span></div>
+        <div class="pt"><span class="m">02</span><span class="t">原件不可逆，<b>找不回</b></span></div>
+        <div class="pt"><span class="m">03</span><span class="t">越压越糊，成了「摘要的摘要」</span></div>
+      </div>
+      <div class="fem-conc">能用，但聊得越久，丢得越多。</div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-views t-pink" id="demo-pink-views">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">06 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">小结</div>
+    <div style="margin-top:14px">
+      <h2 class="bp-title" style="margin-top:0">三种思路<br>三种<em>记忆观</em></h2>
+      <div class="vw-rows">
+        <div class="vw-row"><div class="vw-k">负担</div><div><div class="vw-lab">思路一</div><div class="vw-d">太多了，得压缩掉</div></div></div>
+        <div class="vw-row"><div class="vw-k">资产</div><div><div class="vw-lab">思路二</div><div class="vw-d">不能丢，得存好</div></div></div>
+        <div class="vw-row"><div class="vw-k"><em>能力</em></div><div><div class="vw-lab">思路三</div><div class="vw-d">会存、会用，还能进化</div></div></div>
+      </div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-media t-pink" id="demo-pink-media">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">07 / 08</div>
+  </div>
+  <div class="fem-body"><div class="mp-head">
+      <div class="fem-kick">CHAPTER 02 · 为什么重要</div>
+      <h2 class="bp-title" style="margin-top:16px;font-size:58px">记忆，决定了<br>AI 能<em>走多远</em></h2>
+    </div>
+    <div class="mp-img"><img class="slot-img" src="assets/media-1.jpg" alt=""></div>
+    <div class="mp-cap">没有记忆的 AI，只是永远停在入职第一天的实习生</div>
+    <div class="mp-flow"><p>第三种思路给了它一套<span class="hl">能存、能学、能进化</span>的知识系统。</p></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-ending t-pink" id="demo-pink-ending">
+  <div class="fem-deco"><svg width="560" height="290" viewBox="0 0 520 270" fill="none" class="" style="right:-130px;top:-40px;opacity:0.85"><path d="M30 270 A 230 230 0 0 1 490 270" stroke="#FF9EC4" stroke-width="20" stroke-linecap="round"/><path d="M52 270 A 208 208 0 0 1 468 270" stroke="#FFC18E" stroke-width="20" stroke-linecap="round"/><path d="M74 270 A 186 186 0 0 1 446 270" stroke="#FFE59E" stroke-width="20" stroke-linecap="round"/><path d="M96 270 A 164 164 0 0 1 424 270" stroke="#A8E6A1" stroke-width="20" stroke-linecap="round"/><path d="M118 270 A 142 142 0 0 1 402 270" stroke="#9ED6F0" stroke-width="20" stroke-linecap="round"/><path d="M140 270 A 120 120 0 0 1 380 270" stroke="#C9A8F0" stroke-width="20" stroke-linecap="round"/></svg><svg width="230" height="142.6" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="left:-50px;top:150px;opacity:0.9"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="160" height="99.2" viewBox="0 0 200 124" fill="currentColor" class="dc-white" style="right:60px;top:430px;opacity:0.8"><path d="M48 110c-24 0-40-16-40-36s17-35 38-34c5-22 24-34 44-34 24 0 42 16 46 38 18 1 32 14 32 32 0 19-15 34-37 34z"/></svg><svg width="300" height="210" viewBox="0 0 300 210" fill="none" stroke="currentColor" stroke-width="2.2" class="dc-soft" style="left:30px;bottom:150px;opacity:0.4"><path d="M40 205V90l24-18 24 18v115M150 205V70l30-24 30 24v135M252 205V96l20-15 20 15v109"/><path d="M64 72l-10-26 20 8 20-8-10 26M180 46l-12-30 24 10 24-10-12 30M272 81l-8-22 16 7 16-7-8 22"/><path d="M20 205h270"/></svg><svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:120px;top:360px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:180px;top:330px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:70px;bottom:360px"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dc-accent2" style="right:120px;bottom:320px"><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 终</div>
+  </div>
+  <div class="fem-body">
+    <div class="fem-kick"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="dc-accent" style=""><path d="M12 0c1.2 8.4 3.4 10.8 12 12-8.6 1.2-10.8 3.6-12 12-1.2-8.4-3.4-10.8-12-12C8.6 10.8 10.8 8.4 12 0z"/></svg></span>写在最后</div>
+    <div style="margin-top:22px">
+      <h2 class="ed-title">一个<em>记事</em>的 AI<br>才值得长期合作</h2>
+      <p class="ed-sub">Agent 记忆还很早期，但方向已经清晰——未来的 AI 不只更聪明，还会更记事。</p>
+      <div><div class="ed-cta">点赞 · 收藏 · 关注我 <span class="arr">→</span></div></div>
+    </div>
+  </div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<!-- ────────── 女性向 · G 乙游夜境（暗黑浪漫，深色） · 主题类名 t-otome ────────── -->
+<section class="femcard fem-cover t-otome" id="demo-otome-cover">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 01</div>
+  </div>
+  <div class="fem-body">
+    <h1 class="fem-title cv-title">聊久了 AI<br>为什么会<em>断片</em></h1>
+    <div class="cv-kick"><div class="fem-kick"><span class="ic"><svg width="24" height="24" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style=""><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg></span>AI 记忆 · 工程师手记</div></div>
+    <p class="fem-lead cv-lead">前面刚说好的需求，聊到后面它自己改回去了。这篇用大白话讲清：AI 到底怎么记忆。</p>
+    <div class="fem-img cv-img"><img class="slot-img" src="assets/cover-hero.jpg" alt=""></div>
+  </div>
+</section>
+
+<section class="femcard fem-statement t-otome" id="demo-otome-statement">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">02 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">写在前面</div>
+    <div style="margin-top:34px">
+      <div class="st-big">你以为它<em>记住了</em>，<br>其实它早忘了。</div>
+      <p class="st-sub">这不是 AI 笨——是它跟人记事的方式，根本就不一样。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-otome" id="demo-otome-body">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">03 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head">
+      <div class="fem-kick">CHAPTER 01 · 基础认知</div>
+      <h2 class="bp-title">AI 的脑子不是硬盘<br>是<em>一张书桌</em></h2>
+    </div>
+    <div class="bp-flow">
+      <p>你说的每句话、它回的每句话，都是摊在桌上的纸。<span class="hl">桌面一满，新的纸就放不下了。</span></p>
+      <div class="fem-note"><span class="lab">术语</span><p>这张书桌，技术上叫<em>「上下文窗口」</em>。</p></div>
+      <p>更要命的是，AI 没有抽屉——不在桌上的东西，对它就等于不存在。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-list t-otome" id="demo-otome-list">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">04 / 08</div>
+  </div>
+  <div class="fem-body"><div class="lp-head"><div class="lp-cat">桌面满了，怎么办？</div><div class="lp-arrow">→</div></div>
+    <div class="fem-li on"><div class="li-no">01</div><div class="li-cell"><div class="li-name">揉成纸团</div><div class="li-by">思路一 · 用「扔」</div></div><div class="li-tail">→</div></div>
+    <div class="fem-li"><div class="li-no">02</div><div class="li-cell"><div class="li-name">分层档案馆</div><div class="li-by">思路二 · 用「存」</div></div></div>
+    <div class="fem-li"><div class="li-no">03</div><div class="li-cell"><div class="li-name">按需检索</div><div class="li-by">思路三 · 用「取」</div></div></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-otome" id="demo-otome-idea">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">05 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head" style="margin:40px 0 30px">
+      <div class="fem-kick">IDEA 01 · 思路一</div>
+      <h2 class="bp-title">把旧笔记<em>揉成纸团</em></h2>
+    </div>
+    <div class="bp-flow" style="gap:22px">
+      <p>对话快满时，系统自动把前面打包成摘要贴回去，原文永久删除。</p>
+      <div class="fem-points">
+        <div class="pt"><span class="m">01</span><span class="t">摘要会<b>丢细节</b></span></div>
+        <div class="pt"><span class="m">02</span><span class="t">原件不可逆，<b>找不回</b></span></div>
+        <div class="pt"><span class="m">03</span><span class="t">越压越糊，成了「摘要的摘要」</span></div>
+      </div>
+      <div class="fem-conc">能用，但聊得越久，丢得越多。</div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-views t-otome" id="demo-otome-views">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">06 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">小结</div>
+    <div style="margin-top:14px">
+      <h2 class="bp-title" style="margin-top:0">三种思路<br>三种<em>记忆观</em></h2>
+      <div class="vw-rows">
+        <div class="vw-row"><div class="vw-k">负担</div><div><div class="vw-lab">思路一</div><div class="vw-d">太多了，得压缩掉</div></div></div>
+        <div class="vw-row"><div class="vw-k">资产</div><div><div class="vw-lab">思路二</div><div class="vw-d">不能丢，得存好</div></div></div>
+        <div class="vw-row"><div class="vw-k"><em>能力</em></div><div><div class="vw-lab">思路三</div><div class="vw-d">会存、会用，还能进化</div></div></div>
+      </div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-media t-otome" id="demo-otome-media">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">07 / 08</div>
+  </div>
+  <div class="fem-body"><div class="mp-head">
+      <div class="fem-kick">CHAPTER 02 · 为什么重要</div>
+      <h2 class="bp-title" style="margin-top:16px;font-size:58px">记忆，决定了<br>AI 能<em>走多远</em></h2>
+    </div>
+    <div class="mp-img"><img class="slot-img" src="assets/media-1.jpg" alt=""></div>
+    <div class="mp-cap">没有记忆的 AI，只是永远停在入职第一天的实习生</div>
+    <div class="mp-flow"><p>第三种思路给了它一套<span class="hl">能存、能学、能进化</span>的知识系统。</p></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-ending t-otome" id="demo-otome-ending">
+  <div class="fem-deco"><svg width="360" height="360" viewBox="0 0 300 300" fill="none" stroke="currentColor" stroke-width="1" class="dc-soft" style="right:-90px;top:-70px;opacity:0.28"><circle cx="150" cy="150" r="140"/><circle cx="150" cy="150" r="120"/><text x="150" y="20" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XII</text><text x="215" y="37.41669750802298" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">I</text><text x="262.58330249197707" y="85.00000000000001" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">II</text><text x="280" y="150" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">III</text><text x="262.58330249197707" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IV</text><text x="215" y="262.583302491977" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">V</text><text x="150" y="280" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VI</text><text x="85.00000000000003" y="262.58330249197707" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VII</text><text x="37.41669750802296" y="215" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">VIII</text><text x="20" y="150.00000000000003" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">IX</text><text x="37.41669750802298" y="84.99999999999999" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">X</text><text x="84.99999999999994" y="37.41669750802299" font-size="14" fill="currentColor" stroke="none" text-anchor="middle" dominant-baseline="middle" font-family="Cormorant Garamond, serif">XI</text></svg><svg width="140" height="140" viewBox="0 0 120 120" fill="none" class="dc-accent" style="left:60px;top:200px;opacity:0.5"><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" fill="currentColor" opacity="0.16"/><path d="M78 12a48 48 0 1 0 30 86A40 40 0 0 1 78 12z" stroke="currentColor" stroke-width="1.2"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="left:26px;top:26px;opacity:0.7"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="180" height="180" viewBox="0 0 180 180" fill="none" stroke="currentColor" stroke-width="1.3" class="dc-accent" style="right:26px;bottom:26px;opacity:0.7;transform:rotate(180deg)"><path d="M10 10c40 0 70 6 70 40 0 18-12 30-28 30-12 0-20-8-20-18 0-8 6-14 14-14"/><path d="M10 10c0 40 6 70 40 70 18 0 30-12 30-28 0-12-8-20-18-20"/><circle cx="32" cy="32" r="4" fill="currentColor" stroke="none"/><path d="M10 50c14 2 24 8 30 18M50 10c2 14 8 24 18 30"/></svg><svg width="66" height="66" viewBox="0 0 60 60" fill="currentColor" class="dc-accent2" style="right:150px;top:330px;opacity:0.8;transform:rotate(-12deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="40" height="40" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style="left:120px;bottom:320px;opacity:0.7;transform:rotate(18deg)"><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:260px;top:250px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="left:200px;top:420px;opacity:0.7"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="dc-white" style="right:120px;bottom:420px;opacity:0.8"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg></div><div class="fem-frame"></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 终</div>
+  </div>
+  <div class="fem-body">
+    <div class="fem-kick"><span class="ic"><svg width="24" height="24" viewBox="0 0 60 60" fill="currentColor" class="dc-accent" style=""><path d="M30 30c-4-14-14-22-24-20-6 1-7 9-3 16 4 8 16 10 27 8zM30 30c4-14 14-22 24-20 6 1 7 9 3 16-4 8-16 10-27 8zM30 28c-3 12-12 20-21 22 7 4 16 1 21-8zM30 28c3 12 12 20 21 22-7 4-16 1-21-8z" opacity="0.9"/><path d="M30 22v20" stroke="currentColor" stroke-width="1.4"/></svg></span>写在最后</div>
+    <div style="margin-top:22px">
+      <h2 class="ed-title">一个<em>记事</em>的 AI<br>才值得长期合作</h2>
+      <p class="ed-sub">Agent 记忆还很早期，但方向已经清晰——未来的 AI 不只更聪明，还会更记事。</p>
+      <div><div class="ed-cta">点赞 · 收藏 · 关注我 <span class="arr">→</span></div></div>
+    </div>
+  </div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<!-- ────────── 女性向 · H 吉卜力（治愈自然） · 主题类名 t-ghibli ────────── -->
+<section class="femcard fem-cover t-ghibli" id="demo-ghibli-cover">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 01</div>
+  </div>
+  <div class="fem-body">
+    <h1 class="fem-title cv-title">聊久了 AI<br>为什么会<em>断片</em></h1>
+    <div class="cv-kick"><div class="fem-kick"><span class="ic"><svg width="22" height="22" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style=""><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></span>AI 记忆 · 工程师手记</div></div>
+    <p class="fem-lead cv-lead">前面刚说好的需求，聊到后面它自己改回去了。这篇用大白话讲清：AI 到底怎么记忆。</p>
+    <div class="fem-img cv-img"><img class="slot-img" src="assets/cover-hero.jpg" alt=""></div>
+  </div>
+</section>
+
+<section class="femcard fem-statement t-ghibli" id="demo-ghibli-statement">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">02 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">写在前面</div>
+    <div style="margin-top:34px">
+      <div class="st-big">你以为它<em>记住了</em>，<br>其实它早忘了。</div>
+      <p class="st-sub">这不是 AI 笨——是它跟人记事的方式，根本就不一样。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-ghibli" id="demo-ghibli-body">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">03 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head">
+      <div class="fem-kick">CHAPTER 01 · 基础认知</div>
+      <h2 class="bp-title">AI 的脑子不是硬盘<br>是<em>一张书桌</em></h2>
+    </div>
+    <div class="bp-flow">
+      <p>你说的每句话、它回的每句话，都是摊在桌上的纸。<span class="hl">桌面一满，新的纸就放不下了。</span></p>
+      <div class="fem-note"><span class="lab">术语</span><p>这张书桌，技术上叫<em>「上下文窗口」</em>。</p></div>
+      <p>更要命的是，AI 没有抽屉——不在桌上的东西，对它就等于不存在。</p>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-list t-ghibli" id="demo-ghibli-list">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">04 / 08</div>
+  </div>
+  <div class="fem-body"><div class="lp-head"><div class="lp-cat">桌面满了，怎么办？</div><div class="lp-arrow">→</div></div>
+    <div class="fem-li on"><div class="li-no">01</div><div class="li-cell"><div class="li-name">揉成纸团</div><div class="li-by">思路一 · 用「扔」</div></div><div class="li-tail">→</div></div>
+    <div class="fem-li"><div class="li-no">02</div><div class="li-cell"><div class="li-name">分层档案馆</div><div class="li-by">思路二 · 用「存」</div></div></div>
+    <div class="fem-li"><div class="li-no">03</div><div class="li-cell"><div class="li-name">按需检索</div><div class="li-by">思路三 · 用「取」</div></div></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-body-pg t-ghibli" id="demo-ghibli-idea">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">05 / 08</div>
+  </div>
+  <div class="fem-body"><div class="bp-head" style="margin:40px 0 30px">
+      <div class="fem-kick">IDEA 01 · 思路一</div>
+      <h2 class="bp-title">把旧笔记<em>揉成纸团</em></h2>
+    </div>
+    <div class="bp-flow" style="gap:22px">
+      <p>对话快满时，系统自动把前面打包成摘要贴回去，原文永久删除。</p>
+      <div class="fem-points">
+        <div class="pt"><span class="m">01</span><span class="t">摘要会<b>丢细节</b></span></div>
+        <div class="pt"><span class="m">02</span><span class="t">原件不可逆，<b>找不回</b></span></div>
+        <div class="pt"><span class="m">03</span><span class="t">越压越糊，成了「摘要的摘要」</span></div>
+      </div>
+      <div class="fem-conc">能用，但聊得越久，丢得越多。</div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-views t-ghibli" id="demo-ghibli-views">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">06 / 08</div>
+  </div>
+  <div class="fem-body"><div class="fem-kick">小结</div>
+    <div style="margin-top:14px">
+      <h2 class="bp-title" style="margin-top:0">三种思路<br>三种<em>记忆观</em></h2>
+      <div class="vw-rows">
+        <div class="vw-row"><div class="vw-k">负担</div><div><div class="vw-lab">思路一</div><div class="vw-d">太多了，得压缩掉</div></div></div>
+        <div class="vw-row"><div class="vw-k">资产</div><div><div class="vw-lab">思路二</div><div class="vw-d">不能丢，得存好</div></div></div>
+        <div class="vw-row"><div class="vw-k"><em>能力</em></div><div><div class="vw-lab">思路三</div><div class="vw-d">会存、会用，还能进化</div></div></div>
+      </div>
+    </div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-media t-ghibli" id="demo-ghibli-media">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">07 / 08</div>
+  </div>
+  <div class="fem-body"><div class="mp-head">
+      <div class="fem-kick">CHAPTER 02 · 为什么重要</div>
+      <h2 class="bp-title" style="margin-top:16px;font-size:58px">记忆，决定了<br>AI 能<em>走多远</em></h2>
+    </div>
+    <div class="mp-img"><img class="slot-img" src="assets/media-1.jpg" alt=""></div>
+    <div class="mp-cap">没有记忆的 AI，只是永远停在入职第一天的实习生</div>
+    <div class="mp-flow"><p>第三种思路给了它一套<span class="hl">能存、能学、能进化</span>的知识系统。</p></div></div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+<section class="femcard fem-ending t-ghibli" id="demo-ghibli-ending">
+  <div class="fem-deco"><svg width="150" height="150" viewBox="0 0 130 130" fill="none" stroke="currentColor" stroke-width="2" class="dc-accent2" style="right:70px;top:70px;opacity:0.5"><circle cx="65" cy="65" r="30"/><line x1="107" y1="65" x2="121" y2="65" stroke-linecap="round"/><line x1="101.37306695894642" y1="86" x2="113.49742261192857" y2="93" stroke-linecap="round"/><line x1="86" y1="101.37306695894642" x2="93" y2="113.49742261192856" stroke-linecap="round"/><line x1="65" y1="107" x2="65" y2="121" stroke-linecap="round"/><line x1="44.000000000000014" y1="101.37306695894642" x2="37.000000000000014" y2="113.49742261192857" stroke-linecap="round"/><line x1="28.626933041053576" y1="86" x2="16.50257738807143" y2="93" stroke-linecap="round"/><line x1="23" y1="65" x2="9" y2="65" stroke-linecap="round"/><line x1="28.626933041053576" y1="44" x2="16.502577388071437" y2="36.99999999999999" stroke-linecap="round"/><line x1="43.999999999999986" y1="28.626933041053583" x2="36.99999999999997" y2="16.502577388071444" stroke-linecap="round"/><line x1="64.99999999999999" y1="23" x2="64.99999999999999" y2="9" stroke-linecap="round"/><line x1="86" y1="28.626933041053576" x2="93" y2="16.502577388071437" stroke-linecap="round"/><line x1="101.37306695894641" y1="43.999999999999986" x2="113.49742261192856" y2="36.99999999999997" stroke-linecap="round"/></svg><svg width="280" height="140" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="left:-40px;top:180px;opacity:0.85"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="180" height="90" viewBox="0 0 240 120" fill="currentColor" class="dc-white" style="right:130px;top:380px;opacity:0.7"><path d="M40 110c-20 0-34-13-34-30 0-15 12-27 28-28 3-16 17-28 34-28 14 0 26 8 31 20 4-3 9-4 14-4 14 0 24 10 24 23 0 2 0 4-1 6 14 2 24 13 24 27 0 16-13 28-30 28z"/></svg><svg width="46" height="23" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:160px;top:300px;opacity:0.8"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="32" height="16" viewBox="0 0 44 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" class="dc-soft" style="left:230px;top:330px;opacity:0.7"><path d="M3 18C9 6 16 6 22 14 28 6 35 6 41 18"/></svg><svg width="1080" height="280" viewBox="0 0 1080 280" fill="none" class="" style="left:0px;bottom:0px" preserveAspectRatio="none"><path d="M0 280 L0 120 Q 270 30 540 110 T 1080 90 L1080 280 Z" fill="var(--accent)" opacity="0.16"/><path d="M0 280 L0 175 Q 320 100 620 165 T 1080 150 L1080 280 Z" fill="var(--accent)" opacity="0.26"/></svg><svg width="64" height="64" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style="right:60px;bottom:250px;opacity:0.5;transform:rotate(20deg)"><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></div>
+  <div class="fem-top">
+    <div class="fem-brand"><div class="fem-mono"><span>泊</span></div><div class="fem-word">泊舟的AI思考</div></div>
+    <div class="fem-idx">AI MEMORY · 终</div>
+  </div>
+  <div class="fem-body">
+    <div class="fem-kick"><span class="ic"><svg width="22" height="22" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.8" class="dc-accent" style=""><path d="M12 68C12 36 36 12 68 12 68 44 44 68 12 68z"/><path d="M20 60 56 24"/></svg></span>写在最后</div>
+    <div style="margin-top:22px">
+      <h2 class="ed-title">一个<em>记事</em>的 AI<br>才值得长期合作</h2>
+      <p class="ed-sub">Agent 记忆还很早期，但方向已经清晰——未来的 AI 不只更聪明，还会更记事。</p>
+      <div><div class="ed-cta">点赞 · 收藏 · 关注我 <span class="arr">→</span></div></div>
+    </div>
+  </div>
+  <div class="fem-foot"><div>泊舟的AI思考</div><div>AI<span class="dot"></span>记忆<span class="dot"></span>Agent</div></div>
+</section>
+
+</main>
+</body>
+</html>

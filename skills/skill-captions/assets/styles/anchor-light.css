@@ -1,0 +1,25 @@
+/* Canonical 1920x1080 reference. Scale every px value by target_height / 1080. */
+.caption-anchor-light {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  max-width: 1500px;
+  padding: 22px;
+  border: 1px solid rgba(21, 32, 42, 0.10);
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(247, 250, 251, 0.84)
+  );
+  box-shadow: 0 12px 34px rgba(64, 93, 112, 0.14);
+  color: #15202a;
+  font-family: "STHeiti Medium", "PingFang SC", sans-serif;
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: center;
+  text-shadow: none;
+  white-space: normal;
+}

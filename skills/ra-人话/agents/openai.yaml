@@ -1,0 +1,6 @@
+interface:
+  display_name: "ra-人话"
+  short_description: "中文 AI 技术文章去味精修"
+  default_prompt: "Use $ra-人话 to revise this Chinese AI technical post while preserving my judgment, details, and voice."
+policy:
+  allow_implicit_invocation: true

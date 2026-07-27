@@ -1,0 +1,426 @@
+/* ============================================================
+   小红书长文转图片 · 排版设计系统
+   卡片基准：1080 × 1440 (3:4)
+   字体：思源黑体(标题/正文) + 思源宋体(金句/编号点缀)
+   ============================================================ */
+
+:root {
+  --card-w: 1080px;
+  --card-h: 1440px;
+  --pad: 92px;
+  --sans: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --serif: "Noto Serif SC", "Songti SC", serif;
+}
+
+/* ---------- 配色皮肤 ---------- */
+/* A · 暖杏奶咖 —— 米白底 + 焦糖暖金（贴近参考） */
+.skin-a {
+  --bg: #F2EADC;
+  --surface: #FBF6EB;
+  --ink: #2B2418;
+  --ink-soft: #786E59;
+  --ink-faint: #A89E88;
+  --accent: oklch(0.60 0.095 68);
+  --accent-2: oklch(0.60 0.095 42);
+  --accent-soft: oklch(0.93 0.028 72);
+  --line: rgba(43, 36, 24, 0.12);
+}
+/* B · 雾松青 —— 燕麦灰底 + 低饱和松绿 */
+.skin-b {
+  --bg: #E9ECE4;
+  --surface: #F6F8F1;
+  --ink: #20261D;
+  --ink-soft: #5E6655;
+  --ink-faint: #9AA192;
+  --accent: oklch(0.55 0.06 168);
+  --accent-2: oklch(0.55 0.06 142);
+  --accent-soft: oklch(0.92 0.022 168);
+  --line: rgba(32, 38, 29, 0.12);
+}
+/* C · 黛墨描金 —— 象牙底 + 墨黑结构 + 细金线 */
+.skin-c {
+  --bg: #F6F3EC;
+  --surface: #FFFFFF;
+  --ink: #1A1812;
+  --ink-soft: #6F695B;
+  --ink-faint: #ABA593;
+  --accent: oklch(0.58 0.085 82);
+  --accent-2: #1A1812;
+  --accent-soft: oklch(0.94 0.024 86);
+  --line: rgba(26, 24, 18, 0.13);
+}
+
+/* ---------- 卡片骨架 ---------- */
+.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+.card * { box-sizing: border-box; }
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad);
+  position: relative;
+  z-index: 2;
+  min-height: 0;
+}
+
+/* ---------- 品牌徽标（每页固定底部） ---------- */
+.brand {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+}
+.brand-id { display: flex; align-items: center; gap: 20px; }
+.brand-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+  border: 2px solid var(--line);
+  background: var(--accent-soft);
+}
+.brand-avatar image-slot { width: 100%; height: 100%; display: block; }
+.brand-name { font-size: 31px; font-weight: 700; letter-spacing: 0.5px; line-height: 1.1; }
+.brand-tag { font-size: 22px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 2px; }
+.brand-page {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--ink-soft);
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+.brand-page b { color: var(--accent); font-size: 30px; }
+
+/* ---------- 通用零件 ---------- */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.kicker::before {
+  content: "";
+  width: 38px; height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.eng { font-family: var(--serif); }
+
+/* 强调竖条标题（清单/正文小标题） */
+.bar-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 26px;
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+.bar-title::before {
+  content: "";
+  width: 12px;
+  align-self: stretch;
+  min-height: 64px;
+  background: var(--accent);
+  border-radius: 3px;
+  flex: none;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   1 · 封面  (三套皮肤各一种版式)
+   ============================================================ */
+.cover .card-body { justify-content: center; }
+
+/* A 版式：超大标题 + 底部色块色条 */
+.cover-a .cv-kicker { margin-bottom: 40px; }
+.cover-a .cv-title {
+  font-size: 104px;
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: 1px;
+  text-wrap: balance;
+}
+.cover-a .cv-title em {
+  font-style: normal;
+  color: var(--accent);
+  position: relative;
+}
+.cover-a .cv-sub {
+  margin-top: 44px;
+  font-size: 36px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 760px;
+  text-wrap: pretty;
+}
+.cover-a .cv-deco {
+  position: absolute;
+  right: -120px; top: -120px;
+  width: 460px; height: 460px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  z-index: 0;
+}
+.cover-a .cv-deco2 {
+  position: absolute;
+  left: var(--pad); bottom: 250px;
+  display: flex; gap: 14px;
+}
+.cover-a .cv-deco2 i { width: 64px; height: 14px; border-radius: 8px; background: var(--accent); display:block; }
+.cover-a .cv-deco2 i:nth-child(2){ background: var(--accent-2); width: 30px; }
+.cover-a .cv-deco2 i:nth-child(3){ background: var(--line); width: 30px; }
+
+/* B 版式：上图下文，16:9 配图 + 标题压角 */
+.cover-b .card-body { justify-content: flex-start; padding-top: 0; }
+.cover-b .cv-hero {
+  margin: 0 calc(var(--pad) * -1);
+  width: var(--card-w);
+  height: 620px;
+  position: relative;
+  background: var(--accent-soft);
+}
+.cover-b .cv-hero image-slot { width: 100%; height: 100%; display:block; }
+.cover-b .cv-textwrap { padding-top: 60px; }
+.cover-b .cv-title {
+  font-size: 92px; font-weight: 900; line-height: 1.2; letter-spacing: 1px;
+  text-wrap: balance;
+}
+.cover-b .cv-title em { font-style: normal; color: var(--accent); }
+.cover-b .cv-sub { margin-top: 36px; font-size: 34px; line-height: 1.6; color: var(--ink-soft); }
+.cover-b .cv-tagstrip {
+  margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap;
+}
+.cover-b .cv-tagstrip span {
+  font-size: 26px; font-weight: 500;
+  padding: 12px 26px; border-radius: 40px;
+  background: var(--surface); border: 1.5px solid var(--line); color: var(--ink-soft);
+}
+
+/* C 版式：编辑感 —— 细金线框 + 序号 + 衬线副标 */
+.cover-c .cv-frame {
+  position: absolute;
+  inset: 44px;
+  border: 2px solid var(--accent);
+  z-index: 1;
+  pointer-events: none;
+}
+.cover-c .card-body { justify-content: center; padding: 130px; }
+.cover-c .cv-no {
+  font-family: var(--serif); font-weight: 700;
+  font-size: 30px; letter-spacing: 6px; color: var(--accent);
+  margin-bottom: 30px;
+}
+.cover-c .cv-title {
+  font-size: 96px; font-weight: 900; line-height: 1.22; letter-spacing: 1px;
+  text-wrap: balance;
+}
+.cover-c .cv-rule { width: 90px; height: 4px; background: var(--accent); margin: 46px 0; }
+.cover-c .cv-sub {
+  font-family: var(--serif);
+  font-size: 36px; line-height: 1.8; color: var(--ink-soft); font-weight: 500;
+  max-width: 720px;
+}
+
+/* ============================================================
+   2 · 金句 / 引言页
+   ============================================================ */
+.quote .card-body { justify-content: center; }
+.quote .q-mark {
+  font-family: var(--serif);
+  font-size: 220px;
+  line-height: 0.8;
+  color: var(--accent);
+  opacity: 0.85;
+  height: 130px;
+}
+.quote .q-text {
+  font-family: var(--serif);
+  font-size: 58px;
+  line-height: 1.62;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  text-wrap: pretty;
+}
+.quote .q-text b { color: var(--accent); font-weight: 700; }
+.quote .q-by {
+  margin-top: 56px;
+  display: flex; align-items: center; gap: 22px;
+  font-size: 32px; color: var(--ink-soft);
+}
+.quote .q-by::before { content:""; width: 56px; height: 2px; background: var(--ink-faint); }
+.quote .q-panel {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 16px; background: var(--accent);
+}
+
+/* ============================================================
+   3 · 正文页
+   ============================================================ */
+.body-pg .card-body { justify-content: flex-start; }
+.body-pg .bp-head { margin-bottom: 56px; }
+.body-pg .bp-title {
+  font-size: 60px; font-weight: 900; line-height: 1.25; letter-spacing: 1px;
+  margin-top: 22px; text-wrap: balance;
+}
+.body-pg .bp-flow { display: flex; flex-direction: column; gap: 40px; }
+.body-pg p {
+  font-size: 40px;
+  line-height: 1.92;
+  letter-spacing: 0.4px;
+  margin: 0;
+  text-wrap: pretty;
+}
+.body-pg p .hl {
+  background: linear-gradient(transparent 60%, var(--accent-soft) 60%);
+  font-weight: 700;
+  padding: 0 2px;
+}
+.body-pg .bp-callout {
+  border-left: 10px solid var(--accent);
+  background: var(--surface);
+  padding: 36px 40px;
+  border-radius: 0 16px 16px 0;
+  font-size: 38px; line-height: 1.7; color: var(--ink);
+  margin: 6px 0;
+}
+
+/* ============================================================
+   4 · 清单 / 书单页
+   ============================================================ */
+.list-pg .card-body { justify-content: flex-start; }
+.list-pg .lp-head { margin-bottom: 50px; }
+.list-pg .lp-cat { margin: 14px 0 38px; }
+.list-pg .lp-cat:first-of-type { margin-top: 6px; }
+.list-item {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  padding: 26px 0;
+  border-bottom: 1.5px solid var(--line);
+}
+.list-item:last-child { border-bottom: none; }
+.list-item .li-no {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 46px;
+  color: var(--accent);
+  flex: none;
+  width: 64px;
+  line-height: 1;
+}
+.list-item .li-main { flex: 1; }
+.list-item .li-title {
+  font-size: 42px; font-weight: 700; line-height: 1.35; letter-spacing: 0.5px;
+}
+.list-item .li-by { font-size: 30px; color: var(--ink-soft); margin-left: 10px; font-weight: 400; }
+.list-item .li-note { font-size: 30px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+
+/* ============================================================
+   5 · 图文混排页 (16:9)
+   ============================================================ */
+.media-pg .card-body { justify-content: flex-start; }
+.media-pg .mp-head { margin-bottom: 44px; }
+.media-pg .mp-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--accent-soft);
+  position: relative;
+}
+.media-pg .mp-img image-slot { width: 100%; height: 100%; display: block; }
+.media-pg .mp-cap {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 27px; color: var(--ink-soft);
+  margin-top: 22px;
+}
+.media-pg .mp-cap::before { content:""; width: 26px; height: 2px; background: var(--accent); flex:none; }
+.media-pg .mp-flow { margin-top: 46px; display: flex; flex-direction: column; gap: 34px; }
+.media-pg .mp-flow p { font-size: 38px; line-height: 1.86; margin: 0; text-wrap: pretty; }
+.media-pg .mp-flow p .hl { background: linear-gradient(transparent 60%, var(--accent-soft) 60%); font-weight: 700; }
+
+/* ============================================================
+   6 · 结尾 / 号召页
+   ============================================================ */
+.ending .card-body { justify-content: center; align-items: flex-start; }
+.ending .ed-deco {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden;
+}
+.ending .ed-deco i {
+  position: absolute; border-radius: 50%;
+}
+.ending .ed-deco i:nth-child(1){ width:520px;height:520px;background:var(--accent-soft);right:-160px;top:-140px; }
+.ending .ed-deco i:nth-child(2){ width:240px;height:240px;background:var(--accent);opacity:.16;left:-90px;bottom:240px; }
+.ending .ed-kicker { margin-bottom: 36px; }
+.ending .ed-title {
+  font-size: 88px; font-weight: 900; line-height: 1.22; letter-spacing: 1px;
+  text-wrap: balance; position: relative; z-index: 2;
+}
+.ending .ed-title em { font-style: normal; color: var(--accent); }
+.ending .ed-sub {
+  margin-top: 38px; font-size: 36px; line-height: 1.7; color: var(--ink-soft);
+  max-width: 780px; position: relative; z-index: 2; text-wrap: pretty;
+}
+.ending .ed-cta {
+  margin-top: 60px;
+  display: inline-flex; align-items: center; gap: 20px;
+  background: var(--ink); color: var(--bg);
+  font-size: 36px; font-weight: 700; letter-spacing: 1px;
+  padding: 28px 56px; border-radius: 60px;
+  position: relative; z-index: 2;
+}
+.ending .ed-cta span { color: var(--accent); }
+
+/* 大号品牌块（封面/结尾用） */
+.brand-big {
+  display: flex; align-items: center; gap: 24px;
+  margin-top: 70px; position: relative; z-index: 2;
+}
+.brand-big .brand-avatar { width: 96px; height: 96px; }
+.brand-big .brand-name { font-size: 38px; }
+.brand-big .brand-tag { font-size: 25px; margin-top: 6px; }
+
+/* ============================================================
+   Skill 静态适配补充（设计稿 JSX → 静态 HTML 所需）
+   ============================================================ */
+/* 图片槽：设计稿中的 <image-slot> 在产线模板中统一换成 <img class="slot-img"> */
+.slot-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 品牌头像里的"泊"字（设计稿中为 JSX 内联样式，这里固化为类） */
+.brand-avatar { display: flex; align-items: center; justify-content: center; }
+.brand-avatar span {
+  font-family: var(--serif); font-weight: 700;
+  font-size: 38px; color: var(--accent); line-height: 1;
+}
+.brand-big .brand-avatar span { font-size: 50px; }
+
+/* 渲染页骨架：深色画布上垂直排列所有卡片，方便人工预览和逐张截图 */
+body.render-sheet { margin: 0; background: #1a1a1a; }
+body.render-sheet .sheet {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 48px; padding: 48px 0;
+}

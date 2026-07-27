@@ -1,6 +1,0 @@
-interface:
-  display_name: "人话"
-  short_description: "中文 AI 技术文章去味精修"
-  default_prompt: "Use $rn-renhua to revise this Chinese AI technical post while preserving my judgment, details, and voice."
-policy:
-  allow_implicit_invocation: true

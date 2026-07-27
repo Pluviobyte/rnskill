@@ -1,0 +1,27 @@
+{
+  "schema_version": 2,
+  "default_style": "shizhan",
+  "styles": {
+    "shizhan": {
+      "display_name": "实战风格",
+      "aliases": ["实战", "实战风格", "shizhan"],
+      "reference_doc": "references/style-shizhan.md",
+      "identity": "assets/shared/avatar/black-t-identity.png",
+      "default_gesture": "zhengzuo",
+      "allowed_gestures": ["zhengzuo", "tanshou"],
+      "prompt_core": "Preserve the premium near-black and deep-crimson technology background, layered warm paper, dark-red backing paper, thin red rules, restrained brush accents and hard-edged editorial AI-testing mood.",
+      "ratios": {
+        "3:4": {
+          "base": "assets/styles/shizhan/base/base-clean-3x4.png",
+          "style_reference": "assets/styles/shizhan/style-reference/style-reference-3x4.png",
+          "composition": "Exact 3:4 portrait. Anchor the presenter at lower-left at roughly 34–40% of canvas width. Keep the paper across the center and right. Use 3–4 compact title lines."
+        },
+        "4:3": {
+          "base": "assets/styles/shizhan/base/base-clean-4x3.png",
+          "style_reference": "assets/styles/shizhan/style-reference/style-reference-4x3.png",
+          "composition": "Exact 4:3 landscape. Anchor the presenter at lower-left at roughly 28–34% of canvas width. Keep the paper expanded horizontally. Use 2–3 compact title lines."
+        }
+      }
+    }
+  }
+}

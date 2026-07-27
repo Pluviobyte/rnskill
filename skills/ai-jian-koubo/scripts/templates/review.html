@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>剪口播 · 审核稿</title>
+  <script src="/lib/compute_keeps.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Surface — 四层叠放 */
+      --ink:    #07070A;
+      --ink-2:  #111114;
+      --ink-3:  #18181C;
+      --ink-4:  #22222A;
+      --plate:  #F2EBDD;
+      --line:   #24242A;
+      --line-2: #34343C;
+
+      --paper-100: #F8F4EA;
+      --paper-200: #E8E2D2;
+      --paper-300: #C9C2B1;
+      --paper-400: #9C9586;
+      --paper-500: #6B6557;
+      --paper-600: #3F3B33;
+
+      --signal:      #2540FF;
+      --signal-deep: #1A2BD9;
+      --signal-soft: #6B7DFF;
+      --signal-wash: rgba(37,64,255,.16);
+
+      --ember:      #FF7A4D;
+      --ember-deep: #E64518;
+      --ember-wash: rgba(255,122,77,.14);
+
+      --danger:      #F87171;
+      --danger-wash: rgba(248,113,113,.16);
+      --warning:     #FACC15;
+
+      --display: "Anton", "Noto Sans SC", sans-serif;
+      --sans:    "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+
+      --r-input: 4px;
+      --r-badge: 8px;
+      --r-card:  14px;
+      --r-panel: 20px;
+      --r-pill:  999px;
+
+      --sh-card:    0 1px 0 0 rgba(255,255,255,.04) inset,
+                    0 1px 2px rgba(0,0,0,.5),
+                    0 8px 24px -16px rgba(0,0,0,.8);
+      --sh-topbar:  0 1px 0 0 var(--line),
+                    0 8px 32px -12px rgba(0,0,0,.6);
+      --sh-glow:    0 0 0 1px rgba(37,64,255,.4),
+                    0 12px 40px -8px rgba(37,64,255,.45);
+
+      --ease-out: cubic-bezier(.2,.7,.2,1);
+      --dur-fast: 120ms;
+      --dur-base: 200ms;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--ink);
+      color: var(--paper-100);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-size: 14px;
+      position: relative;
+    }
+
+    /* 噪声层：从 fixed overlay + mix-blend-mode 改成滚动容器的静态背景。
+       fullscreen 的 blend mode 会强制每次重绘都重新合成整个 viewport —— 头号性能杀手。 */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .8 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+
+    /* ─── 顶栏 · 指挥台 ─── */
+    .topbar {
+      flex-shrink: 0;
+      background: var(--ink-2);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--sh-topbar);
+      padding: 0 24px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      z-index: 100;
+      position: relative;
+    }
+
+    .tb-left   { display: flex; align-items: center; gap: 16px; }
+    .tb-center { display: flex; align-items: center; gap: 8px; padding: 6px; background: var(--ink); border: 1px solid var(--line); border-radius: var(--r-pill); }
+    .tb-right  { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .brand-mark {
+      width: 32px; height: 32px;
+      display: block;
+      flex-shrink: 0;
+      border-radius: 9px;
+      box-shadow: 0 4px 14px -5px rgba(0,0,0,.55);
+    }
+    .brand-word {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: var(--paper-100);
+      white-space: nowrap;
+    }
+    .brand { flex-shrink: 0; }
+    .brand-word em { font-style: normal; color: var(--signal-soft); }
+
+    .file-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .file-meta .file-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--paper-400);
+    }
+    .file-meta .file-sub .dot { color: var(--ember); margin: 0 6px; }
+
+    button {
+      padding: 8px 14px;
+      background: transparent;
+      color: var(--paper-200);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all var(--dur-fast) var(--ease-out);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover  { background: var(--ink-3); border-color: var(--paper-400); color: var(--paper-100); }
+    button:active { transform: scale(0.97); }
+    button.ghost-tight {
+      border: none;
+      background: transparent;
+      padding: 7px 12px;
+      color: var(--paper-300);
+    }
+    button.ghost-tight:hover { background: var(--ink-3); color: var(--paper-100); }
+    button.play-btn {
+      background: var(--paper-100);
+      color: var(--ink);
+      border-color: var(--paper-100);
+      padding: 8px 18px;
+      font-weight: 700;
+    }
+    button.play-btn:hover { background: var(--paper-200); border-color: var(--paper-200); color: var(--ink); }
+    button.primary {
+      background: var(--signal);
+      color: var(--paper-100);
+      border-color: var(--signal);
+      box-shadow: 0 6px 18px -8px rgba(37,64,255,.7);
+    }
+    button.primary:hover { background: var(--signal-deep); border-color: var(--signal-deep); }
+    button.secondary {
+      background: var(--ember);
+      color: var(--ink);
+      border-color: var(--ember);
+      box-shadow: 0 6px 18px -8px rgba(255,122,77,.6);
+    }
+    button.secondary:hover { background: var(--ember-deep); border-color: var(--ember-deep); color: var(--paper-100); }
+    button.danger { color: var(--danger); border-color: rgba(248,113,113,.4); }
+    button.danger:hover { background: var(--danger-wash); border-color: var(--danger); color: var(--danger); }
+
+    select {
+      padding: 7px 12px;
+      background: var(--ink-3);
+      color: var(--paper-200);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-pill);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      outline: none;
+    }
+    select:hover { border-color: var(--paper-400); color: var(--paper-100); }
+
+    .tb-sep { width: 1px; height: 22px; background: var(--line); }
+
+    .time-display {
+      font-variant-numeric: tabular-nums;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--paper-300);
+      letter-spacing: 0.04em;
+      padding: 6px 12px;
+      background: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+    }
+    .time-display .sep { color: var(--paper-500); margin: 0 4px; }
+
+    /* ─── 主体 ─── */
+    /* 工作区：上半区 stage + 底部全宽时间线 dock */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .stage {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      padding: 16px 16px 10px;
+      gap: 12px;
+    }
+
+    /* 右侧栏：视频 + 切割参数 */
+    .side-panel {
+      width: 360px;
+      min-width: 300px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line-2) transparent;
+    }
+    .side-panel::-webkit-scrollbar { width: 6px; }
+    .side-panel::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+    /* 卡片保持自身高度，不被 flex 压缩裁切；空间不够时由 .side-panel 滚动 */
+    .side-panel > .card { flex-shrink: 0; }
+
+    .card {
+      background: var(--ink-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-card);
+      box-shadow: var(--sh-card);
+      overflow: hidden;
+    }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%);
+    }
+    .card-head .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ember);
+    }
+    .card-head .meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--paper-500);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Video card */
+    .video-card { padding: 0; }
+    #video-container {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+      min-height: 200px;
+    }
+    #video-container video {
+      display: block;
+      width: 100%;
+      max-height: 280px;
+    }
+
+    /* 底部全宽时间线 dock */
+    .timeline-dock {
+      flex-shrink: 0;
+      background: var(--ink-2);
+      border-top: 1px solid var(--line);
+      padding: 6px 16px 8px;
+      user-select: none;
+      position: relative;
+    }
+    /* 顶边拖拽手柄：上下拖调整波形高度 */
+    .dock-resizer {
+      position: absolute;
+      top: -4px; left: 0; right: 0;
+      height: 9px;
+      cursor: row-resize;
+      z-index: 6;
+    }
+    .dock-resizer::after {
+      content: "";
+      position: absolute;
+      left: 50%; top: 4px;
+      transform: translateX(-50%);
+      width: 48px; height: 3px;
+      border-radius: 2px;
+      background: var(--line-2);
+      transition: background var(--dur-fast) var(--ease-out);
+    }
+    .dock-resizer:hover::after,
+    .dock-resizer.dragging::after { background: var(--ember); }
+    #rulerCanvas {
+      display: block;
+      width: 100%;
+      height: 20px;
+    }
+    #waveform {
+      position: relative;
+    }
+    #waveCanvas {
+      display: block;
+      width: 100%;
+      height: var(--wave-h, 132px);
+      cursor: text;
+      border-radius: 6px;
+    }
+    .tl-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 2px 0 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--paper-400);
+    }
+    .tl-status .sstat b { color: var(--paper-100); font-weight: 700; }
+    .tl-status .sstat-final b { color: #6CA0FF; }
+    .wave-legend {
+      display: flex; gap: 12px; align-items: center;
+    }
+    .wave-legend .wl { display: inline-flex; align-items: center; gap: 4px; }
+    .wave-legend .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .tl-zoom {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tl-zoom button {
+      font-family: var(--mono); font-size: 11px;
+      width: 22px; height: 22px; line-height: 1;
+      border: 1px solid var(--line); background: var(--ink-3);
+      color: var(--paper-100); border-radius: 5px; cursor: pointer;
+    }
+    .tl-zoom button:hover { background: var(--ink); }
+    .tl-zoom input[type=range] { width: 140px; accent-color: #2540FF; height: 4px; cursor: pointer; }
+    .tl-zoom select {
+      font-family: var(--mono); font-size: 11px;
+      height: 22px; padding: 0 6px;
+      border: 1px solid var(--line); background: var(--ink-3);
+      color: var(--paper-100); border-radius: 5px; cursor: pointer;
+      margin-right: 4px;
+    }
+
+    /* 切割参数滑块 */
+    .knobs-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .knob { display: flex; flex-direction: column; gap: 4px; }
+    .knob-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: var(--mono); font-size: 11px; color: var(--paper-400);
+    }
+    .knob-head b { color: var(--paper-100); font-weight: 700; }
+    .knob-hint {
+      font-family: var(--sans); font-size: 10.5px; line-height: 1.45;
+      color: var(--paper-500); margin: -1px 0 3px;
+    }
+    .knob input[type=range] { width: 100%; accent-color: #2540FF; height: 4px; cursor: pointer; }
+    /* 松紧示意：一条由粗到细的楔形线——粗端「紧」有力量感，细端「松」轻盈 */
+    .tightness { display: flex; flex-direction: column; gap: 9px; padding-top: 4px; }
+    .tightness-line { display: flex; align-items: center; gap: 12px; }
+    .tightness-line .tt-end {
+      font-size: 13px; font-weight: 800; flex-shrink: 0; letter-spacing: 0.05em;
+    }
+    .tt-end.tt-tight { color: var(--paper-100); }
+    .tt-end.tt-loose { color: var(--paper-400); }
+    /* 楔形：左（紧）粗 → 右（松）细，纯 CSS clip-path */
+    .tt-wedge {
+      flex: 1; height: 6px;
+      background: linear-gradient(90deg, #E5402A 0%, #FF6A3D 50%, #F6B23C 100%);
+      clip-path: polygon(0 0, 100% 41%, 100% 59%, 0 100%);
+      border-radius: 2px;
+    }
+    .tightness-cap {
+      font-size: 11px; line-height: 1.5; color: var(--paper-400);
+    }
+
+    /* Help card */
+    .help-body { padding: 16px 20px 20px; }
+    .help-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--paper-300);
+      align-items: center;
+    }
+    .help-row + .help-row { margin-top: 8px; }
+    kbd {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      background: var(--ink-4);
+      border: 1px solid var(--line-2);
+      border-bottom-width: 2px;
+      border-radius: var(--r-input);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--paper-100);
+      letter-spacing: 0.04em;
+    }
+    .legend-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--paper-300);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .legend-dot-ember  { background: var(--ember); box-shadow: 0 0 8px rgba(255,122,77,.5); }
+    .legend-dot-danger { background: var(--danger); box-shadow: 0 0 8px rgba(248,113,113,.4); }
+
+    .resizer {
+      width: 4px;
+      flex-shrink: 0;
+      background: transparent;
+      cursor: col-resize;
+      border-radius: 2px;
+      transition: background var(--dur-fast) var(--ease-out);
+    }
+    .resizer:hover, .resizer.dragging { background: var(--signal); }
+
+    .transcript-panel {
+      flex: 1;
+      min-width: 320px;
+      display: flex;
+      overflow: hidden;
+    }
+    .transcript-card {
+      flex: 1;
+      background: var(--ink-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-panel);
+      box-shadow: var(--sh-card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .transcript-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%);
+    }
+    .transcript-head .num {
+      width: 34px; height: 34px; flex-shrink: 0;
+      align-self: center;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .transcript-head .num svg { width: 32px; height: 32px; display: block; }
+    .transcript-head h2 {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: -0.015em;
+      color: var(--paper-100);
+    }
+    .transcript-head .en {
+      font-family: var(--display);
+      font-weight: 400;
+      color: var(--ember);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 16px;
+      margin-left: 4px;
+    }
+    .transcript-head .head-right {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--paper-400);
+    }
+    /* 快捷键移到标题栏右侧空白区 */
+    .head-shortcuts {
+      margin-left: auto;
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .head-shortcuts .help-row { font-size: 11px; gap: 8px; }
+    .head-shortcuts .help-row + .help-row { margin-top: 0; }
+
+    .transcript-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 36px 80px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line-2) transparent;
+    }
+    .transcript-scroll::-webkit-scrollbar { width: 8px; }
+    .transcript-scroll::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+
+    .content {
+      line-height: 2.1;
+      font-size: 18px;
+      color: var(--paper-100);
+      letter-spacing: 0.005em;
+    }
+
+    .paragraph {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px dashed var(--line);
+      /* 段落隔离：屏幕外的段落跳过渲染；屏幕内段落的重绘也不会波及邻居 */
+      contain: layout style paint;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 200px;
+    }
+    .paragraph:last-child { border-bottom: none; }
+    .paragraph .tc {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--paper-400);
+      padding-top: 12px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+    .paragraph .tc .tc-bar {
+      display: inline-block;
+      width: 3px; height: 14px;
+      background: var(--ember);
+      border-radius: 2px;
+      margin-right: 6px;
+      vertical-align: -2px;
+    }
+    .paragraph-body { min-width: 0; }
+
+    .word {
+      display: inline-block;
+      padding: 4px 2px;
+      margin: 0 1px;
+      cursor: pointer;
+      /* 去掉 transition —— 高亮要即时响应；transition + 频繁切换 = 持续重绘 */
+      color: var(--paper-100);
+      border-radius: 3px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+    }
+    .word:hover { background: var(--ink-3); }
+    .word.current {
+      background: var(--signal-wash);
+      color: var(--signal-soft);
+      box-shadow: inset 0 -2px 0 var(--signal);
+    }
+    .word.selected {
+      color: var(--paper-500);
+      text-decoration: line-through;
+      text-decoration-color: var(--danger);
+      text-decoration-thickness: 2px;
+    }
+
+    .gap {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--ink-3);
+      color: var(--paper-400);
+      padding: 4px 10px 4px 8px;
+      margin: 1px 3px;
+      border-radius: var(--r-pill);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      border: 1px solid var(--line-2);
+      /* 去掉 transition: all —— all 会让任何属性变化都触发动画，性能黑洞 */
+      vertical-align: middle;
+    }
+    .gap::before {
+      content: "";
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--paper-500);
+    }
+    .gap:hover { background: var(--ink-4); border-color: var(--paper-500); color: var(--paper-200); }
+    /* 选中删除 = 红色删除线，和文字保持一致 */
+    .gap.selected {
+      color: var(--paper-500);
+      text-decoration: line-through;
+      text-decoration-color: var(--danger);
+      text-decoration-thickness: 2px;
+    }
+    .gap.selected::before { background: var(--danger); }
+
+    .word.ai-selected:not(.selected) { background: var(--ember-wash); color: var(--ember); }
+    /* AI 预选但被取消 = 维持灰底（明确"熄灭/保留"），仅用虚线橙边 + 橙点做轻提示 */
+    .gap.ai-selected:not(.selected) {
+      border-color: rgba(255,122,77,.55);
+      border-style: dashed;
+    }
+    .gap.ai-selected:not(.selected)::before { background: var(--ember); }
+    .word.selected.ai-selected { border-color: var(--ember); }
+
+    /* 划选后的浮动工具条 */
+    .sel-toolbar {
+      position: fixed;
+      z-index: 9000;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--ink-4);
+      border: 1px solid var(--line-2);
+      border-radius: var(--r-badge);
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+      animation: sel-pop var(--dur-fast) var(--ease-out);
+    }
+    @keyframes sel-pop { from { opacity: 0; transform: translateY(4px) scale(.96); } }
+    .sel-toolbar button {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--paper-100);
+      background: transparent;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sel-toolbar button:hover { background: var(--ink-2); }
+    .sel-toolbar button[data-act="preview"] { color: var(--signal-soft); }
+    .sel-toolbar button em { font-style: normal; opacity: .6; font-family: var(--mono); font-size: 10px; }
+
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 7, 10, 0.92);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      backdrop-filter: blur(8px);
+    }
+    .loading-overlay.show { display: flex; }
+    .loading-card {
+      background: var(--ink-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-panel);
+      padding: 44px 52px;
+      text-align: center;
+      box-shadow: var(--sh-glow);
+      min-width: 360px;
+    }
+    .loading-kicker {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ember); margin-bottom: 8px;
+    }
+    .loading-label {
+      font-size: 16px; font-weight: 700;
+      color: var(--paper-100);
+      margin-bottom: 22px;
+      letter-spacing: -0.01em;
+    }
+    .loading-dot-row {
+      display: flex; gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .loading-dot {
+      width: 8px; height: 8px;
+      background: var(--signal);
+      border-radius: 50%;
+      animation: loadingPulse 1.2s ease-in-out infinite;
+    }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; background: var(--signal-soft); }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; background: var(--ember); }
+    @keyframes loadingPulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50%      { opacity: 1;   transform: scale(1); }
+    }
+    .loading-progress-container {
+      width: 100%; height: 3px;
+      background: var(--ink);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--signal), var(--signal-soft));
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.4s var(--ease-out);
+    }
+    .loading-time {
+      margin-top: 16px;
+      font-family: var(--mono); font-size: 12px;
+      color: var(--paper-300);
+      font-variant-numeric: tabular-nums;
+    }
+    .loading-estimate {
+      margin-top: 4px;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--paper-500);
+    }
+
+    ::selection { background: var(--signal); color: var(--paper-100); }
+  </style>
+</head>
+
+<body>
+  <!-- Loading 遮罩 -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="loading-kicker">/ LIKETALKAI · CUT</div>
+      <div class="loading-label" id="loadingLabel">正在加载数据...</div>
+      <div class="loading-dot-row">
+        <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
+      </div>
+      <div class="loading-progress-container"><div class="loading-progress-bar" id="loadingProgress"></div></div>
+      <div class="loading-time" id="loadingTime">加载中</div>
+      <div class="loading-estimate" id="loadingEstimate"></div>
+    </div>
+  </div>
+
+  <!-- 顶栏 · 指挥台 -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="剪口播">
+          <rect width="36" height="36" rx="9" fill="#F2EBDD"/>
+          <g fill="#2540FF">
+            <rect x="6"    y="14"   width="3" height="8"  rx="1.5"/>
+            <rect x="10.5" y="10.5" width="3" height="15" rx="1.5"/>
+            <rect x="23"   y="9"    width="3" height="18" rx="1.5"/>
+            <rect x="27.5" y="12.5" width="3" height="11" rx="1.5"/>
+          </g>
+          <path d="M14 6 H22 L18 11 Z" fill="#FF7A4D"/>
+          <rect x="17.1" y="7" width="1.8" height="22" rx="0.9" fill="#FF7A4D"/>
+        </svg>
+        <span class="brand-word">剪<em>口播</em></span>
+      </div>
+      <div class="file-meta">
+        <div class="file-sub" id="fileSub">REVIEW <span class="dot">●</span> 加载中</div>
+      </div>
+    </div>
+    <div class="tb-center">
+      <button class="ghost-tight" onclick="seekRel(-5)" title="后退 5s">⏮</button>
+      <button class="play-btn" onclick="togglePlay()" id="playBtn">▶ 播放</button>
+      <button class="ghost-tight" onclick="seekRel(5)" title="前进 5s">⏭</button>
+      <div class="tb-sep"></div>
+      <select id="speed" onchange="setSpeed(parseFloat(this.value))">
+        <option value="0.5">0.5×</option>
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <select id="silenceThreshold" onchange="applySilenceThreshold(parseFloat(this.value))" title="一键勾选逐字稿里 ≥ 此长度的停顿为「删除」（红色），你还能手动改。&#10;注意区别于切割参数的「内部静音切割」：那是导出时自动切掉保留段内残留的静音（黄色）。">
+        <option value="0.2" selected>静音 ≥ 0.2s</option>
+        <option value="0.3">静音 ≥ 0.3s</option>
+        <option value="0.5">静音 ≥ 0.5s</option>
+        <option value="1.0">静音 ≥ 1.0s</option>
+      </select>
+      <span class="time-display"><span id="timeCur">00:00</span><span class="sep">/</span><span id="timeTot">00:00</span></span>
+    </div>
+    <div class="tb-right">
+      <button class="primary" onclick="exportFCPXML()">导出 FCPXML</button>
+      <div class="tb-sep"></div>
+      <button class="danger" onclick="clearAll()" title="清空选择">清空</button>
+    </div>
+  </div>
+
+  <!-- 主体 -->
+  <div class="workspace">
+    <div class="stage">
+      <!-- 逐字稿（主编辑区） -->
+      <div class="transcript-panel">
+        <div class="transcript-card">
+          <div class="transcript-head">
+            <div class="num" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="7"    width="20" height="3" rx="1.5" fill="#2540FF"/>
+                <rect x="4" y="14.5" width="24" height="3" rx="1.5" fill="#2540FF" opacity=".68"/>
+                <rect x="4" y="22"   width="13" height="3" rx="1.5" fill="#2540FF" opacity=".42"/>
+              </svg>
+            </div>
+            <h2>逐字稿 <span class="en">/ Transcript</span></h2>
+            <div class="head-shortcuts">
+              <div class="help-row">
+                <span><kbd>单击</kbd> 去那听</span>
+                <span><kbd>划过</kbd> 删 / 恢复</span>
+                <span><kbd>点静音</kbd> 删</span>
+              </div>
+              <div class="help-row">
+                <span><kbd>Space</kbd> 播放</span>
+                <span><kbd>←→</kbd> ±1s</span>
+                <span><kbd>⌘Z</kbd> 撤销</span>
+              </div>
+            </div>
+          </div>
+          <div class="transcript-scroll">
+            <div class="content" id="content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="resizer" id="resizer"></div>
+
+      <!-- 右侧栏：视频 + 切割参数 -->
+      <div class="side-panel">
+        <!-- Video card -->
+        <div class="card video-card">
+          <div id="video-container">
+            <video id="player" src="/video" preload="metadata"></video>
+          </div>
+        </div>
+
+        <!-- Cut params card -->
+        <div class="card">
+          <div class="card-head">
+            <span class="label">/ 静音剪辑</span>
+          </div>
+          <div class="knobs-body">
+            <div class="knob">
+              <div class="knob-head"><span>句头</span><b id="knob-padstart-val">2 帧</b></div>
+              <div class="knob-hint">每句开头多留几帧再起声，避免吞字、接得太赶</div>
+              <input type="range" id="knob-padstart" min="0" max="8" step="1" value="2">
+            </div>
+            <div class="knob">
+              <div class="knob-head"><span>句尾</span><b id="knob-padend-val">2 帧</b></div>
+              <div class="knob-hint">每句结尾多留几帧再收，避免话没说完就被切</div>
+              <input type="range" id="knob-padend" min="0" max="8" step="1" value="2">
+            </div>
+            <div class="tightness">
+              <div class="tightness-line">
+                <span class="tt-end tt-tight">紧</span>
+                <div class="tt-wedge"></div>
+                <span class="tt-end tt-loose">松</span>
+              </div>
+              <div class="tightness-cap">往「紧」＝留白少、干脆利落　·　往「松」＝留白多、多留呼吸</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 快捷键已移到逐字稿标题栏右侧 -->
+
+      </div>
+    </div>
+
+    <!-- 底部全宽时间线 -->
+    <div class="timeline-dock">
+      <div class="dock-resizer" id="dockResizer" title="拖动调整波形高度"></div>
+      <div class="tl-status">
+        <div class="wave-legend">
+          <span class="wl"><span class="sw" id="lg-silence"></span>静音</span>
+          <span class="wl"><span class="sw" id="lg-del"></span>选中删除</span>
+          <span class="wl"><span class="sw" id="lg-cut"></span>额外切掉</span>
+        </div>
+        <span class="sstat">总时长 <b id="tl-total">--:--</b></span>
+        <span class="sstat sstat-final">剪后 <b id="tl-final">--:--</b></span>
+        <div class="tl-zoom">
+          <select id="themeSelect" title="波形配色"></select>
+          <button onclick="waveZoom(1/1.6)" title="缩小">−</button>
+          <input type="range" id="zoomSlider" min="0" max="1000" value="0" title="缩放">
+          <button onclick="waveZoom(1.6)" title="放大">+</button>
+          <button onclick="waveZoomFit()" title="整段">⊡</button>
+        </div>
+      </div>
+      <canvas id="rulerCanvas"></canvas>
+      <div id="waveform">
+        <canvas id="waveCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let words = [];
+    let autoSelected = new Set();
+    const selected = new Set();
+    const aiSelectedIds = new Set();
+
+    const video = document.getElementById('player');
+    const timeCur = document.getElementById('timeCur');
+    const timeTot = document.getElementById('timeTot');
+    const content = document.getElementById('content');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    let elements = [];
+    let gapGroups = [];
+    // 交互模型「点=定位，划=删/恢复」：
+    // pendingDown 记录按下信息，移动超过阈值才升级为划选；否则松手算单击。
+    let isSelecting = false;
+    let selectStart = -1;
+    let selectMode = 'add';            // 'add'=标删 / 'remove'=恢复，由起点状态决定
+    let pendingDown = null;            // { startId, x, y, isGap, target, started }
+    let dragSpan = null;              // 本次划选覆盖的时间范围 {start,end}，供「试听这段」
+    const DRAG_THRESHOLD = 4;          // px，超过才算「划」，否则算「点」
+    const undoStack = [];             // 每次编辑前的 selected 快照
+    let previewUntil = null;          // 「试听这段」时播放到此秒数即停（且期间不跳删除段）
+
+    // 波形 / 切割预览数据
+    let peaksData = null;          // { duration, sampleRate, peaks:[0..1] }
+    let silencePeriods = [];       // ffmpeg 检测的静音段
+    let cutOpts = {                // 切割参数（与 lib/compute_keeps.js 默认一致，可被滑块覆盖）
+      lookBack: 0.6, padStart: 2 / 30, padEnd: 2 / 30, minInternalSilence: 0.2
+    };
+
+    loadingOverlay.classList.add('show');
+    const loadingMessages = ['正在加载字幕数据...', '正在解析音频波形...', '正在准备播放器...', '即将就绪...'];
+    let msgIdx = 0;
+    const labelEl = document.getElementById('loadingLabel');
+    const msgTimer = setInterval(() => {
+      msgIdx = (msgIdx + 1) % loadingMessages.length;
+      labelEl.textContent = loadingMessages[msgIdx];
+    }, 1500);
+    labelEl.textContent = loadingMessages[0];
+
+    const fetchJSON = (url) => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
+
+    fetch('./data.json')
+      .then(r => {
+        if (!r.ok) throw new Error('data.json 未找到 (HTTP ' + r.status + ')，请确认步骤 6 已完成');
+        return r.json();
+      })
+      .then(async (data) => {
+        words = data.words || [];
+        autoSelected = new Set(data.autoSelected || []);
+        autoSelected.forEach(idx => {
+          const id = 'word-' + idx;
+          selected.add(id);
+          aiSelectedIds.add(id);
+        });
+        markSegsDirty();
+
+        // 并行加载波形包络 + 静音段（任一缺失都不阻塞主流程）
+        const [pk, sp] = await Promise.all([fetchJSON('./peaks.json'), fetchJSON('./silence_periods.json')]);
+        peaksData = (pk && Array.isArray(pk.peaks)) ? pk : null;
+        silencePeriods = Array.isArray(sp) ? sp.slice().sort((a, b) => a.start - b.start) : [];
+
+        initWave();
+
+        // 顶栏文件元信息
+        document.getElementById('fileSub').innerHTML =
+          `REVIEW <span class="dot">●</span> ${aiSelectedIds.size} 处 AI 预选`;
+
+        loadingOverlay.classList.remove('show');
+        clearInterval(msgTimer);
+        render();
+        initKnobs();
+        initThemeSwitcher();
+      })
+      .catch(err => {
+        clearInterval(msgTimer);
+        document.getElementById('loadingLabel').textContent = '数据加载失败';
+        document.getElementById('loadingTime').textContent = err.message;
+      });
+
+    function togglePlay()  { clearPreview(); video.paused ? video.play() : video.pause(); }
+    function setSpeed(v)   { video.playbackRate = v; }
+    function seekRel(d)    { clearPreview(); video.currentTime = Math.max(0, video.currentTime + d); }
+
+    // ============================================================
+    // 波形渲染器（自绘 canvas）：视口窗口化渲染，长视频也顺滑
+    // 叠加三色带：灰=静音 / 红=选中删除 / 黄=算法额外切掉（吸附+内部静音二次切）
+    // ============================================================
+    // 波形配色主题（可在时间线右下角实时切换，选择存 localStorage）
+    const WAVE_THEMES = {
+      cool: {
+        name: '冷调蓝白',
+        bg: '#0E0E13', wave: '#8CA0C8', center: '#23252E', silence: 'rgba(44,46,54,0.9)',
+        del: 'rgba(248,113,113,0.40)', delEdge: 'rgba(248,113,113,0.95)',
+        cut: 'rgba(255,193,7,0.40)', cutEdge: 'rgba(255,193,7,0.98)', head: '#FF7A4D'
+      },
+      mint: {
+        name: '薄荷青',
+        bg: '#0D0F0E', wave: '#5EEAD4', center: '#1F2826', silence: 'rgba(40,48,46,0.9)',
+        del: 'rgba(251,113,133,0.40)', delEdge: 'rgba(251,113,133,0.95)',
+        cut: 'rgba(251,146,60,0.42)', cutEdge: 'rgba(251,146,60,0.98)', head: '#FB7185'
+      },
+      recut: {
+        name: 'Recut 暖灰',
+        bg: '#1A1917', wave: '#A89F90', center: '#2A2823', silence: 'rgba(52,50,46,0.92)',
+        del: 'rgba(248,113,113,0.42)', delEdge: 'rgba(248,113,113,0.92)',
+        cut: 'rgba(251,191,36,0.42)', cutEdge: 'rgba(251,191,36,0.96)', head: '#FF7A4D'
+      },
+      outline: {
+        name: '石墨霓虹·描边',
+        bg: '#101014', wave: '#B7BCC9', center: '#26262C', silence: 'rgba(42,42,48,0.9)',
+        del: 'rgba(248,113,113,0.16)', delEdge: 'rgba(248,113,113,1)',
+        cut: 'rgba(255,212,59,0.16)', cutEdge: 'rgba(255,212,59,1)', head: '#FF7A4D'
+      }
+    };
+    const WAVE_THEME_KEY = 'reviewWaveTheme';
+    let COL = WAVE_THEMES.cool;
+    (function () {
+      const saved = localStorage.getItem(WAVE_THEME_KEY);
+      if (saved && WAVE_THEMES[saved]) COL = WAVE_THEMES[saved];
+    })();
+
+    const wave = (function () {
+      let cv, ctx, buf, bctx, rcv, rctx, dpr = 1;
+      let cssW = 0, cssH = 132, rulerH = 20;
+      let duration = 0;
+      let pxPerSec = 1, viewStart = 0;
+      let staticDirty = true, lastKey = '';
+      let cutsDirty = true; // 切割几何（选段/参数）是否需要重算；与视口平移/缩放无关
+      let deleteSegs = [], extraCuts = [];
+      let drag = null;
+      let gain = 1; // 波形归一化增益：把全局峰值拉到接近满高（像剪映/FCP 那样自适应填满）
+      const ZOOM_MAX = 400; // 相对 fit 的最大放大倍数
+
+      // 计算归一化增益：全局最大峰值映射到 ~0.92 半高；安静录音也能填满面板
+      function computeGain() {
+        const pk = peaksData ? peaksData.peaks : null;
+        let mx = 0;
+        if (pk) for (let i = 0; i < pk.length; i++) if (pk[i] > mx) mx = pk[i];
+        gain = mx > 0.0001 ? 0.92 / mx : 1;
+      }
+
+      const timeToX = (t) => (t - viewStart) * pxPerSec;
+      const xToTime = (x) => viewStart + x / pxPerSec;
+      const viewDur = () => cssW / pxPerSec;
+      const fitPxPerSec = () => (duration > 0 ? cssW / duration : 1);
+
+      function clampView() {
+        const vd = viewDur();
+        if (vd >= duration) { viewStart = 0; return; }
+        viewStart = Math.max(0, Math.min(viewStart, duration - vd));
+      }
+
+      function recompute() {
+        deleteSegs = getDeleteSegments();
+        if (typeof ComputeKeeps !== 'undefined') {
+          const keeps = ComputeKeeps.computeFinalKeeps(deleteSegs, silencePeriods, duration, cutOpts);
+          const cuts = ComputeKeeps.keepsToCuts(keeps, duration);
+          extraCuts = ComputeKeeps.intervalSubtract(cuts, deleteSegs); // 用户没选、却被算法切掉的部分
+          // 状态栏：总时长 / 剪后
+          let finalDur = 0;
+          for (const k of keeps) finalDur += (k.end - k.start);
+          const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+          set('tl-total', formatTime(duration));
+          set('tl-final', formatTime(finalDur));
+        } else { extraCuts = []; }
+      }
+
+      function layout() {
+        cssW = cv.clientWidth || 1;
+        cssH = cv.clientHeight || 132; // 由 CSS --wave-h 驱动，可拖拽调整
+        dpr = window.devicePixelRatio || 1;
+        for (const c of [cv, buf]) { c.width = Math.round(cssW * dpr); c.height = Math.round(cssH * dpr); }
+        if (rcv) { rcv.width = Math.round(cssW * dpr); rcv.height = Math.round(rulerH * dpr); rctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        staticDirty = true;
+      }
+
+      // 时间标尺：根据 pxPerSec 自适应选刻度间隔
+      function drawRuler() {
+        if (!rctx) return;
+        rctx.clearRect(0, 0, cssW, rulerH);
+        rctx.fillStyle = '#1A1A1F'; rctx.fillRect(0, 0, cssW, rulerH);
+        const steps = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600];
+        const minPx = 70; // 相邻主刻度最小像素间距
+        let step = steps[steps.length - 1];
+        for (const s of steps) { if (s * pxPerSec >= minPx) { step = s; break; } }
+        rctx.fillStyle = '#6B6557';
+        rctx.font = '10px "JetBrains Mono", monospace';
+        rctx.textBaseline = 'middle';
+        const t0 = Math.floor(viewStart / step) * step;
+        for (let t = t0; t <= viewStart + viewDur(); t += step) {
+          const x = timeToX(t);
+          if (x < -1 || x > cssW + 1) continue;
+          rctx.fillRect(x, rulerH - 7, 1, 7);
+          const m = Math.floor(t / 60), s = Math.floor(t % 60);
+          const label = m > 0 ? `${m}:${String(s).padStart(2, '0')}` : `${s}s`;
+          rctx.fillText(label, x + 4, rulerH / 2 - 1);
+        }
+      }
+
+      function peakAt(i0, i1, peaks, n) {
+        let m = 0;
+        const a = Math.max(0, i0 | 0), b = Math.min(n - 1, i1 | 0);
+        for (let i = a; i <= b; i++) if (peaks[i] > m) m = peaks[i];
+        return m;
+      }
+
+      function buildStatic() {
+        bctx.clearRect(0, 0, cssW, cssH);
+        bctx.fillStyle = COL.bg; bctx.fillRect(0, 0, cssW, cssH);
+        const mid = cssH / 2;
+
+        // 静音带（最底层）
+        bctx.fillStyle = COL.silence;
+        for (const sp of silencePeriods) {
+          const x0 = timeToX(sp.start), x1 = timeToX(sp.end);
+          if (x1 < 0 || x0 > cssW) continue;
+          bctx.fillRect(x0, 0, Math.max(1, x1 - x0), cssH);
+        }
+
+        // 波形：填充镜像包络（替代逐像素硬竖条，贴近剪映/FCP 观感）
+        const peaks = peaksData ? peaksData.peaks : null;
+        const n = peaks ? peaks.length : 0;
+        if (peaks && n > 1 && duration > 0) {
+          const samplesPerSec = n / duration;
+          const maxH = cssH - 6;
+          // 1) 逐像素求幅值：样本多→取峰（包络）；样本少→线性插值（消除放大时的阶梯）
+          const amp = new Float32Array(cssW);
+          for (let x = 0; x < cssW; x++) {
+            const sa = xToTime(x) * samplesPerSec, sb = xToTime(x + 1) * samplesPerSec;
+            if (sb - sa >= 1) {
+              amp[x] = peakAt(sa, sb, peaks, n);
+            } else {
+              const f = Math.max(0, Math.min(n - 1, (sa + sb) / 2));
+              const i = f | 0, fr = f - i;
+              amp[x] = (peaks[i] || 0) * (1 - fr) + (peaks[Math.min(n - 1, i + 1)] || 0) * fr;
+            }
+          }
+          // 2) 描出上沿（左→右）再回描下沿（右→左），填成镜像包络。
+          //    hAt(x) 现算 3-tap 平滑（消尖刺）+ 全局增益归一化再限幅，省掉一条整长数组和一趟循环。
+          const hAt = (x) => {
+            const a = x > 0 ? amp[x - 1] : amp[x];
+            const c = x < cssW - 1 ? amp[x + 1] : amp[x];
+            const v = (a + amp[x] * 2 + c) / 4;
+            return Math.max(0.6, Math.min(1, v * gain) * maxH / 2);
+          };
+          bctx.fillStyle = COL.wave;
+          bctx.beginPath();
+          bctx.moveTo(0, mid - hAt(0));
+          for (let x = 1; x < cssW; x++) bctx.lineTo(x, mid - hAt(x));
+          for (let x = cssW - 1; x >= 0; x--) bctx.lineTo(x, mid + hAt(x));
+          bctx.closePath();
+          bctx.fill();
+        } else {
+          bctx.fillStyle = COL.center;
+          bctx.fillRect(0, mid - 0.5, cssW, 1);
+        }
+
+        // 删除带（红）
+        drawBand(deleteSegs, COL.del, COL.delEdge);
+        // 额外切掉（黄）—— 这正是「把你该说的话切掉」的高危区
+        drawBand(extraCuts, COL.cut, COL.cutEdge);
+      }
+
+      function drawBand(segs, fill, edge) {
+        for (const s of segs) {
+          const x0 = timeToX(s.start), x1 = timeToX(s.end);
+          if (x1 < 0 || x0 > cssW) continue;
+          const w = Math.max(1.5, x1 - x0);
+          bctx.fillStyle = fill; bctx.fillRect(x0, 0, w, cssH);
+          bctx.fillStyle = edge;
+          bctx.fillRect(x0, 0, 1.5, cssH);
+          bctx.fillRect(x0 + w - 1.5, 0, 1.5, cssH);
+        }
+      }
+
+      function draw(t) {
+        if (!ctx) return;
+        // 播放跟随：playhead 越过右侧 85% 时把视图前移到 15% 处（仅放大时）
+        if (!video.paused && pxPerSec > fitPxPerSec() + 1e-6) {
+          const x = timeToX(t);
+          if (x > cssW * 0.85 || x < 0) { viewStart = t - viewDur() * 0.15; clampView(); staticDirty = true; }
+        }
+        // 切割几何只在选段/参数变化时重算；平移缩放只需重画静态层
+        if (cutsDirty) { recompute(); cutsDirty = false; }
+        const key = viewStart.toFixed(3) + '|' + pxPerSec.toFixed(3);
+        if (staticDirty || key !== lastKey) { buildStatic(); drawRuler(); syncZoomSlider(); lastKey = key; staticDirty = false; }
+
+        ctx.clearRect(0, 0, cssW, cssH);
+        ctx.drawImage(buf, 0, 0, cssW, cssH);
+
+        // 播放头
+        const hx = timeToX(t);
+        if (hx >= 0 && hx <= cssW) {
+          ctx.fillStyle = COL.head;
+          ctx.fillRect(hx - 0.5, 0, 1.5, cssH);
+          ctx.beginPath(); ctx.arc(hx, 4, 3, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+
+      function markDirty() { staticDirty = true; cutsDirty = true; if (ctx && video.paused) draw(video.currentTime); }
+      function redraw() { staticDirty = true; cutsDirty = true; draw(video.currentTime); }
+
+      function zoom(factor, anchorT) {
+        const at = (anchorT == null) ? video.currentTime : anchorT;
+        const fit = fitPxPerSec();
+        const next = Math.max(fit, Math.min(pxPerSec * factor, fit * 400));
+        if (next === pxPerSec) return;
+        const ax = timeToX(at);
+        pxPerSec = next;
+        viewStart = at - ax / pxPerSec; // 锚点时间保持在原屏幕位置
+        clampView(); redraw();
+      }
+      function fit() { pxPerSec = fitPxPerSec(); viewStart = 0; redraw(); }
+
+      // 缩放滑块 0..1000 ↔ pxPerSec（对数，0=fit，1000=最大）
+      const slider = () => document.getElementById('zoomSlider');
+      function syncZoomSlider() {
+        const sl = slider(); if (!sl) return;
+        const fit = fitPxPerSec();
+        const frac = Math.log(pxPerSec / fit) / Math.log(ZOOM_MAX);
+        sl.value = Math.round(Math.max(0, Math.min(1, frac)) * 1000);
+      }
+      function setZoomFrac(frac01) {
+        const fit = fitPxPerSec();
+        const next = fit * Math.pow(ZOOM_MAX, Math.max(0, Math.min(1, frac01)));
+        const at = video.currentTime;
+        const ax = timeToX(at);
+        pxPerSec = next;
+        viewStart = at - ax / pxPerSec;
+        clampView(); redraw();
+      }
+
+      function init() {
+        cv = document.getElementById('waveCanvas');
+        rcv = document.getElementById('rulerCanvas');
+        buf = document.createElement('canvas');
+        ctx = cv.getContext('2d');
+        bctx = buf.getContext('2d');
+        rctx = rcv ? rcv.getContext('2d') : null;
+        duration = (peaksData && peaksData.duration) || video.duration || 0;
+        computeGain();
+        layout();
+        pxPerSec = fitPxPerSec();
+        viewStart = 0;
+
+        new ResizeObserver(() => { layout(); clampView(); draw(video.currentTime); }).observe(cv);
+        video.addEventListener('loadedmetadata', () => {
+          if (!duration) { duration = video.duration || 0; fit(); }
+        });
+
+        // 滚轮缩放（以光标处时间为锚点）
+        cv.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          const r = cv.getBoundingClientRect();
+          zoom(e.deltaY < 0 ? 1.15 : 1 / 1.15, xToTime(e.clientX - r.left));
+        }, { passive: false });
+
+        // 按下：拖动平移；未移动则点击跳转
+        cv.addEventListener('mousedown', (e) => {
+          const r = cv.getBoundingClientRect();
+          drag = { x0: e.clientX - r.left, vs0: viewStart, moved: false };
+          e.preventDefault();
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!drag) return;
+          const r = cv.getBoundingClientRect();
+          const dx = (e.clientX - r.left) - drag.x0;
+          if (Math.abs(dx) > 3) drag.moved = true;
+          if (drag.moved && pxPerSec > fitPxPerSec() + 1e-6) {
+            viewStart = drag.vs0 - dx / pxPerSec; clampView(); redraw();
+          }
+        });
+        window.addEventListener('mouseup', (e) => {
+          if (!drag) return;
+          if (!drag.moved) {
+            const r = cv.getBoundingClientRect();
+            const t = Math.max(0, Math.min(duration, xToTime(e.clientX - r.left)));
+            clearPreview();
+            video.currentTime = t;
+          }
+          drag = null;
+        });
+
+        // 缩放滑块
+        const sl = slider();
+        if (sl) sl.addEventListener('input', () => setZoomFrac(parseInt(sl.value, 10) / 1000));
+
+        draw(0);
+      }
+
+      return { init, draw, markDirty, redraw, zoom, fit };
+    })();
+
+    function initWave() { wave.init(); }
+    function waveZoom(f) { wave.zoom(f); }
+    function waveZoomFit() { wave.fit(); }
+
+    // 波形配色：实时切换 + 同步图例色块 + 持久化
+    function applyWaveTheme(key, persist) {
+      if (!WAVE_THEMES[key]) return;
+      COL = WAVE_THEMES[key];
+      const setSw = (id, c) => { const el = document.getElementById(id); if (el) el.style.background = c; };
+      setSw('lg-silence', COL.silence);
+      setSw('lg-del', COL.delEdge);
+      setSw('lg-cut', COL.cutEdge);
+      if (persist) { try { localStorage.setItem(WAVE_THEME_KEY, key); } catch (e) {} }
+      if (typeof wave !== 'undefined') wave.redraw(); // redraw 已重建静态层，无需再 markDirty
+    }
+    function initThemeSwitcher() {
+      const sel = document.getElementById('themeSelect');
+      if (!sel) return;
+      const current = localStorage.getItem(WAVE_THEME_KEY) || 'cool';
+      sel.innerHTML = Object.keys(WAVE_THEMES)
+        .map(k => `<option value="${k}"${k === current ? ' selected' : ''}>${WAVE_THEMES[k].name}</option>`)
+        .join('');
+      sel.addEventListener('change', () => applyWaveTheme(sel.value, true));
+      applyWaveTheme(current, false); // 同步图例色块到当前主题
+    }
+
+    // 切割参数滑块：实时重算波形上的「额外切掉」预览，并在导出时一并发给 server
+    function initKnobs() {
+      // 吸附窗口(lookBack)与内部静音切割(minInternalSilence)已固定为默认值（见 cutOpts），
+      // 不再暴露为滑块——它们是「工具自动做对的事」，面板用静态说明讲清机制即可。
+      const padS = document.getElementById('knob-padstart');
+      const padE = document.getElementById('knob-padend');
+      const padSV = document.getElementById('knob-padstart-val');
+      const padEV = document.getElementById('knob-padend-val');
+      const sync = () => {
+        const fs = parseInt(padS.value, 10), fe = parseInt(padE.value, 10);
+        cutOpts.padStart = fs / 30;
+        cutOpts.padEnd = fe / 30;
+        padSV.textContent = fs + ' 帧';
+        padEV.textContent = fe + ' 帧';
+        playbackCutsDirty = true;   // 切割参数变了，播放跳段也要跟着重算
+        wave.redraw();
+      };
+      [padS, padE].forEach(el => el.addEventListener('input', sync));
+      sync();
+    }
+
+    // === 选段缓存：只在 selected 变化时重算 ===
+    let cachedDeleteSegs = [];
+    let segsDirty = true;
+    // 播放跳段用的「实际切点」缓存：与波形 / 导出 FCPXML 同源（computeFinalKeeps），
+    // 这样预览听到的就是真正会被剪掉的内容，且切点已吸附到静音。选段或切割参数变化时失效。
+    let cachedPlaybackCuts = [];
+    let playbackCutsDirty = true;
+    function markSegsDirty() { segsDirty = true; playbackCutsDirty = true; if (typeof wave !== 'undefined') wave.markDirty(); }
+    function getPlaybackCuts() {
+      if (!playbackCutsDirty) return cachedPlaybackCuts;
+      const del = getDeleteSegments();
+      const dur = (peaksData && peaksData.duration) || video.duration || 0;
+      if (typeof ComputeKeeps === 'undefined' || dur <= 0) {
+        // 算法未就绪或时长未知：退回原始选段，且不缓存（保持 dirty，等就绪后重算）
+        return del;
+      }
+      const keeps = ComputeKeeps.computeFinalKeeps(del, silencePeriods, dur, cutOpts);
+      cachedPlaybackCuts = ComputeKeeps.keepsToCuts(keeps, dur);
+      playbackCutsDirty = false;
+      return cachedPlaybackCuts;
+    }
+    function getDeleteSegments() {
+      if (!segsDirty) return cachedDeleteSegs;
+      // 按词序扫一遍，把「连续删除」连成整刀：两个选中词之间只要没夹着「你保留的真词」
+      // （中间只有静音段 isGap 或字间时间戳零头），就贯穿成一刀，吞掉中间的缝——
+      // 避免连续删除里残留没字可点的声音/空隙（旧版用固定 0.15s 阈值会漏掉 >0.15s 的缝）。
+      // 一旦夹着你保留的真词，才断开成两段，绝不误删要留的内容。
+      const out = [];
+      let cur = null;          // 当前正在累积的删除段
+      let sawKeptWord = false;  // 自上一个选中词以来，中间是否夹了「保留的真词」
+      for (let i = 0; i < words.length; i++) {
+        const w = words[i];
+        if (selected.has('word-' + i)) {
+          if (cur && !sawKeptWord) cur.end = w.end;            // 只隔静音/零头 → 连成一刀
+          else { if (cur) out.push(cur); cur = { start: w.start, end: w.end }; }
+          sawKeptWord = false;
+        } else if (!w.isGap) {
+          sawKeptWord = true;   // 保留的真词 → 会切断删除段，不能被吞
+        }
+        // 未选中的 isGap（静音/缝）：不切断 run，留给下一个选中词决定是否吞
+      }
+      if (cur) out.push(cur);
+      cachedDeleteSegs = out;
+      segsDirty = false;
+      return out;
+    }
+
+    // === 当前词二分查找（按 start 升序，跳过 isGap=false 的 word 时间轴用全数组即可）===
+    function findWordIndexAt(t) {
+      let lo = 0, hi = words.length - 1, ans = -1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (words[mid].start <= t) { ans = mid; lo = mid + 1; } else { hi = mid - 1; }
+      }
+      return ans;
+    }
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    }
+
+    function buildGapGroups() {
+      gapGroups = [];
+      let cur = null;
+      words.forEach((w, idx) => {
+        if (w.isGap) {
+          if (cur && cur.indices[cur.indices.length - 1] === idx - 1) {
+            cur.indices.push(idx); cur.end = w.end; cur.duration += (w.end - w.start);
+          } else {
+            if (cur) gapGroups.push(cur);
+            cur = { indices: [idx], start: w.start, end: w.end, duration: w.end - w.start };
+          }
+        } else {
+          if (cur) { gapGroups.push(cur); cur = null; }
+        }
+      });
+      if (cur) gapGroups.push(cur);
+    }
+
+    // 段落切分：长静音（≥0.4s）作为段落分界
+    function buildParagraphs() {
+      const PARA_THRESHOLD = 0.4;
+      const paras = [];
+      let cur = { startTime: 0, items: [] };
+      let firstWord = true;
+      words.forEach((w, idx) => {
+        if (w.isGap && (w.end - w.start) >= PARA_THRESHOLD && cur.items.length > 0) {
+          cur.items.push({ word: w, idx });
+          paras.push(cur);
+          cur = { startTime: w.end, items: [] };
+        } else {
+          if (firstWord && !w.isGap) { cur.startTime = w.start; firstWord = false; }
+          cur.items.push({ word: w, idx });
+        }
+      });
+      if (cur.items.length) paras.push(cur);
+      return paras;
+    }
+
+    function render() {
+      content.innerHTML = '';
+      elements = [];
+      buildGapGroups();
+      const gapIdxToGroup = new Map();
+      gapGroups.forEach(g => g.indices.forEach(i => gapIdxToGroup.set(i, g)));
+      const renderedGroups = new Set();
+
+      const paragraphs = buildParagraphs();
+
+      paragraphs.forEach(para => {
+        const pDiv = document.createElement('div');
+        pDiv.className = 'paragraph';
+        const tc = document.createElement('div');
+        tc.className = 'tc';
+        tc.innerHTML = `<span class="tc-bar"></span>${formatTime(para.startTime)}`;
+        pDiv.appendChild(tc);
+        const body = document.createElement('div');
+        body.className = 'paragraph-body';
+        pDiv.appendChild(body);
+
+        para.items.forEach(({ word, idx }) => {
+          if (word.isGap) {
+            const group = gapIdxToGroup.get(idx);
+            if (!group || renderedGroups.has(group)) {
+              if (group && renderedGroups.has(group)) {
+                const existingEl = document.querySelector(`[data-gap-group-id="${group.indices[0]}"]`);
+                if (existingEl) elements.push({ el: existingEl, word, idx });
+              }
+              return;
+            }
+            renderedGroups.add(group);
+
+            const div = document.createElement('div');
+            div.className = 'gap';
+            div.textContent = `${group.duration.toFixed(1)}s`;
+            div.dataset.gapGroupId = group.indices[0];
+            div.dataset.gapGroup = JSON.stringify(group.indices);
+            div.dataset.start = group.start;
+            div.dataset.end = group.end;
+            div.title = `${formatTime(group.start)} – ${formatTime(group.end)}`;
+
+            const allIds = group.indices.map(i => 'word-' + i);
+            const allSelected = allIds.every(id => selected.has(id));
+            const isAi = allIds.some(id => aiSelectedIds.has(id));
+            if (allSelected) div.classList.add('selected');
+            if (isAi && !allSelected) div.classList.add('ai-selected');
+            if (allSelected && isAi) { div.classList.add('selected'); div.classList.add('ai-selected'); }
+
+            // 静音 chip：单击直接切删除（见委托 mousedown/up），划过也参与
+            body.appendChild(div);
+            group.indices.forEach(i => elements.push({ el: div, word: words[i], idx: i }));
+          } else {
+            const div = document.createElement('div');
+            const id = 'word-' + idx;
+            div.dataset.id = id;
+            div.dataset.start = word.start;
+            div.dataset.end = word.end;
+            div.className = 'word';
+            div.textContent = word.text;
+            if (selected.has(id)) div.classList.add('selected');
+            if (aiSelectedIds.has(id)) div.classList.add('ai-selected');
+            // 交互统一由 content 上的委托处理（见 mousedown/move/up），此处不再绑事件
+            body.appendChild(div);
+            elements.push({ el: div, word, idx });
+          }
+        });
+
+        content.appendChild(pDiv);
+      });
+    }
+
+    // ===== 撤销栈：每次编辑前快照 selected =====
+    function pushUndo() {
+      undoStack.push(new Set(selected));
+      if (undoStack.length > 100) undoStack.shift();
+    }
+    function undo() {
+      if (!undoStack.length) return;
+      const prev = undoStack.pop();
+      selected.clear();
+      prev.forEach(id => selected.add(id));
+      markSegsDirty();
+      refreshSelectionStyles();
+    }
+
+    // 只更新词/气口的 selected/ai-selected class，不重建 DOM
+    function refreshSelectionStyles() {
+      const seenGroups = new Set();
+      for (const { el, idx } of elements) {
+        if (el.dataset.gapGroup) {
+          if (seenGroups.has(el)) continue;
+          seenGroups.add(el);
+          const groupIds = JSON.parse(el.dataset.gapGroup).map(i => 'word-' + i);
+          const allOn = groupIds.every(gid => selected.has(gid));
+          const isAi = groupIds.some(gid => aiSelectedIds.has(gid));
+          el.classList.toggle('selected', allOn);
+          el.classList.toggle('ai-selected', isAi && !allOn);
+        } else {
+          const id = 'word-' + idx;
+          const on = selected.has(id);
+          el.classList.toggle('selected', on);
+          el.classList.toggle('ai-selected', !on && aiSelectedIds.has(id));
+        }
+      }
+    }
+
+    // ===== 交互：点=定位，划=删/恢复（统一委托，不再逐元素绑事件）=====
+    const elIndexOfId = id => elements.findIndex(el => 'word-' + el.idx === id);
+
+    // 把 [startId..endId] 这段词统一设为 add(删) 或 remove(恢复)，并记录时间范围
+    function applyRange(startId, endId, mode) {
+      const a = elIndexOfId(startId), b = elIndexOfId(endId);
+      if (a < 0 || b < 0) return;
+      const [lo, hi] = a <= b ? [a, b] : [b, a];
+      let tMin = Infinity, tMax = -Infinity;
+      for (let j = lo; j <= hi; j++) {
+        const id = 'word-' + elements[j].idx;
+        mode === 'add' ? selected.add(id) : selected.delete(id);
+        const w = elements[j].word;
+        if (w.start < tMin) tMin = w.start;
+        if (w.end > tMax) tMax = w.end;
+      }
+      dragSpan = tMin <= tMax ? { start: tMin, end: tMax } : null;
+      markSegsDirty();
+      refreshSelectionStyles();
+    }
+
+    content.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      const target = e.target.closest('[data-id], [data-gap-group]');
+      if (!target) return;
+      const isGap = !!target.dataset.gapGroup;
+      const startId = isGap ? ('word-' + JSON.parse(target.dataset.gapGroup)[0]) : target.dataset.id;
+      // 划选方向由「按下的第一个元素」当前状态决定：已删→恢复，未删→删
+      const startDeleted = isGap
+        ? JSON.parse(target.dataset.gapGroup).every(i => selected.has('word-' + i))
+        : selected.has(startId);
+      selectMode = startDeleted ? 'remove' : 'add';
+      selectStart = startId;
+      dragSpan = null;
+      pendingDown = { startId, x: e.clientX, y: e.clientY, isGap, target, started: false };
+      hideToolbar();
+      e.preventDefault(); // 阻止原生文本选择
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!pendingDown) return;
+      if (!pendingDown.started) {
+        if (Math.abs(e.clientX - pendingDown.x) < DRAG_THRESHOLD &&
+            Math.abs(e.clientY - pendingDown.y) < DRAG_THRESHOLD) return;
+        pendingDown.started = true;   // 越过阈值 → 升级为「划」
+        isSelecting = true;
+        pushUndo();
+      }
+      const target = e.target.closest('[data-id], [data-gap-group]');
+      if (!target) return;
+      const endId = target.dataset.gapGroup
+        ? ('word-' + JSON.parse(target.dataset.gapGroup)[0])
+        : target.dataset.id;
+      applyRange(selectStart, endId, selectMode);
+    });
+
+    document.addEventListener('mouseup', e => {
+      if (!pendingDown) { isSelecting = false; return; }
+      const pd = pendingDown;
+      pendingDown = null;
+      isSelecting = false;
+      if (pd.started) {
+        // 仅「标删」划选后弹工具条（试听/撤销）；「恢复」不需要，恢复就是恢复
+        if (selectMode === 'add') showSelectionToolbar(e.clientX, e.clientY);
+        return;
+      }
+      // 没移动 = 单击
+      if (pd.isGap) {
+        // 静音 chip：单击直接切删除
+        pushUndo();
+        const ids = JSON.parse(pd.target.dataset.gapGroup).map(i => 'word-' + i);
+        const add = !ids.every(id => selected.has(id));
+        ids.forEach(id => add ? selected.add(id) : selected.delete(id));
+        markSegsDirty();
+        refreshSelectionStyles();
+      } else {
+        // 词：定位并播放（去那听）
+        const wi = parseInt(pd.startId.replace('word-', ''), 10);
+        const w = words[wi];
+        if (w) {
+          clearPreview();
+          const run = deletedRunAround(wi);
+          // 点到红词 → 试听这整段被删的内容（否则跳段逻辑会立刻把它跳过去）
+          if (run) previewSpan(run);
+          else { video.currentTime = w.start; video.play().catch(() => {}); }
+        }
+      }
+    });
+
+    // 给定词 idx，若它在某段连续删除里，返回这段的时间范围（用于点红词试听）
+    function deletedRunAround(idx) {
+      if (!selected.has('word-' + idx)) return null;
+      let lo = idx, hi = idx;
+      while (lo - 1 >= 0 && selected.has('word-' + (lo - 1))) lo--;
+      while (hi + 1 < words.length && selected.has('word-' + (hi + 1))) hi++;
+      return { start: words[lo].start, end: words[hi].end };
+    }
+
+    // ===== 划选后的浮动工具条：试听这段 / 撤销 =====
+    let toolbarEl = null, toolbarDismiss = null;
+    function hideToolbar() {
+      if (toolbarDismiss) { toolbarDismiss(); toolbarDismiss = null; }
+      if (toolbarEl) { toolbarEl.remove(); toolbarEl = null; }
+    }
+    function showSelectionToolbar(x, y) {
+      hideToolbar();
+      if (!dragSpan) return;
+      const span = dragSpan;
+      const bar = document.createElement('div');
+      bar.className = 'sel-toolbar';
+      const d = Math.max(0, span.end - span.start);
+      bar.innerHTML =
+        `<button data-act="preview">▶ 试听 <em>${d.toFixed(1)}s</em></button>` +
+        `<button data-act="undo">↺ 撤销</button>`;
+      document.body.appendChild(bar);
+      toolbarEl = bar;
+      const bw = bar.offsetWidth, bh = bar.offsetHeight;
+      const left = Math.min(Math.max(8, x - bw / 2), window.innerWidth - bw - 8);
+      const top = (y - bh - 12 < 8) ? y + 16 : y - bh - 12;
+      bar.style.left = left + 'px';
+      bar.style.top = top + 'px';
+      bar.addEventListener('mousedown', ev => ev.stopPropagation());
+      bar.querySelector('[data-act="preview"]').onclick = () => previewSpan(span);
+      bar.querySelector('[data-act="undo"]').onclick = () => { undo(); hideToolbar(); };
+      // 点工具条以外任意位置即消失（工具条自身的 mousedown 已 stopPropagation，不会触发）
+      const onOutside = ev => { if (toolbarEl && !toolbarEl.contains(ev.target)) hideToolbar(); };
+      document.addEventListener('mousedown', onOutside, true);
+      toolbarDismiss = () => document.removeEventListener('mousedown', onOutside, true);
+    }
+
+    // 试听这段：从段首播到段尾即停；期间不跳删除段（否则红段会被直接跳过听不到）
+    function clearPreview() { previewUntil = null; }
+    function previewSpan(span) {
+      hideToolbar();
+      previewUntil = span.end;
+      video.currentTime = span.start;
+      video.play().catch(() => {});
+    }
+
+    // === rAF 主循环：60Hz 检测跳段 + 当前词高亮，远比 timeupdate 的 ~4Hz 可靠 ===
+    let rafId = 0;
+    let currentEl = null;        // 当前高亮的 DOM 元素
+    let currentWordIdx = -1;
+    let lastSeekTarget = -1;     // 防止反复 seek 到同一个段尾
+
+    function tick() {
+      rafId = 0;
+      if (video.paused) return;
+      const t = video.currentTime;
+      const dur = video.duration || 0;
+
+      // 0) 「试听这段」预览模式：播到段尾即停，期间不跳删除段（要听被剪掉的内容）
+      if (previewUntil != null) {
+        if (t >= previewUntil) { previewUntil = null; video.pause(); return; }
+        updatePlayheadUI(t, dur);
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      // 1) 跳过切点：用二分定位当前段，O(log n)。
+      //    用 getPlaybackCuts()（= 波形 / 导出同源的 computeFinalKeeps 结果），保证
+      //    预览听到的就是真正会剪掉的内容。SEEK_EPS 容差吸收 seek 欠冲（落点常比目标
+      //    早几毫秒），避免落点仍判定在段内而反复 seek 到同一段尾，造成卡顿 / 重放。
+      const SEEK_EPS = 0.03;
+      const segs = getPlaybackCuts();
+      if (segs.length) {
+        let lo = 0, hi = segs.length - 1, hit = -1;
+        while (lo <= hi) {
+          const mid = (lo + hi) >> 1;
+          if (segs[mid].start <= t) {
+            if (segs[mid].end > t + SEEK_EPS) { hit = mid; break; }
+            lo = mid + 1;
+          } else { hi = mid - 1; }
+        }
+        if (hit >= 0) {
+          const target = segs[hit].end;
+          if (Math.abs(target - lastSeekTarget) > 0.001) {
+            lastSeekTarget = target;
+            video.currentTime = target;
+          }
+          rafId = requestAnimationFrame(tick);
+          return;
+        }
+        lastSeekTarget = -1;
+      }
+
+      updatePlayheadUI(t, dur);
+      rafId = requestAnimationFrame(tick);
+    }
+
+    // 时间文本 + 当前词高亮 + 波形游标（正常播放与试听预览共用）
+    function updatePlayheadUI(t, dur) {
+      timeCur.textContent = formatTime(t);
+
+      let idx = findWordIndexAt(t);
+      if (idx >= 0 && t >= words[idx].end) idx = -1; // 在词与词之间的微间隙，不高亮
+      if (idx !== currentWordIdx) {
+        currentWordIdx = idx;
+        const entry = idx >= 0 ? elements.find(e => e.idx === idx) : null;
+        const el = entry ? entry.el : null;
+        if (el !== currentEl) {
+          if (currentEl) currentEl.classList.remove('current');
+          if (el) {
+            el.classList.add('current');
+            scrollCurrentIntoView(el);
+          }
+          currentEl = el;
+        }
+      }
+
+      wave.draw(t);
+    }
+
+    function startTick() { if (!rafId) rafId = requestAnimationFrame(tick); }
+
+    // 只在元素滚出可视区时滚动，且不用 smooth（smooth 在频繁触发时会叠加成卡顿）
+    function scrollCurrentIntoView(el) {
+      const scroller = el.closest('.transcript-scroll') || el.parentElement;
+      if (!scroller) return;
+      const er = el.getBoundingClientRect();
+      const sr = scroller.getBoundingClientRect();
+      if (er.top < sr.top + 40 || er.bottom > sr.bottom - 40) {
+        el.scrollIntoView({ block: 'center' });
+      }
+    }
+
+    video.addEventListener('play', () => {
+      document.getElementById('playBtn').textContent = '❚❚ 暂停';
+      startTick();
+    });
+    video.addEventListener('pause', () => {
+      document.getElementById('playBtn').textContent = '▶ 播放';
+      // 暂停时刷新一次时间/波形，确保静止状态准确
+      const t = video.currentTime, dur = video.duration || 0;
+      timeCur.textContent = formatTime(t);
+      timeTot.textContent = formatTime(dur);
+      wave.draw(t);
+    });
+    video.addEventListener('seeked', () => {
+      // 跳转后让下一帧 tick 重新检查（处理用户手动 seek 到删除段内）
+      lastSeekTarget = -1;
+      wave.draw(video.currentTime);
+      if (!video.paused) startTick();
+    });
+    video.addEventListener('loadedmetadata', () => {
+      timeTot.textContent = formatTime(video.duration || 0);
+    });
+    function clearAll() { pushUndo(); selected.clear(); markSegsDirty(); render(); }
+    function applySilenceThreshold(threshold) {
+      pushUndo();
+      words.forEach((w, idx) => { if (w.isGap) selected.delete('word-' + idx); });
+      buildGapGroups();
+      gapGroups.forEach(group => {
+        if (group.duration >= threshold) {
+          group.indices.forEach(idx => selected.add('word-' + idx));
+        }
+      });
+      markSegsDirty();
+      render();
+    }
+
+    async function exportFCPXML() {
+      const segments = getDeleteSegments();
+      if (!segments.length) { alert('没有选中任何片段'); return; }
+      // 把「你最终选中的词级 idx」一并送给服务器，供自进化学习写 review_log.json。
+      // selected 里是 'word-<idx>'，提取数字、升序；服务器再 diff AI 初选 vs 你最终。
+      const finalSelected = [...selected]
+        .map(id => parseInt(id.replace('word-', ''), 10))
+        .filter(n => !Number.isNaN(n))
+        .sort((a, b) => a - b);
+      try {
+        const res = await fetch('/api/fcpxml', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deleteList: segments, opts: cutOpts, finalSelected })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const fileName = data.output.split('/').pop();
+          const dlRes = await fetch('/api/download/' + encodeURIComponent(data.output));
+          const blob = await dlRes.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          a.click();
+          URL.revokeObjectURL(url);
+          alert(`✅ FCPXML 已导出\n\n📁 文件: ${fileName}\n🎬 保留片段: ${data.segments} 个\n\n直接拖入 Final Cut Pro 即可`);
+        } else {
+          alert('❌ 导出失败: ' + data.error);
+        }
+      } catch (err) {
+        alert('❌ 请求失败: ' + err.message + '\n\n请确保使用 review_server.js 启动服务');
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ') { e.preventDefault(); undo(); return; }
+      if (e.metaKey || e.ctrlKey) return;   // 不拦截其它系统快捷键
+      if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+      else if (e.code === 'ArrowLeft')  { e.preventDefault(); seekRel(e.shiftKey ? -5 : -1); }
+      else if (e.code === 'ArrowRight') { e.preventDefault(); seekRel(e.shiftKey ?  5 :  1); }
+    });
+
+    const resizer = document.getElementById('resizer');
+    const sidePanel = document.querySelector('.side-panel');
+    let isResizing = false;
+    resizer.addEventListener('mousedown', e => {
+      isResizing = true; resizer.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isResizing) return;
+      // 拖动改右侧栏宽度（左侧逐字稿 flex 自适应）
+      const rect = document.querySelector('.stage').getBoundingClientRect();
+      const newWidth = Math.max(300, Math.min(rect.right - e.clientX, rect.width - 360));
+      sidePanel.style.width = newWidth + 'px';
+    });
+    document.addEventListener('mouseup', () => {
+      if (!isResizing) return;
+      isResizing = false; resizer.classList.remove('dragging');
+      document.body.style.cursor = ''; document.body.style.userSelect = '';
+    });
+
+    // ── 波形高度：可拖拽 + 随视口自适应（小屏也保证 stage 不被挤没）──
+    const WAVE_H_MIN = 70;
+    const WAVE_H_KEY = 'reviewWaveH';
+    // dock 内除波形外的固定占用（标尺 + 状态栏 + padding）+ 顶栏 + stage 最小高度
+    function waveHMax() {
+      return Math.max(WAVE_H_MIN, window.innerHeight - 64 /*topbar*/ - 64 /*dock chrome*/ - 200 /*min stage*/);
+    }
+    function clampWaveH(h) {
+      return Math.max(WAVE_H_MIN, Math.min(h, waveHMax()));
+    }
+    function setWaveH(h, persist) {
+      const v = Math.round(clampWaveH(h));
+      document.documentElement.style.setProperty('--wave-h', v + 'px');
+      if (persist) { try { localStorage.setItem(WAVE_H_KEY, v); } catch (e) {} }
+      // ResizeObserver(cv) 会接住高度变化并重绘，无需手动 redraw
+    }
+    const curWaveH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--wave-h'), 10) || 132;
+    (function initWaveResize() {
+      const stored = parseInt(localStorage.getItem(WAVE_H_KEY) || '', 10);
+      setWaveH(Number.isFinite(stored) ? stored : 132, false);
+
+      const handle = document.getElementById('dockResizer');
+      let dragH = null;
+      handle.addEventListener('mousedown', e => {
+        dragH = { y0: e.clientY, h0: curWaveH() };
+        handle.classList.add('dragging');
+        document.body.style.cursor = 'row-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', e => {
+        if (!dragH) return;
+        // 手柄在 dock 顶部：往上拖 = 变高
+        setWaveH(dragH.h0 + (dragH.y0 - e.clientY), false);
+      });
+      document.addEventListener('mouseup', () => {
+        if (!dragH) return;
+        dragH = null;
+        handle.classList.remove('dragging');
+        document.body.style.cursor = ''; document.body.style.userSelect = '';
+        setWaveH(curWaveH(), true); // 落地时持久化
+      });
+      // 视口变化时重新夹紧（换显示器 / 缩放窗口都会触发）
+      window.addEventListener('resize', () => setWaveH(curWaveH(), false));
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "duration": 7.3,
+  "maxStaticSec": 1.2,
+  "assertions": [
+    {
+      "kind": "appearsBy",
+      "selector": "#grid-motion",
+      "bySec": 0.1
+    },
+    {
+      "kind": "keepsMoving",
+      "withinSelector": "#grid-motion"
+    }
+  ]
+}

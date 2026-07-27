@@ -1,0 +1,6 @@
+interface:
+  display_name: "ra-逐字稿提取skill"
+  short_description: "抖音/小红书视频链接提取完整逐字稿"
+  default_prompt: "Use $ra-逐字稿提取skill to extract a faithful Markdown transcript from this Douyin or Xiaohongshu video URL."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小黑 SVG 动效系列参考</title>
+<link rel="icon" href="data:,">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f6f4ef;
+  --paper: #fff;
+  --ink: #171717;
+  --muted: #6d6860;
+  --line: #e5ded2;
+  --red: #d63a30;
+  --blue: #386fc2;
+  --orange: #ef6b1f;
+  --green: #178358;
+}
+* { box-sizing: border-box; }
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+}
+main {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 22px;
+}
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+h1 {
+  margin: 0 0 5px;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 780;
+}
+.note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+}
+button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffaf2;
+  padding: 0 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+button.active,
+button:hover {
+  border-color: var(--orange);
+  color: #9d3b08;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 50px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.card-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 760;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+.chip {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: var(--muted);
+  font: 700 11px/16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #fff;
+}
+.line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.thin { stroke-width: 2; }
+.heavy { stroke-width: 4; }
+.soft { stroke: rgba(23, 23, 23, .52); }
+.red { stroke: var(--red); }
+.blue { stroke: var(--blue); }
+.orange { stroke: var(--orange); }
+.green { stroke: var(--green); }
+.fill-white { fill: #fff; }
+.fill-black { fill: #050505; }
+.fill-soft { fill: #fffdf8; }
+.fill-good { fill: #eafff2; }
+.fill-warn { fill: #fff1ed; }
+.paper {
+  fill: #fff;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.hand-text {
+  font-family: "Kaiti SC", "STKaiti", "PingFang SC", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.text-red { fill: var(--red); }
+.text-blue { fill: var(--blue); }
+.text-orange { fill: var(--orange); }
+.text-ink { fill: var(--ink); }
+.small { font-size: 22px; }
+.medium { font-size: 28px; }
+.draw {
+  stroke-dasharray: var(--len, 1);
+  stroke-dashoffset: var(--len, 1);
+}
+.motion-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  main { padding: 14px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="topbar">
+    <div>
+      <h1>小黑 SVG 动效系列参考</h1>
+      <p class="note">同一套白底手绘、小黑动作主体、短批注、阶段递进规则。每张都是可复制改造的 HTML/SVG/GSAP 模板。</p>
+    </div>
+    <div class="controls">
+      <button id="play" class="active" type="button">播放</button>
+      <button id="pause" type="button">暂停</button>
+      <button id="static" type="button">静态审核</button>
+    </div>
+  </header>
+
+  <section class="grid">
+    <article class="card">
+      <header class="card-head">
+        <div>
+          <div class="card-title">01 卡住的输入</div>
+          <div class="card-meta">适合：素材、需求、信息进入系统前卡住</div>
+        </div>
+        <div class="chip">stuck-input</div>
+      </header>
+      <svg id="scene-stuck" viewBox="0 0 1200 675" aria-label="卡住的输入">
+        <defs>
+          <marker id="arrow-orange-a" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#ef6b1f"></path>
+          </marker>
+          <marker id="arrow-red-a" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#d63a30"></path>
+          </marker>
+        </defs>
+        <rect width="1200" height="675" fill="#fff"></rect>
+        <g id="a-inputs" class="motion-layer">
+          <path class="paper" d="M95 380L160 365L212 384L148 402Z"></path>
+          <path class="paper" d="M112 342L180 330L232 350L162 368Z"></path>
+          <path class="paper" d="M216 385L280 371L330 390L265 406Z"></path>
+        </g>
+        <g id="a-belt">
+          <path class="line" d="M70 438C250 430 420 432 560 438"></path>
+          <path class="line" d="M70 488C250 480 420 482 560 488"></path>
+          <path class="line" d="M70 438L70 488M560 438L560 488"></path>
+          <circle class="line fill-white a-roller" cx="150" cy="463" r="14"></circle>
+          <circle class="line fill-white a-roller" cx="290" cy="463" r="14"></circle>
+          <circle class="line fill-white a-roller" cx="430" cy="463" r="14"></circle>
+        </g>
+        <g id="a-gate">
+          <path class="line heavy" d="M570 405C604 428 606 496 572 520"></path>
+          <path class="line heavy" d="M600 414C632 438 634 487 605 510"></path>
+        </g>
+        <g id="a-xiaohei" class="motion-layer">
+          <path class="fill-black" d="M638 350C675 324 728 330 748 370C768 411 758 480 730 508C700 538 648 524 628 484C606 440 604 375 638 350Z"></path>
+          <circle cx="672" cy="409" r="8" fill="#fff"></circle>
+          <circle cx="712" cy="410" r="8" fill="#fff"></circle>
+          <path class="line" d="M645 392C615 374 592 355 568 325"></path>
+          <path class="line" d="M736 392C772 370 805 354 842 333"></path>
+          <path class="line" d="M660 516C652 548 645 572 634 600"></path>
+          <path class="line" d="M722 516C730 548 738 572 750 600"></path>
+        </g>
+        <g id="a-output" class="motion-layer">
+          <path class="paper" d="M0 0L92 -4L98 52L8 60Z"></path>
+          <text class="hand-text text-ink small" x="23" y="36">卡片</text>
+        </g>
+        <g id="a-ann">
+          <g id="a-ann-before">
+            <text class="hand-text text-blue small" x="118" y="300">输入很多</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-a)" d="M142 318C210 312 278 315 338 320"></path>
+          </g>
+          <g id="a-ann-stuck">
+            <text class="hand-text text-red small" x="486" y="333">入口太窄</text>
+            <path class="line red draw" marker-end="url(#arrow-red-a)" d="M540 348C558 368 568 386 580 410"></path>
+          </g>
+          <g id="a-ann-clear">
+            <text class="hand-text text-blue small" x="808" y="300">先拆小</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-a)" d="M805 320C868 315 935 316 1002 320"></path>
+          </g>
+        </g>
+      </svg>
+    </article>
+
+    <article class="card">
+      <header class="card-head">
+        <div>
+          <div class="card-title">02 筛选漏斗</div>
+          <div class="card-meta">适合：筛掉无效信息，保留可用素材</div>
+        </div>
+        <div class="chip">filter-funnel</div>
+      </header>
+      <svg id="scene-filter" viewBox="0 0 1200 675" aria-label="筛选漏斗">
+        <defs>
+          <marker id="arrow-orange-b" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#ef6b1f"></path>
+          </marker>
+          <marker id="arrow-red-b" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#d63a30"></path>
+          </marker>
+        </defs>
+        <rect width="1200" height="675" fill="#fff"></rect>
+        <g id="b-inputs" class="motion-layer">
+          <path class="paper b-paper" d="M0 0L58 -6L68 34L10 42Z"></path>
+          <path class="paper b-paper" d="M0 0L62 -4L70 38L8 45Z"></path>
+          <path class="paper b-paper" d="M0 0L56 -8L68 28L14 42Z"></path>
+          <path class="paper b-paper" d="M0 0L60 -5L72 35L9 44Z"></path>
+        </g>
+        <g id="b-funnel">
+          <path class="line" d="M430 230L760 230L660 390L535 390Z"></path>
+          <path class="line" d="M535 390L590 500L660 390"></path>
+          <path class="line thin soft" d="M480 285C560 300 635 300 710 286"></path>
+          <path class="line thin soft" d="M512 340C575 350 628 350 684 340"></path>
+        </g>
+        <g id="b-xiaohei" class="motion-layer">
+          <path class="fill-black" d="M500 410C530 382 580 388 600 425C620 462 612 525 586 550C556 578 512 566 492 530C472 492 472 436 500 410Z"></path>
+          <circle cx="530" cy="463" r="8" fill="#fff"></circle>
+          <circle cx="565" cy="464" r="8" fill="#fff"></circle>
+          <path class="line" d="M588 438C636 420 675 402 720 382"></path>
+          <path class="line" d="M506 442C475 425 445 405 418 382"></path>
+          <path class="line" d="M518 558C510 582 503 600 494 622"></path>
+          <path class="line" d="M578 558C588 582 596 600 606 622"></path>
+        </g>
+        <g id="b-kept" class="motion-layer">
+          <path class="paper" d="M0 0L90 -4L96 52L6 58Z"></path>
+          <text class="hand-text text-ink small" x="24" y="36">可用</text>
+        </g>
+        <g id="b-trash" class="motion-layer">
+          <ellipse class="line fill-white" cx="860" cy="528" rx="82" ry="24"></ellipse>
+          <path class="fill-black" d="M810 522C838 504 886 506 912 526C884 544 836 544 810 522Z"></path>
+        </g>
+        <g id="b-ann">
+          <g id="b-ann-in">
+            <text class="hand-text text-blue small" x="210" y="170">先混在一起</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-b)" d="M270 188C350 195 418 207 482 226"></path>
+          </g>
+          <g id="b-ann-filter">
+            <text class="hand-text text-red small" x="720" y="168">筛一下</text>
+            <path class="line red draw" marker-end="url(#arrow-red-b)" d="M735 185C704 205 680 224 648 248"></path>
+          </g>
+          <g id="b-ann-out">
+            <text class="hand-text text-blue small" x="838" y="404">留下能用的</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-b)" d="M830 420C806 430 782 440 758 455"></path>
+          </g>
+        </g>
+      </svg>
+    </article>
+
+    <article class="card">
+      <header class="card-head">
+        <div>
+          <div class="card-title">03 承接搭桥</div>
+          <div class="card-meta">适合：从内容观点到行动入口，中间缺承接</div>
+        </div>
+        <div class="chip">bridge-handoff</div>
+      </header>
+      <svg id="scene-bridge" viewBox="0 0 1200 675" aria-label="承接搭桥">
+        <defs>
+          <marker id="arrow-orange-c" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#ef6b1f"></path>
+          </marker>
+          <marker id="arrow-red-c" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#d63a30"></path>
+          </marker>
+        </defs>
+        <rect width="1200" height="675" fill="#fff"></rect>
+        <g id="c-left">
+          <path class="line" d="M120 430C220 398 334 400 430 430C346 460 210 462 120 430Z"></path>
+          <text class="hand-text text-ink small" x="235" y="430">内容</text>
+        </g>
+        <g id="c-right">
+          <path class="line" d="M795 410L970 410L970 535L795 535Z"></path>
+          <path class="line" d="M815 430L950 430L950 515L815 515Z"></path>
+          <text class="hand-text text-ink small" x="852" y="482">行动</text>
+        </g>
+        <g id="c-gap">
+          <path class="line red" d="M505 468C560 438 624 438 680 468"></path>
+          <path class="line red" d="M530 500C574 478 620 478 656 500"></path>
+        </g>
+        <g id="c-bridge" class="motion-layer">
+          <path class="line heavy" d="M0 0C90 -34 188 -34 278 0"></path>
+          <path class="line thin" d="M45 -12L55 15M100 -23L110 9M160 -23L170 9M220 -12L230 15"></path>
+        </g>
+        <g id="c-xiaohei" class="motion-layer">
+          <path class="fill-black" d="M505 330C535 302 584 308 604 344C624 382 612 440 586 466C558 492 514 482 494 448C474 412 478 354 505 330Z"></path>
+          <circle cx="532" cy="382" r="8" fill="#fff"></circle>
+          <circle cx="566" cy="383" r="8" fill="#fff"></circle>
+          <path class="line" d="M501 366C456 355 420 346 378 330"></path>
+          <path class="line" d="M598 366C632 347 664 333 702 314"></path>
+          <path class="line" d="M522 474C515 502 507 526 496 552"></path>
+          <path class="line" d="M578 474C586 502 594 526 606 552"></path>
+        </g>
+        <g id="c-card" class="motion-layer">
+          <path class="paper" d="M0 0L84 -4L92 50L8 58Z"></path>
+          <text class="hand-text text-ink small" x="22" y="36">观点</text>
+        </g>
+        <g id="c-ann">
+          <g id="c-ann-gap">
+            <text class="hand-text text-red small" x="388" y="560">中间断了</text>
+            <path class="line red draw" marker-end="url(#arrow-red-c)" d="M482 540C506 522 526 504 548 486"></path>
+          </g>
+          <g id="c-ann-build">
+            <text class="hand-text text-blue small" x="760" y="344">补承接</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-c)" d="M760 360C720 392 684 430 650 462"></path>
+          </g>
+          <g id="c-ann-pass">
+            <text class="hand-text text-blue small" x="765" y="592">能过去</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-c)" d="M760 570C800 548 835 530 875 505"></path>
+          </g>
+        </g>
+      </svg>
+    </article>
+
+    <article class="card">
+      <header class="card-head">
+        <div>
+          <div class="card-title">04 回流修正</div>
+          <div class="card-meta">适合：审核发现问题，回到上一步修正后再输出</div>
+        </div>
+        <div class="chip">feedback-loop</div>
+      </header>
+      <svg id="scene-loop" viewBox="0 0 1200 675" aria-label="回流修正">
+        <defs>
+          <marker id="arrow-orange-d" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#ef6b1f"></path>
+          </marker>
+          <marker id="arrow-red-d" viewBox="0 0 20 20" refX="16" refY="10" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+            <path d="M2 3L17 10L2 17Z" fill="#d63a30"></path>
+          </marker>
+        </defs>
+        <rect width="1200" height="675" fill="#fff"></rect>
+        <g id="d-machines">
+          <path class="line" d="M160 380L330 380L330 485L160 485Z"></path>
+          <text class="hand-text text-ink small" x="214" y="438">草稿</text>
+          <path class="line" d="M515 350L690 350L690 505L515 505Z"></path>
+          <path class="line thin" d="M535 388L670 388M535 425L670 425M535 462L670 462"></path>
+          <text class="hand-text text-ink small" x="560" y="330">检查台</text>
+          <path class="line" d="M875 380L1045 380L1045 485L875 485Z"></path>
+          <text class="hand-text text-ink small" x="930" y="438">输出</text>
+        </g>
+        <g id="d-card" class="motion-layer">
+          <path class="paper" d="M0 0L86 -4L94 54L8 60Z"></path>
+          <text class="hand-text text-ink small" x="22" y="38">稿子</text>
+        </g>
+        <g id="d-xiaohei" class="motion-layer">
+          <path class="fill-black" d="M565 500C594 474 642 480 662 514C684 552 672 608 646 630C618 655 574 645 552 612C530 578 538 526 565 500Z"></path>
+          <circle cx="594" cy="552" r="8" fill="#fff"></circle>
+          <circle cx="628" cy="553" r="8" fill="#fff"></circle>
+          <path class="line" d="M560 536C528 520 500 506 468 488"></path>
+          <path class="line" d="M656 536C692 520 724 504 760 486"></path>
+        </g>
+        <g id="d-loop-path">
+          <path id="d-loop-draw" class="line orange draw" marker-end="url(#arrow-orange-d)" d="M640 348C728 230 400 214 280 356"></path>
+        </g>
+        <g id="d-stamp" class="motion-layer">
+          <path class="line green" d="M0 0L92 0L92 48L0 48Z"></path>
+          <text class="hand-text text-ink small" x="18" y="32">通过</text>
+        </g>
+        <g id="d-ann">
+          <g id="d-ann-check">
+            <text class="hand-text text-blue small" x="498" y="248">先检查</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-d)" d="M548 266C560 294 572 318 588 350"></path>
+          </g>
+          <g id="d-ann-back">
+            <text class="hand-text text-red small" x="318" y="238">有问题就回去</text>
+            <path class="line red draw" marker-end="url(#arrow-red-d)" d="M420 256C392 286 360 316 320 350"></path>
+          </g>
+          <g id="d-ann-out">
+            <text class="hand-text text-blue small" x="800" y="318">再输出</text>
+            <path class="line orange draw" marker-end="url(#arrow-orange-d)" d="M798 336C828 366 852 388 878 410"></path>
+          </g>
+        </g>
+      </svg>
+    </article>
+  </section>
+</main>
+
+<script src="vendor/gsap.min.js"></script>
+<script>
+const timelines = [];
+
+function prepDraws(root = document) {
+  root.querySelectorAll('.draw').forEach(path => {
+    const len = path.getTotalLength();
+    path.style.setProperty('--len', len);
+    path.style.strokeDashoffset = len;
+  });
+}
+
+function reveal(tl, group, at) {
+  tl.to(group, { opacity: 1, duration: .1 }, at)
+    .fromTo(`${group} .draw`, {
+      strokeDashoffset: (i, target) => target.getTotalLength()
+    }, {
+      strokeDashoffset: 0,
+      duration: .35,
+      stagger: .05
+    }, at + .04)
+    .from(`${group} text`, { opacity: 0, y: 8, duration: .2, stagger: .04 }, at + .02);
+}
+
+function makeTimeline() {
+  const tl = gsap.timeline({ repeat: -1, repeatDelay: .9, defaults: { ease: 'power2.out' } });
+  timelines.push(tl);
+  return tl;
+}
+
+function setupStuck() {
+  gsap.set(['#a-ann-before', '#a-ann-stuck', '#a-ann-clear'], { opacity: 0 });
+  gsap.set('#a-output', { x: 650, y: 416, opacity: 0, transformOrigin: '50% 50%' });
+  const tl = makeTimeline();
+  tl.addLabel('context', 0)
+    .from('#scene-stuck #a-belt, #scene-stuck #a-gate', { opacity: 0, y: 16, duration: .4 }, 0)
+    .from('#a-xiaohei', { opacity: 0, scale: .9, y: 14, duration: .4 }, .12)
+    .from('#a-inputs', { opacity: 0, x: -90, duration: .42 }, .28)
+    .addLabel('input', .72)
+    .to('#a-inputs', { x: 210, duration: 1.1, ease: 'none' }, .72)
+    .to('#scene-stuck .a-roller', { rotation: 250, transformOrigin: '50% 50%', duration: 1.1, ease: 'none' }, .72)
+    .addLabel('break', 1.68)
+    .to('#a-gate', { x: -10, duration: .12, yoyo: true, repeat: 5 }, 1.68)
+    .to('#a-xiaohei', { y: -8, duration: .24, yoyo: true, repeat: 1 }, 1.72)
+    .addLabel('clear', 2.55)
+    .to('#a-output', { opacity: 1, duration: .18 }, 2.55)
+    .to('#a-output', { x: 880, duration: .9, ease: 'none' }, 2.75)
+    .to('#a-gate', { x: 28, duration: .38 }, 2.72);
+  reveal(tl, '#a-ann-before', .48);
+  reveal(tl, '#a-ann-stuck', 1.85);
+  reveal(tl, '#a-ann-clear', 2.72);
+}
+
+function setupFilter() {
+  gsap.set(['#b-ann-in', '#b-ann-filter', '#b-ann-out'], { opacity: 0 });
+  gsap.set('.b-paper', {
+    x: i => [160, 230, 300, 370][i],
+    y: i => [120, 155, 112, 165][i],
+    rotation: i => [-10, 12, 8, -14][i],
+    transformOrigin: '50% 50%',
+    opacity: 0
+  });
+  gsap.set('#b-kept', { x: 628, y: 470, opacity: 0, transformOrigin: '50% 50%' });
+  gsap.set('#b-trash', { opacity: 0 });
+  const tl = makeTimeline();
+  tl.addLabel('context', 0)
+    .from('#b-funnel', { opacity: 0, y: 18, duration: .4 }, 0)
+    .from('#b-xiaohei', { opacity: 0, scale: .9, y: 12, duration: .4 }, .12)
+    .to('.b-paper', { opacity: 1, duration: .18, stagger: .05 }, .28)
+    .addLabel('input', .62)
+    .to('.b-paper', {
+      x: i => [430, 505, 585, 660][i],
+      y: i => [202, 210, 200, 214][i],
+      rotation: i => [2, -8, 9, -4][i],
+      duration: .9,
+      stagger: .05
+    }, .62)
+    .addLabel('filter', 1.55)
+    .to('#b-xiaohei', { rotation: -4, duration: .2, yoyo: true, repeat: 3 }, 1.55)
+    .to('.b-paper', {
+      x: i => [520, 612, 805, 850][i],
+      y: i => [438, 472, 505, 532][i],
+      rotation: i => [-12, 10, 25, -18][i],
+      duration: .75,
+      stagger: .03
+    }, 1.72)
+    .to('#b-trash', { opacity: 1, duration: .18 }, 1.82)
+    .addLabel('out', 2.55)
+    .to('#b-kept', { opacity: 1, duration: .18 }, 2.55)
+    .to('#b-kept', { x: 800, y: 430, duration: .65, ease: 'none' }, 2.78);
+  reveal(tl, '#b-ann-in', .45);
+  reveal(tl, '#b-ann-filter', 1.48);
+  reveal(tl, '#b-ann-out', 2.65);
+}
+
+function setupBridge() {
+  gsap.set(['#c-ann-gap', '#c-ann-build', '#c-ann-pass'], { opacity: 0 });
+  gsap.set('#c-bridge', { x: 470, y: 468, scaleX: .05, opacity: 0, transformOrigin: '0% 50%' });
+  gsap.set('#c-card', { x: 255, y: 374, opacity: 0, transformOrigin: '50% 50%' });
+  const tl = makeTimeline();
+  tl.addLabel('context', 0)
+    .from('#c-left, #c-right', { opacity: 0, y: 18, duration: .4, stagger: .08 }, 0)
+    .from('#c-gap', { opacity: 0, scale: .9, duration: .3 }, .28)
+    .from('#c-xiaohei', { opacity: 0, scale: .9, y: 12, duration: .4 }, .36)
+    .addLabel('build', 1.1)
+    .to('#c-xiaohei', { y: -8, duration: .22, yoyo: true, repeat: 2 }, 1.1)
+    .to('#c-bridge', { opacity: 1, scaleX: 1, duration: .78, ease: 'power2.out' }, 1.22)
+    .addLabel('pass', 2.18)
+    .to('#c-card', { opacity: 1, duration: .18 }, 2.18)
+    .to('#c-card', { x: 840, y: 426, rotation: 4, duration: 1.05, ease: 'none' }, 2.38);
+  reveal(tl, '#c-ann-gap', .68);
+  reveal(tl, '#c-ann-build', 1.25);
+  reveal(tl, '#c-ann-pass', 2.7);
+}
+
+function setupLoop() {
+  gsap.set(['#d-ann-check', '#d-ann-back', '#d-ann-out'], { opacity: 0 });
+  gsap.set('#d-card', { x: 198, y: 406, opacity: 0, transformOrigin: '50% 50%' });
+  gsap.set('#d-stamp', { x: 912, y: 506, opacity: 0, rotation: -4, transformOrigin: '50% 50%' });
+  gsap.set('#d-loop-draw', { strokeDashoffset: () => document.getElementById('d-loop-draw').getTotalLength() });
+  const tl = makeTimeline();
+  tl.addLabel('context', 0)
+    .from('#d-machines', { opacity: 0, y: 18, duration: .45 }, 0)
+    .from('#d-xiaohei', { opacity: 0, scale: .9, y: 12, duration: .4 }, .18)
+    .addLabel('check', .72)
+    .to('#d-card', { opacity: 1, duration: .15 }, .72)
+    .to('#d-card', { x: 560, y: 398, rotation: -3, duration: .9, ease: 'none' }, .9)
+    .addLabel('back', 1.75)
+    .to('#d-loop-draw', { strokeDashoffset: 0, duration: .72 }, 1.75)
+    .to('#d-card', { x: 236, y: 352, rotation: -10, duration: .72, ease: 'power1.inOut' }, 1.82)
+    .addLabel('out', 2.75)
+    .to('#d-card', { x: 910, y: 404, rotation: 2, duration: .95, ease: 'none' }, 2.75)
+    .to('#d-stamp', { opacity: 1, scale: 1.08, duration: .18, yoyo: true, repeat: 1 }, 3.5)
+    .to('#d-xiaohei', { rotation: 4, duration: .18, yoyo: true, repeat: 3 }, 3.42);
+  reveal(tl, '#d-ann-check', .75);
+  reveal(tl, '#d-ann-back', 1.78);
+  reveal(tl, '#d-ann-out', 2.9);
+}
+
+function setStatic() {
+  timelines.forEach(tl => {
+    tl.repeat(0);
+    tl.progress(1).pause();
+  });
+  document.getElementById('play').classList.remove('active');
+  document.getElementById('static').classList.add('active');
+}
+
+function setMidFrame() {
+  const midTimes = [2.05, 1.9, 1.85, 2.05];
+  timelines.forEach((tl, index) => {
+    tl.repeat(0);
+    tl.time(midTimes[index]).pause();
+  });
+  document.getElementById('play').classList.remove('active');
+  document.getElementById('static').classList.remove('active');
+}
+
+prepDraws();
+setupStuck();
+setupFilter();
+setupBridge();
+setupLoop();
+
+document.getElementById('play').addEventListener('click', () => {
+  timelines.forEach(tl => tl.repeat(-1).restart());
+  document.getElementById('play').classList.add('active');
+  document.getElementById('static').classList.remove('active');
+});
+document.getElementById('pause').addEventListener('click', () => {
+  timelines.forEach(tl => tl.pause());
+  document.getElementById('play').classList.remove('active');
+});
+document.getElementById('static').addEventListener('click', setStatic);
+window.xiaoheiSeries = { timelines, setStatic, setMidFrame };
+const initialReviewMode = window.location.search.includes('frame=mid')
+  ? 'mid'
+  : window.location.search.includes('static') ? 'static' : '';
+function applyInitialReviewMode() {
+  if (initialReviewMode === 'mid') setMidFrame();
+  if (initialReviewMode === 'static') setStatic();
+}
+if (initialReviewMode) {
+  applyInitialReviewMode();
+  requestAnimationFrame(applyInitialReviewMode);
+  window.addEventListener('load', applyInitialReviewMode, { once: true });
+  setTimeout(applyInitialReviewMode, 50);
+  setTimeout(applyInitialReviewMode, 250);
+}
+</script>
+</body>
+</html>

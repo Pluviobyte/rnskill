@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: videocut-skills
+message: "If you use this project, please cite the original repository."
+authors:
+  - name: chengfeng / AI产品自由
+repository-code: "https://github.com/Agentchengfeng/chengfeng-videocut-skills"
+url: "https://x.com/chengfeng240928"
+license: Apache-2.0

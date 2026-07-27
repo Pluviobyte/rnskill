@@ -1,0 +1,14 @@
+# 用户私有配置（API Key 等）
+.env
+.env.local
+
+# 用户生成的逐字稿
+outputs/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 系统垃圾
+.DS_Store

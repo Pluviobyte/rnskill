@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xhs-article-to-images · 五套皮肤预览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,18..72,400;0,18..72,500;0,18..72,600;1,18..72,400;1,18..72,500&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles-d.css" />
+<link rel="stylesheet" href="styles-e.css" />
+<style>
+  /* 预览页：卡片上方加皮肤标签，方便截图识别 */
+  .preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .preview-tag {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 15px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); user-select: none;
+  }
+  .preview-tag b { color: rgba(255,255,255,0.85); font-weight: 600; }
+</style>
+</head>
+<body class="render-sheet">
+<main class="sheet">
+
+<!-- ① E 雅刊 · 主预告 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>01</b> · E 雅刊（默认）</div>
+  <section class="ecard e-cover" id="preview-e">
+    <div class="e-top">
+      <div class="e-brand">
+        <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+        <div class="e-wordmark">泊舟的AI思考</div>
+      </div>
+      <div class="e-idx">SKILL PREVIEW</div>
+    </div>
+    <div class="e-body">
+      <h1 class="e-title cv-title">Markdown 长文<br>→ <em>小红书图组</em></h1>
+      <div class="e-kicker cv-kicker"><span class="sq"></span>xhs-article-to-images · 开源项目</div>
+      <p class="e-lead cv-lead">给 Agent 一篇文章，自动拆页排版、Playwright 截图导出。五套皮肤，全文重排版，不是 8 页摘要。</p>
+      <div class="e-img cv-img">
+        <img class="slot-img" src="assets/cover-hero.jpg" alt="" style="object-position: center 40%;" />
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ② A 暖杏奶咖 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>02</b> · A 暖杏奶咖</div>
+  <section class="card cover cover-a skin-a" id="preview-a">
+    <div class="cv-deco"></div>
+    <div class="card-body">
+      <div class="kicker cv-kicker"><span class="eng">SKILL</span> · 长文转图</div>
+      <h1 class="cv-title">一篇 Markdown<br>自动变<em>图组</em></h1>
+      <p class="cv-sub">暖调爆款感。经验分享、干货合集、生活方式类内容都撑得住。</p>
+      <div class="cv-deco2"><i></i><i></i><i></i></div>
+    </div>
+    <div class="brand">
+      <div class="brand-id">
+        <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+        <div>
+          <div class="brand-name">泊舟的AI思考</div>
+          <div class="brand-tag">AI · 阅读 · 认知</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ③ B 雾松青 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>03</b> · B 雾松青</div>
+  <section class="card cover cover-b skin-b" id="preview-b">
+    <div class="card-body">
+      <div class="cv-hero">
+        <img class="slot-img" src="assets/cover-hero.jpg" alt="" style="object-position: center 40%;" />
+      </div>
+      <div class="cv-textwrap">
+        <h1 class="cv-title">长文排版<br>也能<em>很治愈</em></h1>
+        <p class="cv-sub">清爽松绿调。手里有张横图时，封面尤其好看。</p>
+        <div class="cv-tagstrip">
+          <span># 教程</span><span># 排版</span><span># Skill</span>
+        </div>
+      </div>
+    </div>
+    <div class="brand">
+      <div class="brand-id">
+        <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+        <div>
+          <div class="brand-name">泊舟的AI思考</div>
+          <div class="brand-tag">AI · 阅读 · 认知</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ④ C 黛墨描金 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>04</b> · C 黛墨描金</div>
+  <section class="card cover cover-c skin-c" id="preview-c">
+    <div class="cv-frame"></div>
+    <div class="card-body">
+      <div class="cv-no">No.01 — Skill Preview</div>
+      <h1 class="cv-title">知识向长文<br>就该<em>这样排</em></h1>
+      <div class="cv-rule"></div>
+      <p class="cv-sub">象牙底 + 墨黑结构 + 细金线。理性克制，编辑感拉满。</p>
+      <div class="brand-big">
+        <div class="brand-avatar"><img class="slot-img" src="assets/avatar.png" alt="" /></div>
+        <div>
+          <div class="brand-name">泊舟的AI思考</div>
+          <div class="brand-tag">AI · 阅读 · 认知</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ⑤ D 夜读鎏金 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>05</b> · D 夜读鎏金</div>
+  <section class="dcard d-cover" id="preview-d">
+    <div class="d-frame"></div>
+    <div class="d-watermark">Skill</div>
+    <div class="d-top">
+      <div class="d-kicker"><span class="en">COMING SOON</span> · 深度长文</div>
+      <div class="d-idx"><b>五</b> / 套</div>
+    </div>
+    <div class="d-body">
+      <div class="cv-en">Markdown to Xiaohongshu cards.</div>
+      <h1 class="cv-title">深墨底<br><em>鎏金</em>衬线</h1>
+      <div class="cv-rule"></div>
+      <p class="cv-sub">认知类、金句多的文章用这个。<br>惊艳感，适合压场。</p>
+      <div class="d-brand-big">
+        <div class="d-ava"><img src="assets/avatar.png" alt="" /></div>
+        <div>
+          <div class="d-name">泊舟的AI思考</div>
+          <div class="d-tag">AI · 阅读 · 认知</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ⑥ E 正文页 · 展示排版能力 -->
+<div class="preview-wrap">
+  <div class="preview-tag"><b>06</b> · E 雅刊 · 正文页示例</div>
+  <section class="ecard e-body-pg" id="preview-e-body">
+    <div class="e-top">
+      <div class="e-brand">
+        <div class="e-mono"><img src="assets/avatar.png" alt="" /></div>
+        <div class="e-wordmark">泊舟的AI思考</div>
+      </div>
+      <div class="e-idx">02 / 18</div>
+    </div>
+    <div class="e-body">
+      <div class="bp-head">
+        <div class="e-kicker"><span class="sq"></span>Skill 能做什么</div>
+        <h2 class="bp-title">全文重排版<br>不是<em>摘要</em></h2>
+      </div>
+      <div class="bp-flow">
+        <p>按 H2/H3 顺序拆页，正文为主，有图用图文。教程截图、Markdown 速查对照表都能排。</p>
+        <div class="bp-pull">1080×1440 · Playwright 一键导出 PNG</div>
+        <p>五套皮肤固定模板，稳定复刻设计稿。Agent 读文章 → 排版 → 截图，全流程自动化。</p>
+      </div>
+    </div>
+    <div class="e-foot">
+      <div>泊舟的AI思考</div>
+      <div>Skill<span class="dot"></span>小红书<span class="dot"></span>排版</div>
+    </div>
+  </section>
+</div>
+
+</main>
+</body>
+</html>

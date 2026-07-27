@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "id": "tanshou",
+  "display_name": "摊手",
+  "aliases": ["tanshou", "摊手", "hands-open", "natural-explain", "自然讲解"],
+  "status": "approved",
+  "assets": {
+    "gesture_reference": "assets/shared/gestures/tanshou/reference.png",
+    "framing_references": {}
+  },
+  "description": "人物正面坐姿，双手在胸前向两侧自然展开；手指微曲，手掌不正对镜头。",
+  "use_cases": ["对比说明", "提出问题", "强化讲解感"],
+  "constraints": [
+    "保持人物脸、发型、肤色、黑 T 和体型不变",
+    "双手自然展开但不完全摊平",
+    "手掌不正对镜头，避免夸张指向和多余手指"
+  ],
+  "framing_rules": {},
+  "compatible_identities": ["black-t"],
+  "supported_ratios": ["3:4", "4:3"]
+}

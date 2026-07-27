@@ -1,0 +1,27 @@
+{
+  "entries": [
+    {"from": "Cloud一般", "to": "Claude一般", "reason": "Claude product context"},
+    {"from": "cloud code", "to": "Claude Code", "reason": "known product"},
+    {"from": "Cloud Code", "to": "Claude Code", "reason": "known product"},
+    {"from": "Call code", "to": "Claude Code", "reason": "known product"},
+    {"from": "Codecademy", "to": "Codex", "reason": "coding-agent context"},
+    {"from": "Code Review", "to": "Codex", "reason": "coding-agent context"},
+    {"from": "Keras", "to": "Cursor", "reason": "editor subscription context"},
+    {"from": "客sir", "to": "Cursor", "reason": "phonetic match"},
+    {"from": "科瑟", "to": "Cursor", "reason": "phonetic match"},
+    {"from": "Ctrl里面", "to": "Cursor里面", "reason": "editor context"},
+    {"from": "console里面", "to": "Cursor里面", "reason": "paired editor comparison"},
+    {"from": "技术站", "to": "技术栈", "reason": "domain phrase"},
+    {"from": "200兆", "to": "200刀", "reason": "subscription price context"},
+    {"from": "claude max", "to": "Claude Max", "reason": "official capitalization"},
+    {"from": "chatgpt pro", "to": "ChatGPT Pro", "reason": "official capitalization"},
+    {"from": "codex", "to": "Codex", "reason": "official capitalization"},
+    {"from": "cursor", "to": "Cursor", "reason": "official capitalization"}
+  ],
+  "uncertain_patterns": [
+    {"pattern": "飞豹5", "reason": "possible model name; confirm from audio or source script"},
+    {"pattern": "Fable5", "reason": "possible model name; confirm from audio or source script"},
+    {"pattern": "k8s的Agent", "reason": "context suggests a product Agent framework; verify audio"},
+    {"pattern": "战略", "reason": "may be an ASR substitution in Cursor context"}
+  ]
+}

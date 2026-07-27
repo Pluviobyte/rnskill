@@ -1,0 +1,6 @@
+interface:
+  display_name: "视频洗稿主流程"
+  short_description: "从链接视频提取逐字稿，洗稿优化后交给AI视频创作"
+  default_prompt: "Use $ra-video-wash-pipeline to extract a transcript from this video link, rewrite it through the wash-script stack, and produce a new video."
+policy:
+  allow_implicit_invocation: true

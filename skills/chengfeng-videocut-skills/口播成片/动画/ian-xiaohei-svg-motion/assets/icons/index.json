@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "description": "Reusable SVG icon library for Ian Xiaohei motion scenes.",
+  "icons": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "category": "ai-model",
+      "file": "ai-models/chatgpt.svg",
+      "source": "user-provided",
+      "usage": "OpenAI / ChatGPT model card icon"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "category": "ai-model",
+      "file": "ai-models/claude.svg",
+      "source": "user-provided",
+      "usage": "Anthropic Claude model card icon"
+    },
+    {
+      "id": "flash-lightning",
+      "name": "Flash Lightning",
+      "category": "ai-model",
+      "file": "ai-models/flash-lightning.svg",
+      "source": "user-provided",
+      "usage": "Flash / speed / lightweight execution model icon"
+    },
+    {
+      "id": "stepfun",
+      "name": "Stepfun",
+      "category": "ai-model",
+      "file": "ai-models/stepfun.svg",
+      "source": "@lobehub/icons-static-svg",
+      "usage": "Step / Stepfun model card icon"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "category": "ai-model",
+      "file": "ai-models/deepseek.svg",
+      "source": "@lobehub/icons-static-svg",
+      "usage": "DeepSeek model card icon"
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "category": "ai-model",
+      "file": "ai-models/qwen.svg",
+      "source": "@lobehub/icons-static-svg",
+      "usage": "Qwen model card icon"
+    },
+    {
+      "id": "bug",
+      "name": "Bug",
+      "category": "common",
+      "file": "common/bug.svg",
+      "source": "lucide-static",
+      "usage": "Bug fixing task icon"
+    },
+    {
+      "id": "database",
+      "name": "Database",
+      "category": "common",
+      "file": "common/database.svg",
+      "source": "lucide-static",
+      "usage": "Data task icon"
+    },
+    {
+      "id": "globe",
+      "name": "Globe",
+      "category": "common",
+      "file": "common/globe.svg",
+      "source": "lucide-static",
+      "usage": "Web task icon"
+    },
+    {
+      "id": "code-2",
+      "name": "Code",
+      "category": "common",
+      "file": "common/code-2.svg",
+      "source": "lucide-static",
+      "usage": "Programming task icon"
+    },
+    {
+      "id": "image",
+      "name": "Image",
+      "category": "common",
+      "file": "common/image.svg",
+      "source": "lucide-static",
+      "usage": "Vision / image task icon"
+    },
+    {
+      "id": "gauge",
+      "name": "Gauge",
+      "category": "common",
+      "file": "common/gauge.svg",
+      "source": "lucide-static",
+      "usage": "Cost / speed meter icon"
+    },
+    {
+      "id": "brain",
+      "name": "Brain",
+      "category": "common",
+      "file": "common/brain.svg",
+      "source": "lucide-static",
+      "usage": "Reasoning / judgement icon"
+    },
+    {
+      "id": "copy",
+      "name": "Copy",
+      "category": "common",
+      "file": "common/copy.svg",
+      "source": "lucide-static",
+      "usage": "Copy / duplicate icon"
+    },
+    {
+      "id": "clipboard-list",
+      "name": "Clipboard List",
+      "category": "common",
+      "file": "common/clipboard-list.svg",
+      "source": "lucide-static",
+      "usage": "Task list / work order icon"
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "category": "common",
+      "file": "common/table.svg",
+      "source": "lucide-static",
+      "usage": "Table or spreadsheet task icon"
+    },
+    {
+      "id": "chart-line",
+      "name": "Chart Line",
+      "category": "common",
+      "file": "common/chart-line.svg",
+      "source": "lucide-static",
+      "usage": "Benchmark / result chart icon"
+    },
+    {
+      "id": "zap",
+      "name": "Zap",
+      "category": "common",
+      "file": "common/zap.svg",
+      "source": "lucide-static",
+      "usage": "Fast execution icon"
+    },
+    {
+      "id": "trending-down",
+      "name": "Trending Down",
+      "category": "common",
+      "file": "common/trending-down.svg",
+      "source": "lucide-static",
+      "usage": "Cost reduction icon"
+    }
+  ]
+}

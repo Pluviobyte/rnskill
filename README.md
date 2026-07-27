@@ -2,112 +2,41 @@
 
 [中文](README.zh.md) | English
 
-AI Agent Skills maintained by 雪踏乌云 for Codex, Claude Code, and other Agent workflows that support `SKILL.md`.
+AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
 
-The collection covers Chinese writing, content extraction, motion direction, original reference-motion studies, style-specific video production, openers, and evidence-based replica QA.
+**55 skills** covering the full video production pipeline: topic selection, scriptwriting, voice cloning (IndexTTS2), HeyGen digital avatars, video editing, ASR subtitles, cover design, motion graphics, and business diagnostics.
 
-## Requirements
+For the complete skill list with descriptions, see [README.zh.md](README.zh.md).
 
-- Codex, Claude Code, or another Agent that supports project-level skills.
-- A target project that can load `.agents/skills/<skill-name>/SKILL.md`.
-
-## Installation
-
-### Claude Code Plugin Marketplace
+## Install
 
 ```bash
+# Claude Code Plugin Marketplace
 claude plugin marketplace add Pluviobyte/rnskill
-claude plugin install rn-renhua@rnskill
-```
 
-### Universal (Codex / Claude Code)
-
-```bash
+# Universal (Codex / Claude Code)
 npx -y skills add Pluviobyte/rnskill -g --all
+
+# Single skill
+npx -y skills add Pluviobyte/rnskill --skill ra-人话
 ```
 
-Or install a single skill:
+## External Credits
 
-```bash
-npx -y skills add Pluviobyte/rnskill --skill rn-renhua
-```
+| Skill | Author | Source | License |
+|-------|--------|--------|---------|
+| `dbs` + `dbs-*` (22) | [@dontbesilent](https://x.com/dontbesilent) | [dbskill](https://github.com/dontbesilent2025/dbskill) | CC BY-NC 4.0 |
+| `chengfeng-videocut-skills` | chengfeng / AI产品自由 | [GitHub](https://github.com/Agentchengfeng/chengfeng-videocut-skills) | Apache-2.0 |
+| `ai-jian-koubo` | Inspired by chengfeng, rewritten | — | AGPL-3.0 |
+| `video-use` | Browser Use | [cloud.browser-use.com](https://cloud.browser-use.com) | MIT |
+| `ian-xiaohei-*` (2) | Ian | [GitHub](https://github.com/helloianneo/ian-xiaohei-illustrations) | MIT |
+| `editorial-collage-motion` | Inspired by Vikash Kumar / Arcads | [buldrr.com](https://buldrr.com/arcads-collage-motion-skill/) | Adapted |
 
-### Manual Install
-
-Copy only the skill you need into your project:
-
-```bash
-# Codex
-mkdir -p <project>/.agents/skills
-cp -R skills/rn-renhua <project>/.agents/skills/rn-renhua
-cp -R skills/rn-motion-replica <project>/.agents/skills/rn-motion-replica
-
-# Claude Code
-mkdir -p <project>/.claude/skills
-cp -R skills/rn-renhua <project>/.claude/skills/rn-renhua
-cp -R skills/rn-motion-replica <project>/.claude/skills/rn-motion-replica
-```
-
-## Available Skills
-
-### Writing
-
-| Skill | Description |
-|-------|-------------|
-| [`rn-renhua`](skills/rn-renhua/) | Chinese AI/tech writing de-AI editor. Removes AI-flavored patterns while preserving author voice, facts, and judgment. |
-
-### Content Extraction
-
-| Skill | Description |
-|-------|-------------|
-| [`rn-wechat-extract`](skills/rn-wechat-extract/) | Extract full text from WeChat public account articles via MicroMessenger UA spoofing. Stdlib only, no API key. |
-
-### Video Production
-
-| Skill | Description |
-|-------|-------------|
-| [`rn-motion-director`](skills/rn-motion-director/) | Motion-first AI video director. Turns topics into motion video concepts with visual metaphors, beat graphs, and anti-PPT QC. |
-| [`rn-motion-replica`](skills/rn-motion-replica/) | Builds an original, editable HyperFrames motion study from an authorized reference range, with analysis evidence and final-MP4 QC. |
-| [`rn-dark-saas-video`](skills/rn-dark-saas-video/) | Dark cinematic SaaS product video in "magic UI" style. 8 scene blueprints, 3 timing presets, hard style rules. |
-| [`rn-bw-text-opener`](skills/rn-bw-text-opener/) | Black-white typed text opener animation with synced typing SFX. 3 timing presets. Includes a Python timing plan generator. |
-
-### Quality Control
-
-| Skill | Description |
-|-------|-------------|
-| [`rn-replica-qc`](skills/rn-replica-qc/) | SOP v2 replica QA. Five fidelity levels plus asset, runtime, and delivery full-frame gates; exact replay and parametric motion are registered separately. |
-
-## Directory Structure
-
-```text
-rnskill/
-├── skills/
-│   ├── rn-renhua/              # Writing: de-AI editor
-│   ├── rn-wechat-extract/      # Extraction: WeChat article reader
-│   ├── rn-motion-director/     # Video: motion director
-│   ├── rn-motion-replica/      # Video: original editable motion study
-│   ├── rn-dark-saas-video/     # Video: dark SaaS style
-│   ├── rn-bw-text-opener/      # Video: typed text opener
-│   └── rn-replica-qc/          # QC: reference video replica
-├── docs/                       # Per-skill overview pages
-├── assets/                     # Showcase images and videos
-├── tools/                      # Build and packaging scripts
-├── .claude-plugin/             # Claude Code marketplace manifest
-└── .github/workflows/          # Release automation
-```
-
-## Maintainer Sync
-
-The four mirrored video skills are developed in `Pluviobyte/video-production-skills`. Refresh them without touching repository-native skills such as `rn-renhua` and `rn-motion-replica`:
-
-```bash
-python3 tools/sync-video-skills.py --source /path/to/video-production-skills
-python3 tools/sync-video-skills.py --source /path/to/video-production-skills --check
-```
+All other skills are original work.
 
 ## License
 
-CC BY-NC 4.0. See [LICENSE](LICENSE).
+CC BY-NC 4.0 unless otherwise noted. See [LICENSE](LICENSE). Third-party components retain their upstream licenses.
 
 ## Author
 

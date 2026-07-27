@@ -1,0 +1,4 @@
+interface:
+  display_name: "本地语音克隆与文章 TTS 路由"
+  short_description: "本地 IndexTTS2 配音与 MiniMax 中转站文章路由"
+  default_prompt: "使用 $tts-skill 生成本地无损配音，或为文章准备 MiniMax 中转站接入示例。"

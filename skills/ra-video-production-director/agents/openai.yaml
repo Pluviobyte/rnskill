@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI 视频创作 Skill"
+  short_description: "统筹视频需求拆解制作验收归档和多工具路线选择完整流程"
+  default_prompt: "Use $ra-video-production-director to produce this video. If I gave a handoff project folder under 01-内容生产/视频工作台/待制作/ (交接稿.md inside), read that frontmatter as the binding contract (set status 制作中 and move the folder to 制作中/ first); otherwise work from my brief. Plan, route, produce, run check_delivery.py, QC, and archive."

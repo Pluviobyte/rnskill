@@ -1,0 +1,36 @@
+{
+  "name": "chengfeng-videocut-skills",
+  "version": "0.1.0",
+  "description": "Small installer for Chengfeng's videocut skills.",
+  "license": "Apache-2.0",
+  "author": "chengfeng / AI产品自由",
+  "homepage": "https://github.com/Agentchengfeng/chengfeng-videocut-skills#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agentchengfeng/chengfeng-videocut-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Agentchengfeng/chengfeng-videocut-skills/issues"
+  },
+  "bin": {
+    "chengfeng-videocut-skills": "bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md",
+    "CITATION.cff"
+  ],
+  "keywords": [
+    "videocut",
+    "video-editing",
+    "skills",
+    "claude-code",
+    "codex",
+    "ai-agent"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "styles": {
+    "xiaohei": {
+      "label": "小黑漫画感 SVG 动效",
+      "skillDir": "ian-xiaohei-svg-motion",
+      "skillFile": "ian-xiaohei-svg-motion/SKILL.md",
+      "templateDir": "ian-xiaohei-svg-motion/assets/templates/xiaohei-comic-motion",
+      "iconLibrary": "ian-xiaohei-svg-motion/assets/icons/index.json"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "zhengzuo",
+  "display_name": "正坐",
+  "aliases": ["zhengzuo", "正坐", "upright-seated"],
+  "status": "approved",
+  "assets": {
+    "gesture_reference": "assets/shared/gestures/zhengzuo/reference.png",
+    "framing_references": {
+      "3:4": "assets/shared/gestures/zhengzuo/reference-3x4.png",
+      "4:3": "assets/shared/gestures/zhengzuo/reference-4x3.png"
+    }
+  },
+  "description": "人物正面端坐，肩线稳定，身体朝向镜头；双臂自然下垂，不在胸前展开手势。",
+  "use_cases": ["默认封面", "模型实测", "工具教程"],
+  "constraints": [
+    "保持人物脸、发型、肤色、黑 T 和体型不变",
+    "双臂自然下垂，双手不进入画面",
+    "完整保留头发，不缩成小头像，不展示全身"
+  ],
+  "framing_rules": {
+    "3:4": "Match the approved framing reference: lower-left anchor; top of hair at about 42–45% of canvas height; body continues through the bottom edge. Show the complete head, neck, shoulders, chest and upper abdomen, cropping near the waist. Presenter occupies about 42–46% of canvas width and 55–60% of canvas height. Both hands remain outside the frame. Do not reduce this to a head-and-shoulders portrait and do not show the full body.",
+    "4:3": "Match the approved framing reference: lower-left anchor; top of hair at about 32–36% of canvas height; body continues through the bottom edge. Show the complete head, neck, shoulders, chest and upper abdomen, cropping near the waist. Presenter occupies about 30–35% of canvas width and 64–69% of canvas height. Both hands remain outside the frame. Do not reduce this to a head-and-shoulders portrait and do not show the full body."
+  },
+  "compatible_identities": ["black-t"],
+  "supported_ratios": ["3:4", "4:3"]
+}

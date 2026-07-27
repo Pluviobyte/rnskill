@@ -1,0 +1,6 @@
+interface:
+  display_name: "ra-洗稿"
+  short_description: "逐字稿改写，并检查AI味、开头、共鸣和小红书标题"
+  default_prompt: "Use $ra-洗稿 to rewrite this transcript with ra-人话, check AI fingerprints, opening, resonance, and Xiaohongshu titles when relevant, then route it into AI video production."
+policy:
+  allow_implicit_invocation: true

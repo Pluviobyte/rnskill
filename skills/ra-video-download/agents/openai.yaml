@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频下载"
+  short_description: "下载并验证抖音、B站、YouTube等平台的视频或音频素材"
+  default_prompt: "Use $ra-video-download to download this source video into the private workspace and verify the media file."

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How an LLM Understands Video</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        accent: '#ff6b35',
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-stone-200 flex justify-center py-10">
+<div class="max-w-[1400px] w-full bg-stone-50 border border-stone-300 shadow-sm">
+
+  <!-- Header -->
+  <div class="bg-stone-900 px-10 py-7">
+    <div class="flex items-end justify-between">
+      <div>
+        <div class="text-[11px] font-bold uppercase tracking-[3px] text-accent mb-2">The Harness</div>
+        <div class="text-[32px] font-extrabold text-white tracking-tight leading-none">How an LLM Understands Video</div>
+      </div>
+      <div class="text-right text-stone-500 text-[11px] font-mono">
+        video-use / SKILL.md
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight bar -->
+  <div class="bg-stone-800 px-10 py-3 border-b border-stone-700">
+    <div class="text-stone-300 text-[13px] text-center">
+      Don't show pixels. Show a <span class="text-white font-bold">text transcript</span> from audio + <span class="text-accent font-bold">visual composites</span> on demand. The LLM never watches the video. It reads it.
+    </div>
+  </div>
+
+  <!-- Section label -->
+  <div class="px-10 pt-7 pb-3">
+    <div class="text-[10px] font-extrabold uppercase tracking-[3px] text-stone-400">What the LLM actually sees</div>
+  </div>
+
+  <!-- ============ HERO: The combined timeline_view visualization ============ -->
+  <div class="px-10 pb-8">
+    <div class="bg-stone-900 rounded-xl overflow-hidden border border-stone-700">
+
+      <!-- Top bar mimicking an editor UI -->
+      <div class="bg-stone-800 px-5 py-2.5 flex items-center justify-between border-b border-stone-700">
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1.5">
+            <div class="w-2.5 h-2.5 rounded-full bg-stone-600"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-stone-600"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-stone-600"></div>
+          </div>
+          <div class="font-mono text-[11px] text-stone-400">timeline_view.py &mdash; C0103.MP4 &mdash; 42.0s &rarr; 48.0s</div>
+        </div>
+        <div class="font-mono text-[10px] text-accent font-bold">ON-DEMAND COMPOSITE PNG</div>
+      </div>
+
+      <div class="p-5">
+        <svg viewBox="0 0 1100 460" class="w-full" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- ===== FILMSTRIP ROW ===== -->
+          <rect x="0" y="0" width="1100" height="135" rx="6" fill="#1a1a20"/>
+
+          <!-- 10 frame thumbnails with slight color variation to look like real frames -->
+          <rect x="8" y="8" width="100" height="119" rx="4" fill="#252530"/>
+          <rect x="20" y="30" width="30" height="30" rx="15" fill="#353540"/>
+          <rect x="55" y="35" width="40" height="20" rx="3" fill="#2d2d38"/>
+          <rect x="25" y="80" width="60" height="8" rx="2" fill="#2d2d38"/>
+          <rect x="35" y="95" width="40" height="6" rx="2" fill="#252530"/>
+
+          <rect x="116" y="8" width="100" height="119" rx="4" fill="#282832"/>
+          <rect x="128" y="30" width="30" height="30" rx="15" fill="#383842"/>
+          <rect x="163" y="35" width="40" height="20" rx="3" fill="#303038"/>
+          <rect x="133" y="80" width="60" height="8" rx="2" fill="#303038"/>
+          <rect x="143" y="95" width="40" height="6" rx="2" fill="#282832"/>
+
+          <rect x="224" y="8" width="100" height="119" rx="4" fill="#262630"/>
+          <rect x="236" y="30" width="30" height="30" rx="15" fill="#363640"/>
+          <rect x="271" y="35" width="40" height="20" rx="3" fill="#2e2e36"/>
+          <rect x="241" y="80" width="60" height="8" rx="2" fill="#2e2e36"/>
+          <rect x="251" y="95" width="40" height="6" rx="2" fill="#262630"/>
+
+          <rect x="332" y="8" width="100" height="119" rx="4" fill="#252530"/>
+          <rect x="344" y="30" width="30" height="30" rx="15" fill="#353540"/>
+          <rect x="379" y="35" width="40" height="20" rx="3" fill="#2d2d38"/>
+          <rect x="349" y="80" width="60" height="8" rx="2" fill="#2d2d38"/>
+
+          <rect x="440" y="8" width="100" height="119" rx="4" fill="#282832"/>
+          <rect x="452" y="30" width="30" height="30" rx="15" fill="#383842"/>
+          <rect x="487" y="35" width="40" height="20" rx="3" fill="#303038"/>
+          <rect x="457" y="80" width="60" height="8" rx="2" fill="#303038"/>
+
+          <rect x="548" y="8" width="100" height="119" rx="4" fill="#262630"/>
+          <rect x="560" y="30" width="30" height="30" rx="15" fill="#363640"/>
+          <rect x="595" y="35" width="40" height="20" rx="3" fill="#2e2e36"/>
+          <rect x="565" y="80" width="60" height="8" rx="2" fill="#2e2e36"/>
+
+          <rect x="656" y="8" width="100" height="119" rx="4" fill="#252530"/>
+          <rect x="668" y="30" width="30" height="30" rx="15" fill="#353540"/>
+          <rect x="703" y="35" width="40" height="20" rx="3" fill="#2d2d38"/>
+          <rect x="673" y="80" width="60" height="8" rx="2" fill="#2d2d38"/>
+
+          <rect x="764" y="8" width="100" height="119" rx="4" fill="#282832"/>
+          <rect x="776" y="30" width="30" height="30" rx="15" fill="#383842"/>
+          <rect x="811" y="35" width="40" height="20" rx="3" fill="#303038"/>
+          <rect x="781" y="80" width="60" height="8" rx="2" fill="#303038"/>
+
+          <rect x="872" y="8" width="100" height="119" rx="4" fill="#262630"/>
+          <rect x="884" y="30" width="30" height="30" rx="15" fill="#363640"/>
+          <rect x="919" y="35" width="40" height="20" rx="3" fill="#2e2e36"/>
+
+          <rect x="980" y="8" width="112" height="119" rx="4" fill="#252530"/>
+          <rect x="992" y="30" width="30" height="30" rx="15" fill="#353540"/>
+          <rect x="1027" y="35" width="40" height="20" rx="3" fill="#2d2d38"/>
+
+          <!-- ===== SPEAKER TRACK ===== -->
+          <rect x="0" y="145" width="1100" height="30" rx="0" fill="#13131a"/>
+          <rect x="8" y="150" width="620" height="20" rx="4" fill="rgba(255,107,53,0.15)" stroke="rgba(255,107,53,0.3)" stroke-width="1"/>
+          <text x="310" y="164" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#ff6b35">SPEAKER 0</text>
+          <rect x="680" y="150" width="410" height="20" rx="4" fill="rgba(255,107,53,0.08)" stroke="rgba(255,107,53,0.15)" stroke-width="1"/>
+          <text x="885" y="164" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="rgba(255,107,53,0.5)">SPEAKER 1</text>
+
+          <!-- ===== WAVEFORM ===== -->
+          <rect x="0" y="180" width="1100" height="190" rx="0" fill="#0f0f16"/>
+
+          <!-- Center line -->
+          <line x1="0" y1="275" x2="1100" y2="275" stroke="#1a1a24" stroke-width="1"/>
+
+          <!-- Silence gap shading -->
+          <rect x="370" y="183" width="80" height="184" fill="rgba(255,107,53,0.06)"/>
+          <rect x="630" y="183" width="100" height="184" fill="rgba(255,107,53,0.06)"/>
+
+          <!-- Waveform — top half -->
+          <polygon points="
+            8,275
+            30,260 50,250 70,235 90,220 110,230 130,220 150,210 170,225 190,240 210,250
+            230,260 250,265 270,268 290,270 310,268 330,265 350,258 370,272
+            380,275 390,275 400,275 410,275 420,275 430,275 440,275 450,272
+            470,260 490,248 510,232 530,218 540,225 550,235 560,228 570,215 580,222
+            590,235 600,248 610,258 620,268 630,274
+            640,275 650,275 660,275 670,275 680,275 690,275 700,275 710,275 720,275 730,274
+            750,268 770,255 790,240 810,228 830,218 850,225 870,235 890,242
+            910,250 930,258 950,262 970,268 990,272 1010,274 1030,275 1050,275 1080,275 1092,275
+          " fill="rgba(140,180,255,0.12)" stroke="none"/>
+          <polyline points="
+            8,275
+            30,260 50,250 70,235 90,220 110,230 130,220 150,210 170,225 190,240 210,250
+            230,260 250,265 270,268 290,270 310,268 330,265 350,258 370,272
+            380,275 390,275 400,275 410,275 420,275 430,275 440,275 450,272
+            470,260 490,248 510,232 530,218 540,225 550,235 560,228 570,215 580,222
+            590,235 600,248 610,258 620,268 630,274
+            640,275 650,275 660,275 670,275 680,275 690,275 700,275 710,275 720,275 730,274
+            750,268 770,255 790,240 810,228 830,218 850,225 870,235 890,242
+            910,250 930,258 950,262 970,268 990,272 1010,274 1030,275 1050,275 1080,275 1092,275
+          " fill="none" stroke="#6b9fff" stroke-width="1.5" stroke-linejoin="round"/>
+
+          <!-- Waveform — bottom half (mirror) -->
+          <polygon points="
+            8,275
+            30,290 50,300 70,315 90,330 110,320 130,330 150,340 170,325 190,310 210,300
+            230,290 250,285 270,282 290,280 310,282 330,285 350,292 370,278
+            380,275 390,275 400,275 410,275 420,275 430,275 440,275 450,278
+            470,290 490,302 510,318 530,332 540,325 550,315 560,322 570,335 580,328
+            590,315 600,302 610,292 620,282 630,276
+            640,275 650,275 660,275 670,275 680,275 690,275 700,275 710,275 720,275 730,276
+            750,282 770,295 790,310 810,322 830,332 850,325 870,315 890,308
+            910,300 930,292 950,288 970,282 990,278 1010,276 1030,275 1050,275 1080,275 1092,275
+          " fill="rgba(140,180,255,0.06)" stroke="none"/>
+          <polyline points="
+            8,275
+            30,290 50,300 70,315 90,330 110,320 130,330 150,340 170,325 190,310 210,300
+            230,290 250,285 270,282 290,280 310,282 330,285 350,292 370,278
+            380,275 390,275 400,275 410,275 420,275 430,275 440,275 450,278
+            470,290 490,302 510,318 530,332 540,325 550,315 560,322 570,335 580,328
+            590,315 600,302 610,292 620,282 630,276
+            640,275 650,275 660,275 670,275 680,275 690,275 700,275 710,275 720,275 730,276
+            750,282 770,295 790,310 810,322 830,332 850,325 870,315 890,308
+            910,300 930,292 950,288 970,282 990,278 1010,276 1030,275 1050,275 1080,275 1092,275
+          " fill="none" stroke="#6b9fff" stroke-width="1" stroke-linejoin="round" opacity="0.4"/>
+
+          <!-- Word labels above waveform -->
+          <text x="40" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">Ninety</text>
+          <text x="120" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">percent</text>
+          <text x="210" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">of</text>
+          <text x="260" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">what</text>
+          <text x="320" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">...wasted.</text>
+          <text x="480" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">We</text>
+          <text x="540" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">fixed</text>
+          <text x="600" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">this.</text>
+          <text x="760" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">When</text>
+          <text x="830" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">a</text>
+          <text x="870" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">web</text>
+          <text x="930" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">agent</text>
+          <text x="1000" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b9fff" font-weight="500">comes...</text>
+
+          <!-- Silence gap labels -->
+          <text x="395" y="215" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" font-weight="600">620ms</text>
+          <text x="395" y="227" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,107,53,0.6)">silence</text>
+          <text x="680" y="215" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#ff6b35" font-weight="600">880ms</text>
+          <text x="680" y="227" text-anchor="middle" font-family="Inter" font-size="8" fill="rgba(255,107,53,0.6)">silence</text>
+
+          <!-- Cut candidate lines -->
+          <line x1="410" y1="183" x2="410" y2="367" stroke="#059669" stroke-width="2" stroke-dasharray="6 4"/>
+          <line x1="680" y1="183" x2="680" y2="367" stroke="#059669" stroke-width="2" stroke-dasharray="6 4"/>
+
+          <!-- Audio event pill -->
+          <rect x="610" y="348" width="85" height="22" rx="11" fill="rgba(255,107,53,0.2)" stroke="#ff6b35" stroke-width="1"/>
+          <text x="652" y="363" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#ff6b35">(laughter)</text>
+
+          <!-- ===== TIME RULER ===== -->
+          <rect x="0" y="375" width="1100" height="30" rx="0" fill="#13131a"/>
+          <text x="8" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">42.00s</text>
+          <line x1="8" y1="378" x2="8" y2="385" stroke="#4a4a58" stroke-width="1"/>
+          <text x="228" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">43.20s</text>
+          <line x1="228" y1="378" x2="228" y2="385" stroke="#4a4a58" stroke-width="1"/>
+          <text x="448" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">44.40s</text>
+          <line x1="448" y1="378" x2="448" y2="385" stroke="#4a4a58" stroke-width="1"/>
+          <text x="668" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">45.60s</text>
+          <line x1="668" y1="378" x2="668" y2="385" stroke="#4a4a58" stroke-width="1"/>
+          <text x="888" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">46.80s</text>
+          <line x1="888" y1="378" x2="888" y2="385" stroke="#4a4a58" stroke-width="1"/>
+          <text x="1048" y="394" font-family="JetBrains Mono" font-size="10" fill="#4a4a58">48.00s</text>
+          <line x1="1048" y1="378" x2="1048" y2="385" stroke="#4a4a58" stroke-width="1"/>
+
+          <!-- ===== CUT CANDIDATE LABELS ===== -->
+          <rect x="375" y="410" width="70" height="22" rx="4" fill="#059669"/>
+          <text x="410" y="425" text-anchor="middle" font-family="Inter" font-size="9" font-weight="800" fill="white">CUT</text>
+          <rect x="645" y="410" width="70" height="22" rx="4" fill="#059669"/>
+          <text x="680" y="425" text-anchor="middle" font-family="Inter" font-size="9" font-weight="800" fill="white">CUT</text>
+          <text x="550" y="450" text-anchor="middle" font-family="Inter" font-size="11" fill="#4a4a58">Silences &ge; 400ms = safe cut candidates. Words give boundary precision. Audio events mark beats to preserve.</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PIPELINE ============ -->
+  <div class="px-10 pb-8">
+    <div class="text-[10px] font-extrabold uppercase tracking-[3px] text-stone-400 mb-4">How it gets there</div>
+    <svg viewBox="0 0 1100 100" class="w-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#78716c"/></marker>
+        <marker id="arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/></marker>
+      </defs>
+
+      <rect x="0" y="15" width="145" height="55" rx="8" fill="white" stroke="#d6d3d1" stroke-width="1.5"/>
+      <text x="72" y="40" text-anchor="middle" font-family="Inter" font-size="12" font-weight="800" fill="#1c1917">Transcribe</text>
+      <text x="72" y="55" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#a8a29e">Volcengine, parallel</text>
+      <line x1="150" y1="42" x2="178" y2="42" stroke="#78716c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <rect x="183" y="15" width="120" height="55" rx="8" fill="white" stroke="#d6d3d1" stroke-width="1.5"/>
+      <text x="243" y="40" text-anchor="middle" font-family="Inter" font-size="12" font-weight="800" fill="#1c1917">Pack</text>
+      <text x="243" y="55" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#a8a29e">phrase-level .md</text>
+      <line x1="308" y1="42" x2="336" y2="42" stroke="#78716c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <rect x="341" y="5" width="175" height="75" rx="10" fill="#1c1917"/>
+      <text x="428" y="32" text-anchor="middle" font-family="Inter" font-size="13" font-weight="900" fill="white">LLM Reasons</text>
+      <text x="428" y="50" text-anchor="middle" font-family="Inter" font-size="9" fill="#a8a29e">reads transcript</text>
+      <text x="428" y="64" text-anchor="middle" font-family="Inter" font-size="9" fill="#ff6b35" font-weight="600">calls timeline_view at decision points</text>
+      <line x1="521" y1="42" x2="549" y2="42" stroke="#059669" stroke-width="1.5" marker-end="url(#arr-g)"/>
+
+      <rect x="554" y="15" width="100" height="55" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+      <text x="604" y="40" text-anchor="middle" font-family="Inter" font-size="12" font-weight="800" fill="#059669">EDL</text>
+      <text x="604" y="55" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#059669">.json</text>
+      <line x1="659" y1="42" x2="687" y2="42" stroke="#78716c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <rect x="692" y="15" width="120" height="55" rx="8" fill="white" stroke="#d6d3d1" stroke-width="1.5"/>
+      <text x="752" y="40" text-anchor="middle" font-family="Inter" font-size="12" font-weight="800" fill="#1c1917">Render</text>
+      <text x="752" y="55" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#a8a29e">ffmpeg pipeline</text>
+      <line x1="817" y1="42" x2="845" y2="42" stroke="#78716c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <rect x="850" y="5" width="145" height="75" rx="10" fill="#ff6b35"/>
+      <text x="922" y="32" text-anchor="middle" font-family="Inter" font-size="13" font-weight="900" fill="white">Self-Eval</text>
+      <text x="922" y="50" text-anchor="middle" font-family="Inter" font-size="9" fill="rgba(255,255,255,0.8)">timeline_view on output</text>
+      <text x="922" y="64" text-anchor="middle" font-family="Inter" font-size="9" fill="rgba(255,255,255,0.8)">at every cut point</text>
+
+      <!-- Loop back -->
+      <path d="M 922 82 L 922 96 L 428 96 L 428 82" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text x="675" y="94" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="#dc2626">issue? fix &rarr; re-render (max 3)</text>
+    </svg>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bg-stone-900 px-10 py-4 text-center">
+    <span class="text-stone-400 text-[12px]"><strong class="text-white">Audio transcript</strong> is the primary surface.</span>
+    <span class="text-[12px] text-stone-500 mx-3">&bull;</span>
+    <span class="text-stone-400 text-[12px]"><strong class="text-accent">Visual composites</strong> are on-demand at decision points.</span>
+    <span class="text-[12px] text-stone-500 mx-3">&bull;</span>
+    <span class="text-stone-400 text-[12px]"><strong class="text-white">Verify output</strong> before presenting.</span>
+  </div>
+
+</div>
+</body>
+</html>

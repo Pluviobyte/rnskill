@@ -1,0 +1,298 @@
+/* ============================================================
+   styles-fem.css v3 — 三主题
+   F 粉色王国(童话甜粉) / G 乙游夜境(暗黑浪漫) / H 吉卜力(治愈自然)
+   卡片 1080×1440 · AI 记忆内容
+   ============================================================ */
+.femcard {
+  --pad: 86px;
+  --sans: "Noto Sans SC", -apple-system, "PingFang SC", sans-serif;
+  --serif: "Newsreader", "Noto Serif SC", "Songti SC", serif;
+  --round: "Baloo 2", "Noto Sans SC", sans-serif;
+  --eleg: "Cormorant Garamond", "Noto Serif SC", serif;
+
+  width: 1080px; height: 1440px;
+  color: var(--ink);
+  font-family: var(--sans);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-sizing: border-box; -webkit-font-smoothing: antialiased;
+}
+.femcard * { box-sizing: border-box; }
+
+/* ============================================================
+   主题变量 + 背景
+   ============================================================ */
+/* F 粉色王国 */
+.t-pink {
+  --bg1: #FDE7F1; --bg2: #FBD3E4; --surface: rgba(255,255,255,0.66); --ink: #8A3E66; --soft: #C988A8; --faint: #EFB9D2;
+  --accent: oklch(0.68 0.18 356); --accent2: oklch(0.80 0.12 30); --wash: oklch(0.90 0.08 350);
+  --line: rgba(138,62,102,0.16);
+  --title-font: var(--round); --title-weight: 800;
+  --radius-card: 32px; --radius-img: 34px;
+  background:
+    radial-gradient(120% 70% at 80% 0%, #FFF0F8 0%, transparent 55%),
+    radial-gradient(110% 60% at 10% 100%, #FCE0EC 0%, transparent 60%),
+    linear-gradient(165deg, var(--bg1), var(--bg2));
+}
+/* G 乙游夜境（深色） */
+.t-otome {
+  --bg1: #1C1838; --bg2: #2E2756; --surface: rgba(180,166,230,0.10); --ink: #ECE6FA; --soft: #B3A9D6; --faint: #6A5F95;
+  --accent: oklch(0.82 0.09 305); --accent2: oklch(0.86 0.06 250); --wash: rgba(190,170,240,0.18);
+  --line: rgba(190,172,235,0.32);
+  --title-font: var(--serif); --title-weight: 500;
+  --radius-card: 6px; --radius-img: 8px;
+  background:
+    radial-gradient(90% 55% at 78% 8%, #423a72 0%, transparent 55%),
+    radial-gradient(80% 50% at 12% 95%, #34708a 0%, transparent 60%),
+    linear-gradient(160deg, #181430, #241e44 55%, #1a1733);
+}
+/* H 吉卜力 */
+.t-ghibli {
+  --bg1: #CDE7EC; --bg2: #F4EFD8; --surface: rgba(255,253,244,0.74); --ink: #3C4A38; --soft: #7E8B6F; --faint: #BBC6A4;
+  --accent: oklch(0.55 0.10 145); --accent2: oklch(0.60 0.13 35); --wash: oklch(0.90 0.05 130);
+  --line: rgba(60,74,56,0.16);
+  --title-font: var(--serif); --title-weight: 500;
+  --radius-card: 20px; --radius-img: 24px;
+  background:
+    linear-gradient(180deg, #BFE0E8 0%, #DCEBDD 40%, #F4EFD9 75%, #F7F1DD 100%);
+}
+
+/* ============================================================
+   装饰层
+   ============================================================ */
+.femcard .fem-deco { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.femcard .fem-deco svg, .femcard .fem-deco span { position: absolute; display: block; }
+.dc-accent { color: var(--accent); }
+.dc-accent2 { color: var(--accent2); }
+.dc-soft { color: var(--faint); }
+.dc-white { color: #fff; }
+
+/* 乙游：内描银紫光边框 */
+.t-otome .fem-frame {
+  position: absolute; inset: 30px; z-index: 1; pointer-events: none;
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 30px rgba(180,160,240,0.12), 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+/* ============================================================
+   顶栏
+   ============================================================ */
+.femcard .fem-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 50px var(--pad) 0; flex: none; position: relative; z-index: 3;
+}
+.femcard .fem-brand { display: flex; align-items: center; gap: 14px; }
+.femcard .fem-mono {
+  width: 54px; height: 54px; flex: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--accent); background: var(--surface);
+}
+.femcard .fem-mono span { font-family: var(--serif); font-weight: 600; font-size: 27px; color: var(--accent); }
+.t-pink .fem-mono { border-width: 2.5px; }
+.t-pink .fem-mono span { font-family: var(--round); font-weight: 700; }
+.t-otome .fem-mono { box-shadow: 0 0 14px rgba(190,170,240,0.4); }
+.femcard .fem-word { font-family: var(--sans); font-weight: 900; font-size: 28px; letter-spacing: 0.5px; }
+.femcard .fem-idx { font-family: var(--sans); font-weight: 700; font-size: 21px; letter-spacing: 2px; color: var(--soft); white-space: nowrap; }
+.t-otome .fem-idx { font-family: var(--eleg); font-weight: 600; letter-spacing: 4px; color: var(--accent); }
+
+/* ============================================================
+   主体 / 页脚
+   ============================================================ */
+.femcard .fem-body { flex: 1; display: flex; flex-direction: column; padding: 52px var(--pad) 100px; position: relative; z-index: 2; min-height: 0; }
+.femcard .fem-foot {
+  position: absolute; left: var(--pad); right: var(--pad); bottom: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--sans); font-size: 21px; letter-spacing: 2px; color: var(--soft); z-index: 4;
+}
+.femcard .fem-foot .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .7; margin: 0 10px; display: inline-block; vertical-align: middle; }
+
+/* ============================================================
+   通用零件
+   ============================================================ */
+.femcard .fem-kick {
+  display: inline-flex; align-items: center; gap: 11px; white-space: nowrap;
+  font-family: var(--sans); font-weight: 700; font-size: 25px; letter-spacing: 1px; color: var(--accent);
+}
+.t-pink .fem-kick {
+  background: rgba(255,255,255,0.8); padding: 11px 26px; border-radius: 40px;
+  box-shadow: 0 6px 18px rgba(255,120,170,0.25); color: var(--accent);
+}
+.t-otome .fem-kick { color: var(--accent2); letter-spacing: 4px; font-weight: 500; font-family: var(--eleg); font-size: 28px; }
+.t-otome .fem-kick::before { content: ""; width: 30px; height: 1px; background: var(--accent); }
+.t-ghibli .fem-kick { color: var(--accent); }
+.femcard .fem-kick .ic { display: inline-flex; }
+
+.femcard .fem-title {
+  font-family: var(--title-font); font-weight: var(--title-weight); font-size: 92px; line-height: 1.12;
+  letter-spacing: -0.5px; color: var(--ink); text-wrap: balance; margin: 0;
+}
+.femcard .fem-title em { font-style: italic; font-weight: var(--title-weight); color: var(--accent); }
+.t-pink .fem-title {
+  letter-spacing: 0; line-height: 1.16;
+  text-shadow: 0 3px 0 rgba(255,255,255,0.9), 0 6px 16px rgba(255,120,170,0.25);
+}
+.t-pink .fem-title em { font-style: normal; }
+.t-otome .fem-title { text-shadow: 0 0 28px rgba(190,170,240,0.35); }
+.t-otome .fem-title em { font-style: italic; text-shadow: 0 0 24px rgba(200,182,240,0.6); }
+
+.femcard .fem-lead {
+  font-family: var(--serif); font-weight: 400; font-size: 37px; line-height: 1.6; color: var(--ink);
+  max-width: 840px; text-wrap: pretty;
+}
+.t-pink .fem-lead { font-family: var(--sans); font-weight: 500; }
+.t-otome .fem-lead { color: var(--soft); }
+
+.femcard .fem-img { width: 100%; border-radius: var(--radius-img); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.femcard .fem-img image-slot { width: 100%; height: 100%; display: block; }
+.t-pink .fem-img { border: 4px solid #fff; box-shadow: 0 16px 40px rgba(255,120,170,0.3); }
+.t-otome .fem-img { border: 1px solid var(--line); box-shadow: 0 0 30px rgba(150,130,220,0.25); }
+.t-ghibli .fem-img { border: 3px solid var(--surface); box-shadow: 0 12px 30px rgba(60,74,56,0.18); }
+
+/* 高亮 */
+.femcard .hl { font-weight: 600; }
+.t-pink .hl { background: linear-gradient(transparent 56%, var(--wash) 56%); padding: 0 3px; border-radius: 4px; }
+.t-otome .hl { color: var(--accent); text-shadow: 0 0 16px rgba(200,182,240,0.5); }
+.t-ghibli .hl { background: linear-gradient(transparent 56%, var(--wash) 56%); padding: 0 2px; }
+
+/* ============================================================
+   封面
+   ============================================================ */
+.femcard.fem-cover .fem-body { justify-content: flex-start; }
+.femcard.fem-cover .cv-title { margin-top: 46px; font-size: 104px; }
+.femcard.fem-cover .cv-kick { margin-top: 36px; }
+.femcard.fem-cover .cv-lead { margin-top: 26px; max-width: 790px; }
+.femcard.fem-cover .cv-img { margin-top: auto; height: 360px; }
+
+/* ============================================================
+   大字陈述
+   ============================================================ */
+.femcard.fem-statement .fem-body { justify-content: center; }
+.femcard .st-big { font-family: var(--title-font); font-weight: var(--title-weight); font-size: 88px; line-height: 1.18; letter-spacing: -0.5px; text-wrap: balance; }
+.femcard .st-big em { font-style: italic; color: var(--accent); }
+.t-pink .st-big { line-height: 1.22; text-shadow: 0 2px 0 rgba(255,255,255,0.85); }
+.t-pink .st-big em { font-style: normal; }
+.t-otome .st-big em { font-style: italic; text-shadow: 0 0 24px rgba(200,182,240,0.6); }
+.femcard .st-sub { margin-top: 34px; font-family: var(--serif); font-weight: 400; font-size: 37px; line-height: 1.55; color: var(--soft); max-width: 800px; text-wrap: pretty; }
+.t-pink .st-sub { font-family: var(--sans); }
+
+/* ============================================================
+   正文 + 注解
+   ============================================================ */
+.femcard.fem-body-pg .fem-body { justify-content: flex-start; }
+.femcard .bp-head { margin: 46px 0 40px; }
+.femcard .bp-title { font-family: var(--title-font); font-weight: var(--title-weight); font-size: 70px; line-height: 1.16; letter-spacing: -0.5px; margin: 16px 0 0; text-wrap: balance; }
+.femcard .bp-title em { font-style: italic; color: var(--accent); }
+.t-pink .bp-title { text-shadow: 0 2px 0 rgba(255,255,255,0.8); }
+.t-pink .bp-title em { font-style: normal; }
+.femcard .bp-flow { display: flex; flex-direction: column; gap: 26px; }
+.femcard .bp-flow p { font-family: var(--serif); font-weight: 400; font-size: 37px; line-height: 1.62; margin: 0; text-wrap: pretty; }
+.t-pink .bp-flow p { font-family: var(--sans); line-height: 1.66; }
+.t-otome .bp-flow p { color: var(--soft); }
+
+.femcard .fem-note { background: var(--surface); border-radius: var(--radius-card); padding: 30px 36px; margin: 2px 0; border: 1px solid var(--line); position: relative; backdrop-filter: blur(4px); }
+.t-otome .fem-note { border-left: 2px solid var(--accent); box-shadow: 0 0 22px rgba(150,130,220,0.14); }
+.femcard .fem-note .lab { display: inline-block; font-family: var(--sans); font-weight: 700; font-size: 20px; letter-spacing: 3px; color: var(--accent); margin-bottom: 10px; }
+.femcard .fem-note p { font-family: var(--serif); font-weight: 400; font-size: 35px; line-height: 1.5; margin: 0; }
+.t-pink .fem-note p { font-family: var(--sans); }
+.t-otome .fem-note p { color: var(--ink); }
+.femcard .fem-note p em { font-style: italic; }
+
+.femcard .bp-pull { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 44px; line-height: 1.36; color: var(--ink); padding: 6px 0; }
+.t-pink .bp-pull { font-family: var(--sans); font-style: normal; font-weight: 700; }
+.t-otome .bp-pull { text-shadow: 0 0 20px rgba(190,170,240,0.3); }
+.femcard .bp-pull::before { content: ""; display: block; width: 64px; height: 4px; border-radius: 3px; background: var(--accent); margin-bottom: 22px; }
+
+/* ============================================================
+   编辑式列表
+   ============================================================ */
+.femcard.fem-list .fem-body { justify-content: flex-start; }
+.femcard .lp-head { display: flex; align-items: center; justify-content: space-between; margin: 44px 0 22px; }
+.femcard .lp-cat { font-family: var(--sans); font-weight: 700; font-size: 27px; letter-spacing: 1px; }
+.femcard .lp-arrow { font-size: 34px; color: var(--accent); }
+.femcard .fem-li { display: flex; align-items: center; gap: 24px; padding: 30px 0; border-bottom: 1.5px solid var(--line); }
+.femcard .fem-li:first-of-type { border-top: 1.5px solid var(--line); }
+.femcard .fem-li .li-no { font-family: var(--serif); font-style: italic; font-size: 38px; color: var(--soft); flex: none; min-width: 56px; }
+.t-pink .fem-li .li-no { font-family: var(--round); font-style: normal; font-weight: 700; }
+.femcard .fem-li .li-name { font-family: var(--title-font); font-weight: var(--title-weight); font-size: 58px; line-height: 1.1; color: var(--faint); letter-spacing: -0.5px; }
+.femcard .fem-li .li-by { display: none; font-family: var(--sans); font-weight: 700; font-size: 22px; letter-spacing: 2px; color: var(--soft); margin-top: 9px; }
+.femcard .fem-li .li-cell { flex: 1; }
+.femcard .fem-li.on .li-no { color: var(--accent); }
+.femcard .fem-li.on .li-name { color: var(--ink); }
+.t-otome .fem-li.on .li-name { text-shadow: 0 0 22px rgba(190,170,240,0.4); }
+.femcard .fem-li.on .li-by { display: block; }
+.femcard .fem-li.on .li-tail { font-size: 38px; color: var(--accent); }
+
+/* 要点列表 */
+.femcard .fem-points { display: flex; flex-direction: column; margin: 2px 0; }
+.femcard .fem-points .pt { display: flex; gap: 22px; align-items: baseline; padding: 20px 0; border-bottom: 1.5px solid var(--line); }
+.femcard .fem-points .pt:first-child { border-top: 1.5px solid var(--line); }
+.femcard .fem-points .m { font-family: var(--serif); font-style: italic; font-size: 31px; color: var(--accent); flex: none; min-width: 50px; }
+.t-pink .fem-points .m { font-family: var(--round); font-style: normal; font-weight: 700; }
+.femcard .fem-points .t { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.4; }
+.t-pink .fem-points .t { font-family: var(--sans); }
+.t-otome .fem-points .t { color: var(--soft); }
+.femcard .fem-points .t b { font-weight: 600; color: var(--accent); }
+.femcard .fem-conc { margin-top: 22px; font-family: var(--serif); font-style: italic; font-size: 37px; line-height: 1.4; color: var(--ink); }
+.t-pink .fem-conc { font-family: var(--sans); font-style: normal; font-weight: 700; }
+
+/* ============================================================
+   图文混排
+   ============================================================ */
+.femcard.fem-media .fem-body { justify-content: flex-start; }
+.femcard .mp-head { margin: 46px 0 34px; }
+.femcard .mp-img { width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-img); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.t-pink .mp-img { border: 4px solid #fff; box-shadow: 0 16px 40px rgba(255,120,170,0.3); }
+.t-otome .mp-img { box-shadow: 0 0 30px rgba(150,130,220,0.25); }
+.t-ghibli .mp-img { border: 3px solid var(--surface); box-shadow: 0 12px 30px rgba(60,74,56,0.18); }
+.femcard .mp-img image-slot { width: 100%; height: 100%; display: block; }
+.femcard .mp-cap { font-family: var(--sans); font-weight: 500; font-size: 23px; letter-spacing: 1px; color: var(--soft); margin-top: 22px; display: flex; align-items: center; gap: 13px; }
+.femcard .mp-cap::before { content: ""; width: 24px; height: 2px; background: var(--accent); flex: none; }
+.femcard .mp-flow { margin-top: 36px; }
+.femcard .mp-flow p { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.6; margin: 0; text-wrap: pretty; }
+.t-pink .mp-flow p { font-family: var(--sans); }
+.t-otome .mp-flow p { color: var(--soft); }
+
+/* ============================================================
+   记忆观三行
+   ============================================================ */
+.femcard.fem-views .fem-body { justify-content: center; }
+.femcard .vw-rows { margin-top: 36px; }
+.femcard .vw-row { display: flex; align-items: baseline; gap: 30px; padding: 34px 0; border-bottom: 1.5px solid var(--line); }
+.femcard .vw-row:first-child { border-top: 1.5px solid var(--line); }
+.femcard .vw-k { font-family: var(--title-font); font-weight: var(--title-weight); font-size: 56px; letter-spacing: -0.5px; flex: none; min-width: 196px; }
+.femcard .vw-k em { font-style: italic; color: var(--accent); }
+.t-pink .vw-k em { font-style: normal; }
+.femcard .vw-lab { font-family: var(--sans); font-weight: 700; font-size: 20px; letter-spacing: 2px; color: var(--accent); }
+.femcard .vw-d { font-family: var(--serif); font-weight: 400; font-size: 33px; line-height: 1.4; margin-top: 8px; color: var(--ink); }
+.t-pink .vw-d { font-family: var(--sans); }
+.t-otome .vw-d { color: var(--soft); }
+
+/* ============================================================
+   结尾
+   ============================================================ */
+.femcard.fem-ending .fem-body { justify-content: center; }
+.femcard .ed-kick { margin-bottom: 30px; }
+.femcard .ed-title { font-family: var(--title-font); font-weight: var(--title-weight); font-size: 88px; line-height: 1.14; letter-spacing: -0.5px; text-wrap: balance; }
+.femcard .ed-title em { font-style: italic; color: var(--accent); }
+.t-pink .ed-title { text-shadow: 0 2px 0 rgba(255,255,255,0.85); }
+.t-pink .ed-title em { font-style: normal; }
+.t-otome .ed-title em { font-style: italic; text-shadow: 0 0 24px rgba(200,182,240,0.6); }
+.femcard .ed-sub { margin-top: 32px; font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.5; color: var(--soft); max-width: 800px; text-wrap: pretty; }
+.t-pink .ed-sub { font-family: var(--sans); }
+.femcard .ed-cta {
+  margin-top: 50px; display: inline-flex; align-items: center; gap: 15px;
+  font-family: var(--sans); font-weight: 700; font-size: 30px; letter-spacing: 1px;
+  padding: 24px 50px; border-radius: 60px; color: #fff; background: var(--accent);
+}
+.t-pink .ed-cta { box-shadow: 0 10px 26px rgba(255,110,165,0.45); border: 3px solid #fff; }
+.t-otome .ed-cta { background: transparent; color: var(--accent); border: 1px solid var(--accent); box-shadow: 0 0 20px rgba(190,170,240,0.35); }
+.t-ghibli .ed-cta { background: var(--accent2); }
+.femcard .ed-cta .arr { font-size: 30px; }
+
+/* ============================================================
+   Skill 静态适配补充（设计稿 JSX → 静态 HTML 所需）
+   ============================================================ */
+/* 图片槽：设计稿中的 <image-slot> 在产线模板中统一换成 <img class="slot-img"> */
+.femcard .fem-img .slot-img,
+.femcard .cv-img .slot-img,
+.femcard .mp-img .slot-img { width: 100%; height: 100%; object-fit: cover; display: block; }

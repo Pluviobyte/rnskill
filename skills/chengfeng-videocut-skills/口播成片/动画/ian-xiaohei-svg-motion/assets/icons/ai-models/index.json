@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "description": "Reusable AI model icons for Ian Xiaohei SVG motion scenes.",
+  "icons": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "file": "chatgpt.svg",
+      "viewBox": "0 0 1089 1024",
+      "defaultFill": "#030303",
+      "usage": "OpenAI / ChatGPT model card icon"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "file": "claude.svg",
+      "viewBox": "0 0 1024 1024",
+      "defaultFill": "#D97757",
+      "usage": "Anthropic Claude model card icon"
+    },
+    {
+      "id": "flash-lightning",
+      "name": "Flash Lightning",
+      "file": "flash-lightning.svg",
+      "viewBox": "0 0 1024 1024",
+      "defaultFill": "#000000",
+      "usage": "Flash / speed / lightweight execution model icon"
+    },
+    {
+      "id": "stepfun",
+      "name": "Stepfun",
+      "file": "stepfun.svg",
+      "viewBox": "0 0 24 24",
+      "defaultFill": "color",
+      "usage": "Step / Stepfun model card icon"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "file": "deepseek.svg",
+      "viewBox": "0 0 24 24",
+      "defaultFill": "#4D6BFE",
+      "usage": "DeepSeek model card icon"
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "file": "qwen.svg",
+      "viewBox": "0 0 24 24",
+      "defaultFill": "color",
+      "usage": "Qwen model card icon"
+    }
+  ]
+}

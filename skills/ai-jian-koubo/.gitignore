@@ -1,0 +1,24 @@
+# 凭证（实际 key 放在 ~/.claude/skills/.env，不进仓库）
+.env
+
+# 运行时状态文件
+.engine_toggle
+.setup_done
+.review_server.pid
+server_url.txt
+review_server.log
+启动审核服务.command
+启动审核服务.sh
+
+# 转录 / 运行产物（用户跑流程时生成，不应进仓库）
+*_result.json
+*_cut.fcpxml
+
+# 本机测试视频与个人数据
+test_video/
+
+# Claude Code 本机配置（含绝对路径，因人而异）
+.claude/settings.local.json
+
+# 系统垃圾
+.DS_Store

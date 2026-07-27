@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "terms": {
+    "Codex": {
+      "display": "Codex",
+      "tts": "Codex",
+      "language": "en",
+      "approved": "2026-07-22",
+      "approved_context": "Chinese IndexTTS2 narration auditioned at final 1.12x speed",
+      "forbidden_tts": [
+        "扣代克斯",
+        "扣戴克斯",
+        "扣德克斯"
+      ],
+      "note": "Keep the raw English token. Do not transliterate it into Chinese."
+    },
+    "Matt Pocock": {
+      "display": "Matt Pocock",
+      "tts": "Matt Poe cock",
+      "language": "en-GB",
+      "ipa": "/mæt ˈpəʊ.kɒk/",
+      "approved": "2026-07-25",
+      "approved_context": "User requested a pronunciation correction; verified against Cambridge Dictionary UK pronunciation. Raw Pocock made IndexTTS2 produce a Podolski-like surname, so the TTS-only spelling is split into the verified two syllables POE-cock.",
+      "forbidden_tts": [
+        "麦特 波考克",
+        "迈特 波考克",
+        "麦特·波考克",
+        "迈特·波考克"
+      ],
+      "note": "Display the canonical English spelling. For IndexTTS2 only, use the phonetic spelling Matt Poe cock: stress POE; the surname has two syllables and must not drift toward Podolski."
+    },
+    "Anthropic": {
+      "display": "Anthropic",
+      "tts": "Anthropic",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved the corrected 15-second IndexTTS2 sample and requested full production.",
+      "forbidden_tts": [],
+      "note": "Keep the raw English token used in the approved sample."
+    },
+    "Claude": {
+      "display": "Claude",
+      "tts": "Claude",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved the corrected 15-second IndexTTS2 sample and requested full production.",
+      "forbidden_tts": [],
+      "note": "Keep the raw English token used in the approved sample."
+    },
+    "Opus": {
+      "display": "Opus",
+      "tts": "Opus",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved the corrected 15-second IndexTTS2 sample and requested full production.",
+      "forbidden_tts": [],
+      "note": "Keep the raw English token used in the approved sample."
+    },
+    "Fable": {
+      "display": "Fable",
+      "tts": "Fable",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved the corrected 15-second IndexTTS2 sample and requested full production.",
+      "forbidden_tts": [],
+      "note": "Keep the raw English token used in the approved sample."
+    },
+    "Agent": {
+      "display": "Agent",
+      "tts": "Agent",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved the corrected 15-second IndexTTS2 sample and requested full production.",
+      "forbidden_tts": [],
+      "note": "Keep the raw English token used in the approved sample."
+    },
+    "GitHub": {
+      "display": "GitHub",
+      "tts": "GitHub",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved pronunciation audition A for the GitHub Awesome explainer at final 1.12x speed.",
+      "forbidden_tts": [
+        "Git Hub"
+      ],
+      "note": "Keep the raw English token used in approved audition A."
+    },
+    "Awesome": {
+      "display": "Awesome",
+      "tts": "Awesome",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved pronunciation audition A for the GitHub Awesome explainer at final 1.12x speed.",
+      "forbidden_tts": [
+        "O sum"
+      ],
+      "note": "Keep the raw English token used in approved audition A."
+    },
+    "MCP": {
+      "display": "MCP",
+      "tts": "MCP",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved pronunciation audition A for the GitHub Awesome explainer at final 1.12x speed.",
+      "forbidden_tts": [
+        "M C P"
+      ],
+      "note": "Keep the raw English token used in approved audition A."
+    },
+    "RAG": {
+      "display": "RAG",
+      "tts": "RAG",
+      "language": "en",
+      "approved": "2026-07-25",
+      "approved_context": "User approved pronunciation audition A for the GitHub Awesome explainer at final 1.12x speed.",
+      "forbidden_tts": [
+        "R A G"
+      ],
+      "note": "Keep the raw English token used in approved audition A."
+    }
+  }
+}

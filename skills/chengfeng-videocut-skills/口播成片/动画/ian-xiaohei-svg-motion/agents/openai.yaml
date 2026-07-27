@@ -1,0 +1,8 @@
+interface:
+  display_name: "小黑 SVG 动效"
+  short_description: "把小黑正文配图改成可控的 HTML/SVG 漫画动效模板"
+  brand_color: "#EF6B1F"
+  default_prompt: "Use $ian-xiaohei-svg-motion 为这段中文内容设计一张小黑漫画感 HTML/SVG 动效样张。"
+
+policy:
+  allow_implicit_invocation: true

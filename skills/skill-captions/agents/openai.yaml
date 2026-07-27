@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill-字幕"
+  short_description: "真实时间轴驱动的深浅双字幕样式预览、烧录与质量验证工具"
+  default_prompt: "Use $skill-captions to select and apply a registered caption style to my final video."

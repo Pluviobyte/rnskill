@@ -1,0 +1,4 @@
+interface:
+  display_name: "本地口播精剪"
+  short_description: "Pre-cut subtitle approval and verified local edit"
+  default_prompt: "Use $ra-local-talking-head-cut to review and approve captions before cutting, then regenerate verified subtitles from the final video."

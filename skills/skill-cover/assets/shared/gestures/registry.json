@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "default_gesture": "zhengzuo",
+  "gestures": {
+    "zhengzuo": {
+      "manifest": "assets/shared/gestures/zhengzuo/manifest.json"
+    },
+    "tanshou": {
+      "manifest": "assets/shared/gestures/tanshou/manifest.json"
+    }
+  }
+}

@@ -124,9 +124,9 @@ If the user asks for a complete production, continue into production instead
 of stopping at a plan:
 
 - create source project under
-  `/Users/rain/Desktop/内容创作/01-内容生产/视频工作台/动效项目/`
+  `<WORKSPACE>/01-内容生产/视频工作台/动效项目/`
 - render final MP4
-- archive to `/Users/rain/Desktop/AI视频成品库/`
+- archive to `<WORKSPACE>/legacy-archive/`
 - put contact sheets and QC artifacts under the same project `质检/` folder
 
 ### 8. Anti-PPT Gate

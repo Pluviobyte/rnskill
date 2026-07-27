@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "default_style": "anchor-dark",
+  "styles": {
+    "anchor-dark": {
+      "display_name": "Kimi 锚点深色字幕",
+      "reference_height": 1080,
+      "font_family": "STHeiti Medium",
+      "font_candidates": [
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/PingFang.ttc",
+        "/System/Library/Fonts/STHeiti Light.ttc"
+      ],
+      "font_size": 56,
+      "min_font_size": 42,
+      "line_height": 1.15,
+      "max_lines": 2,
+      "max_text_width": 1500,
+      "text_color": [252, 252, 249, 255],
+      "text_stroke_width": 0,
+      "text_shadow": false,
+      "panel_color": [45, 51, 50, 213],
+      "panel_padding_x": 22,
+      "panel_padding_y": 22,
+      "panel_radius": 16,
+      "panel_shadow": false,
+      "bottom": 96,
+      "band_height": 320,
+      "horizontal_align": "center",
+      "vertical_growth": "up"
+    },
+    "anchor-light": {
+      "display_name": "锚点浅色字幕",
+      "reference_height": 1080,
+      "font_family": "STHeiti Medium",
+      "font_candidates": [
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/PingFang.ttc",
+        "/System/Library/Fonts/STHeiti Light.ttc"
+      ],
+      "font_size": 56,
+      "min_font_size": 42,
+      "line_height": 1.15,
+      "max_lines": 2,
+      "max_text_width": 1500,
+      "text_color": [21, 32, 42, 255],
+      "text_stroke_width": 0,
+      "text_shadow": false,
+      "panel_color": [251, 252, 252, 224],
+      "panel_gradient": {
+        "top": [255, 255, 255, 235],
+        "bottom": [247, 250, 251, 214]
+      },
+      "panel_border_color": [21, 32, 42, 26],
+      "panel_border_width": 1,
+      "panel_padding_x": 22,
+      "panel_padding_y": 22,
+      "panel_radius": 16,
+      "panel_shadow": {
+        "color": [64, 93, 112, 36],
+        "offset_x": 0,
+        "offset_y": 12,
+        "blur": 17
+      },
+      "bottom": 96,
+      "band_height": 320,
+      "horizontal_align": "center",
+      "vertical_growth": "up"
+    }
+  }
+}

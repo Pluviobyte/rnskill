@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>透视网格背景</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --canvas: #faf9f4;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #111;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+      }
+
+      .clip,
+      .scene-fill {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .scene-fill {
+        background: var(--canvas) url("assets/reference-gradient.png") center /
+          100% 100% no-repeat;
+      }
+
+      #grid-canvas {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 1920px;
+        height: 1080px;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .horizontal-grid-layer {
+        position: absolute;
+        left: 0;
+        width: 1920px;
+        z-index: 2;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      #top-horizontal-lines {
+        top: 0;
+        height: 341px;
+      }
+
+      #bottom-horizontal-lines {
+        top: 737px;
+        height: 343px;
+      }
+
+      .horizontal-grid-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 1920px;
+        height: 3px;
+        background: rgba(70, 78, 82, 0.245);
+        transform-origin: 50% 50%;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="perspective-grid-background"
+      data-start="0"
+      data-duration="7.3"
+      data-fps="30"
+      data-width="1920"
+      data-height="1080"
+    >
+      <section
+        id="grid-scene"
+        class="clip"
+        data-start="0"
+        data-duration="7.3"
+        data-track-index="1"
+      >
+        <div id="grid-motion" class="scene-fill">
+          <canvas
+            id="grid-canvas"
+            width="1920"
+            height="1080"
+            data-layout-ignore
+            aria-hidden="true"
+          ></canvas>
+          <div
+            id="top-horizontal-lines"
+            class="horizontal-grid-layer"
+            data-layout-ignore
+          ></div>
+          <div
+            id="bottom-horizontal-lines"
+            class="horizontal-grid-layer"
+            data-layout-ignore
+          ></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const WIDTH = 1920;
+      const HEIGHT = 1080;
+      const FPS = 30;
+      const LOOP_FRAMES = 219;
+      // Perceptual alignment: the source's softer lines read slower than their
+      // measured phase velocity. Three complete cells in the same loop keeps
+      // the seam exact while reducing the visible drift to 75% of V4.1.
+      const LOOP_CYCLES = 3;
+      const DURATION = LOOP_FRAMES / FPS;
+      const CENTER_X = WIDTH / 2;
+      const HORIZONTAL_MIRROR_AXIS_Y = 1076.91;
+      const RAY_MIRROR_AXIS_Y = 1079;
+
+      // Measurements from the 1280x720 source, scaled to 1920x1080.
+      const GRID_STEP = 61.98664;
+      const GRID_PHASE_AT_ZERO = 44.465;
+      const TOP_CUTOFF_Y = 341;
+      const TOP_RAY_CUTOFF_Y = 342;
+      const BOTTOM_CUTOFF_Y = 737;
+      const TOP_FULL_OPACITY_UNTIL = 165;
+      const RAY_FULL_OPACITY_UNTIL = 150;
+      const HORIZONTAL_EDGE_OPACITY = 0.32;
+      const TOP_RAY_EDGE_OPACITY = 0.18;
+      const BOTTOM_RAY_EDGE_OPACITY = 0.1;
+      const RAY_BASE_OPACITY = 0.18;
+      const TOP_RAY_VANISH_Y = 751.5;
+      const BOTTOM_RAY_VANISH_Y = 327.5;
+      const RAY_SPACING_AT_OUTER_EDGE = 139.51;
+      const RAY_INDEX_LIMIT = 13;
+      const SCALE_BREAK_Y = 153.8 / 1.005;
+      const TOTAL_TRAVEL = LOOP_CYCLES * GRID_STEP;
+
+      const canvas = document.getElementById("grid-canvas");
+      const context = canvas.getContext("2d", { alpha: true });
+      const topHorizontalLines = document.getElementById("top-horizontal-lines");
+      const bottomHorizontalLines = document.getElementById(
+        "bottom-horizontal-lines",
+      );
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const mix = (a, b, amount) => Math.round(a + (b - a) * amount);
+
+      const rayColor = (index) => {
+        const amount = clamp((index / RAY_INDEX_LIMIT + 1) / 2, 0, 1);
+        const left = [96, 118, 145];
+        const right = [136, 119, 100];
+        return [
+          mix(left[0], right[0], amount),
+          mix(left[1], right[1], amount),
+          mix(left[2], right[2], amount),
+        ];
+      };
+
+      const smoothstep = (start, end, value) => {
+        const amount = clamp((value - start) / (end - start), 0, 1);
+        return amount * amount * (3 - 2 * amount);
+      };
+
+      const horizontalFade = (y) => {
+        if (y <= TOP_FULL_OPACITY_UNTIL) return 1;
+        const amount = clamp(
+          (y - TOP_FULL_OPACITY_UNTIL) /
+            (TOP_CUTOFF_Y - TOP_FULL_OPACITY_UNTIL),
+          0,
+          1,
+        );
+        return 1 + (HORIZONTAL_EDGE_OPACITY - 1) * amount;
+      };
+
+      const horizontalInset = (distanceFromOuterEdge) => {
+        return clamp(1.005 * distanceFromOuterEdge - 153.8, 0, CENTER_X);
+      };
+
+      const horizontalScale = (distanceFromOuterEdge) => {
+        const inset = horizontalInset(distanceFromOuterEdge);
+        return (WIDTH - 2 * inset) / WIDTH;
+      };
+
+      const drawRayFan = (half) => {
+        const isTop = half === "top";
+        const outerY = isTop ? 0 : RAY_MIRROR_AXIS_Y;
+        const vanishY = isTop ? TOP_RAY_VANISH_Y : BOTTOM_RAY_VANISH_Y;
+        const clipY = isTop ? 0 : BOTTOM_CUTOFF_Y;
+        const clipHeight = isTop
+          ? TOP_RAY_CUTOFF_Y
+          : HEIGHT - BOTTOM_CUTOFF_Y;
+
+        context.save();
+        context.beginPath();
+        context.rect(0, clipY, WIDTH, clipHeight);
+        context.clip();
+        context.lineWidth = 3;
+        context.lineCap = "butt";
+
+        for (let index = -RAY_INDEX_LIMIT; index <= RAY_INDEX_LIMIT; index += 1) {
+          if (index === 0) continue;
+
+          const [red, green, blue] = rayColor(index);
+          const gradient = context.createLinearGradient(0, 0, 0, HEIGHT);
+          const sampleCount = 28;
+
+          for (let sample = 0; sample <= sampleCount; sample += 1) {
+            const progress = sample / sampleCount;
+            const y = isTop
+              ? progress * TOP_RAY_CUTOFF_Y
+              : BOTTOM_CUTOFF_Y +
+                progress * (RAY_MIRROR_AXIS_Y - BOTTOM_CUTOFF_Y);
+            const distanceFromOuterEdge = isTop ? y : RAY_MIRROR_AXIS_Y - y;
+            const cutoffDistance = isTop
+              ? TOP_RAY_CUTOFF_Y
+              : RAY_MIRROR_AXIS_Y - BOTTOM_CUTOFF_Y;
+            const edgeOpacity = isTop
+              ? TOP_RAY_EDGE_OPACITY
+              : BOTTOM_RAY_EDGE_OPACITY;
+            const fadeAmount = clamp(
+              (distanceFromOuterEdge - RAY_FULL_OPACITY_UNTIL) /
+                (cutoffDistance - RAY_FULL_OPACITY_UNTIL),
+              0,
+              1,
+            );
+            const depthFade = 1 + (edgeOpacity - 1) * fadeAmount;
+            let leftFog = 1;
+
+            if (index < 0) {
+              leftFog = isTop
+                ? 1 -
+                  0.92 *
+                    smoothstep(142.5, 337.5, distanceFromOuterEdge)
+                : 1 - smoothstep(187.5, 322.5, distanceFromOuterEdge);
+            }
+
+            const opacity = RAY_BASE_OPACITY * depthFade * leftFog;
+            gradient.addColorStop(
+              y / HEIGHT,
+              `rgba(${red}, ${green}, ${blue}, ${opacity})`,
+            );
+          }
+
+          context.strokeStyle = gradient;
+          context.beginPath();
+          context.moveTo(
+            CENTER_X + index * RAY_SPACING_AT_OUTER_EDGE,
+            outerY,
+          );
+          context.lineTo(CENTER_X, vanishY);
+          context.stroke();
+        }
+
+        context.restore();
+      };
+
+      const createHorizontalLine = (id, parent) => {
+        const line = document.createElement("div");
+        line.id = id;
+        line.className = "horizontal-grid-line";
+        line.setAttribute("data-layout-ignore", "");
+        parent.appendChild(line);
+        return line;
+      };
+
+      const tl = gsap.timeline({ paused: true });
+
+      const addPiecewiseTween = (
+        targets,
+        property,
+        valueAt,
+        breakpoints,
+        startY,
+        endY,
+      ) => {
+        const points = [
+          startY,
+          ...breakpoints.filter(
+            (breakpoint) => breakpoint > startY && breakpoint < endY,
+          ),
+          endY,
+        ];
+
+        tl.set(targets, { [property]: valueAt(startY) }, 0);
+
+        for (let index = 0; index < points.length - 1; index += 1) {
+          const segmentStartY = points[index];
+          const segmentEndY = points[index + 1];
+          const startTime =
+            ((segmentStartY - startY) / (endY - startY)) * DURATION;
+          const segmentDuration =
+            ((segmentEndY - segmentStartY) / (endY - startY)) * DURATION;
+
+          tl.to(
+            targets,
+            {
+              [property]: valueAt(segmentEndY),
+              duration: segmentDuration,
+              ease: "none",
+            },
+            startTime,
+          );
+        }
+      };
+
+      context.clearRect(0, 0, WIDTH, HEIGHT);
+      drawRayFan("top");
+      drawRayFan("bottom");
+
+      for (let index = -5; index <= 5; index += 1) {
+        const startY = GRID_PHASE_AT_ZERO + index * GRID_STEP;
+        const endY = startY + TOTAL_TRAVEL;
+        const bottomStartY =
+          HORIZONTAL_MIRROR_AXIS_Y - startY - BOTTOM_CUTOFF_Y;
+        const bottomEndY =
+          HORIZONTAL_MIRROR_AXIS_Y - endY - BOTTOM_CUTOFF_Y;
+        const topLine = createHorizontalLine(
+          `top-horizontal-line-${index + 5}`,
+          topHorizontalLines,
+        );
+        const bottomLine = createHorizontalLine(
+          `bottom-horizontal-line-${index + 5}`,
+          bottomHorizontalLines,
+        );
+        const linePair = [topLine, bottomLine];
+
+        tl.fromTo(
+          topLine,
+          { y: startY },
+          {
+            y: endY,
+            duration: DURATION,
+            ease: "none",
+          },
+          0,
+        );
+
+        tl.fromTo(
+          bottomLine,
+          { y: bottomStartY },
+          {
+            y: bottomEndY,
+            duration: DURATION,
+            ease: "none",
+          },
+          0,
+        );
+
+        addPiecewiseTween(
+          linePair,
+          "scaleX",
+          horizontalScale,
+          [SCALE_BREAK_Y],
+          startY,
+          endY,
+        );
+        addPiecewiseTween(
+          linePair,
+          "opacity",
+          horizontalFade,
+          [TOP_FULL_OPACITY_UNTIL, TOP_CUTOFF_Y],
+          startY,
+          endY,
+        );
+      }
+
+      window.__timelines["perspective-grid-background"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
