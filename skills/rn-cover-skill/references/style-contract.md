@@ -1,54 +1,95 @@
-# Style contract and no-reference prompt
+# Style contract and reference-free construction
 
-## Fixed visual DNA
+## Fixed identity
+
+Keep only these invariants:
 
 - Canvas: `5:2`, normally `3000 × 1200`.
-- Background: warm ivory `#F4F1EA`, subtle paper softness.
-- Layout: typography on the left; compact diagram on the far right.
-- Grid: thin, low-contrast neutral grid only behind artwork.
-- Lines: charcoal `#44433F`, thin dashed strokes with rounded corners.
-- Accent: muted coral `#D97A57`, limited to one outline/signal.
-- Objects: empty rounded nodes, routed connectors, one floating interface/card object.
-- Hierarchy: Chinese headline first, Latin label second, illustration third.
+- Background: exact flat warm white `#FAF9F5`.
+- Foreground: near-black typography and restrained charcoal linework.
+- Accent: one small muted-coral focal signal.
+- Structure: strong left typography, an original conceptual visual on the right, and generous negative space.
+- Decoration: no underline, divider, rule, or decorative line beneath the text.
 
-## Adaptive layout
+Never accept a model-generated background as final. Generate only isolated right-side artwork; let `compose_cover.py` draw the fixed background, optional grid, placement, and real text.
 
-Estimate the width of the final text before generating:
+## Aesthetic relationships
 
-- Short Chinese title (`≤12` full-width glyphs): reserve `60%` for text; require the generated base to stay blank through `68%`; artwork begins at `70%`.
-- Medium title (`13–17` glyphs): reserve `64%`; keep the base blank through `70%`; artwork begins at `72%`.
-- Long title: use one intentional break, reserve `66%`; keep the base blank through `72%`; artwork begins at `74%`.
+Use relationships rather than fixed coordinates:
 
-Treat the extra blank band as a safety buffer against ImageGen drift. The artwork must stay between `artwork_start` and `96%` of canvas width. Reject any base with a node or connector left of the blank boundary.
+- Start with a clear asymmetry: typography anchors the left; the diagram creates counterweight on the right.
+- Let the headline determine the split. Short copy permits a larger visual closer to the center; long Chinese copy earns more horizontal room and pushes the visual right.
+- Keep at least one comfortable headline-sized gap between text and actual diagram marks.
+- Align the two sides by optical center, not merely by bounding-box center.
+- Let the diagram feel substantial enough to be a second subject, but never let it overpower the headline.
+- A grid may begin in the transition zone, farther right, or be omitted when the diagram is already structured.
+- Use negative space as active rhythm. Avoid both a cramped center seam and an empty gulf between the two sides.
 
-## Choose a new topology
+The reference image suggests a useful family resemblance—editorial serif, large type, faint geometry, delicate paths—but its exact node count, loop, labels, line breaks, grid origin, and distances are not a template.
 
-Select one per cover from semantics:
+## Flexible geometry ranges
 
-- Automation/workflow: compact loop with 3–4 nodes.
-- Tool stack/integration: offset chain feeding one center card.
-- Growth/distribution: one input branching into 2–3 routes, then reconverging.
-- Comparison/decision: split path, decision diamond, chosen output.
-- Content production: capture → transform → compose → publish, expressed without text.
-- Learning/research: orbiting note cards around one evidence card.
+Use these only as starting ranges:
 
-Change the topology, node geometry, path routing, card angle, and accent position for each new cover.
+- Left text origin: roughly `5–8%` of canvas width.
+- Grid transition: roughly `35–55%`, or omit it.
+- Right artwork start: roughly `48–72%`, depending on text length.
+- Right artwork height: roughly `55–88%`, depending on the visual family.
+- Outer breathing room: visually consistent on all sides, without forcing equal numeric margins.
 
-## Built-in ImageGen prompt template
+Move outside these ranges when the title or concept benefits and the hierarchy remains intact.
 
-Replace braces, then call ImageGen without any image inputs:
+## Typography
+
+- Latin headline: bold editorial serif with tight tracking and deliberate line breaks.
+- Optional Latin emphasis: italicize one coherent phrase or line.
+- Chinese or mixed headline: heavy sans with strong stroke mass and clean Latin glyphs.
+- Optional label: smaller and quieter than the headline.
+- Optional subtitle: bold italic editorial serif with relaxed leading.
+- Vertically center the complete left text group after calculating its real height.
+- Prefer an expressive silhouette—one broad line, a strong two-line block, or a smaller label over a large Chinese line—rather than mechanical wrapping.
+
+Font sizes are outcomes of hierarchy and available width, not identity constants. At thumbnail scale, the headline must remain the first thing read.
+
+## Original visual families
+
+Choose freely from the topic:
+
+- Workflow, orchestration, routed systems
+- Tool integration or modular stacks
+- Growth, distribution, convergence
+- Comparison, choice, verification
+- Charts, curves, thresholds, progress
+- Architecture, layers, orbits, dependencies
+- Content production or transformation
+- Research, evidence, notes, learning
+- A new abstract metaphor invented for the specific title
+
+Vary the visual family, silhouette, topology, object count, route, central object, and coral signal placement. A new cover should not look like a previous diagram with the title swapped.
+
+## ImageGen construction
+
+Generate an isolated diagram on a removable chroma background. Keep the prompt descriptive rather than numerically prescriptive:
 
 ```text
 Use case: productivity-visual
-Asset type: ultra-wide 5:2 editorial technology cover background
-Primary request: Generate a completely original warm-ivory editorial cover background for the theme "{theme}". Keep every pixel in the entire left {blank_boundary_percent}% visually empty except for the warm-ivory paper background: no grid, no line, no node, no connector, no card, no decoration. Create a fresh compact abstract workflow illustration only on the far right.
-Subject: {topology_description}. Use thin charcoal dashed connectors, empty rounded nodes, one floating minimal interface/card object, and one restrained muted-coral outline or signal. Express the idea visually without labels.
-Style/medium: premium editorial infographic, vector-like line art, modern AI research publication, understated and elegant
-Composition/framing: exact 5:2 ultra-wide banner; a hard empty-zone boundary at {blank_boundary_percent}% canvas width; artwork contained from {artwork_start_percent}% to 96%; centered vertically; fully visible; generous margins; the illustration must be small and yield space to the title
-Color palette: warm ivory #F4F1EA, charcoal #44433F, faint grid #D9D6CF, muted coral #D97A57
+Asset type: isolated editorial diagram asset for the right side of a 5:2 cover
+Primary request: Generate a completely original conceptual diagram for "{theme}". Create only the diagram object; background, grid, and typography will be composed separately.
+Scene/backdrop: perfectly flat solid #00FF00 chroma-key background; no gradient, texture, grid, floor, shadow, or lighting variation
+Subject: {fresh_visual_concept}. Use delicate charcoal geometry, restrained dashed routes where useful, minimal interface or diagram objects, and one small muted-coral focal signal. Express the idea without labels.
+Style/medium: sophisticated editorial infographic, modern AI research publication, understated vector-like line art
+Composition/framing: coherent self-contained silhouette; fully visible; tight but comfortable crop; balanced optical center; no unnecessary empty padding
+Color palette: charcoal, near-black, muted coral, optional #FAF9F5 card surfaces
 Text: none
-Constraints: no reference image; newly invent this diagram; no words, letters, numbers, logos, watermark, people, or photography; grid only behind the right-side artwork; absolutely no visible mark may cross left of the hard empty-zone boundary; no clipped nodes
-Avoid: pseudo-text, reused-looking composition, oversized diagram, neon, glossy 3D, heavy shadows, dense UI, clutter
+Constraints: create from scratch with no reference image; no words, letters, numbers, logos, watermark, people, photography, canvas background, or grid; keep subject colors distinct from #00FF00
+Avoid: copied-looking topology, chunky generic flowchart icons, pseudo-text, neon, glossy 3D, heavy shadows, dense UI, clutter
 ```
 
-Never include `Input images:` in this prompt. Never pass `referenced_image_paths` or `num_last_images_to_include`.
+Never include `Input images:`. Never pass `referenced_image_paths` or `num_last_images_to_include`.
+
+After generation:
+
+1. Remove the chroma key.
+2. Reject green fringe, pseudo-text, clipped geometry, excessive padding, or a generic copied-looking layout.
+3. Let the compositor trim transparent margins and place the effective visual bounds.
+4. Adjust grid, artwork start, and artwork height by optical judgment.

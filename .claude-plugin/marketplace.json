@@ -65,6 +65,16 @@
       "category": "video-production",
       "keywords": ["开场", "打字", "黑底白字", "opener", "typing", "animation"],
       "skills": ["./skills/rn-bw-text-opener"]
+    },
+    {
+      "name": "rn-cover-skill",
+      "description": "无参考图生成 5:2 编辑图解风封面。固定暖白背景、自适应左文右图，每次重新设计右侧概念图，输出可编辑 SVG + PNG。\nReference-free 5:2 editorial diagram covers with adaptive typography, fresh artwork, and editable SVG + PNG.\nTrigger: /rn-cover-skill, RN封面, 编辑图解风封面",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "design",
+      "keywords": ["封面", "编辑设计", "图解", "cover", "editorial", "diagram"],
+      "skills": ["./skills/rn-cover-skill"]
     }
   ]
 }

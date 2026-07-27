@@ -14,6 +14,23 @@
 
 通用编码 Skill，持续补充中。
 
+## RN Cover Skill
+
+`rn-cover-skill` 用标题和主题直接生成 `5:2` 编辑图解风封面，不需要提供参考图。它把创作分成两层：ImageGen 每次重新设计右侧概念图，脚本负责精确排版、暖白背景与可编辑 SVG，因此既能保持家族气质，也不会把某张参考封面的节点和构图反复复制。
+
+![RN Cover Skill 示例](docs/assets/rn-cover-skill-example.png)
+
+- 固定干净的 `#FAF9F5` 暖白画布，中文或混合标题优先
+- 左侧文字整体垂直居中；右侧图形根据标题长度主动让位
+- 网格、图形起点、密度和高度可按内容调整，不锁死单一模板
+- 每个新封面重新生成独立图形，最终输出自包含 SVG 与 PNG
+
+调用示例：
+
+```text
+使用 $rn-cover-skill 制作 5:2 封面，标题为「开源 Claude 风格封面 Skill」
+```
+
 ## 前置要求
 
 - 已安装 Codex、Claude Code 或其他支持项目级 Skill 的 Agent
@@ -141,7 +158,7 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 | [`rn-dark-saas-video`](skills/rn-dark-saas-video/) | 暗色 SaaS 产品视频：8 套场景蓝图、3 种时长预设 | 原创 |
 | [`rn-bw-text-opener`](skills/rn-bw-text-opener/) | 黑白打字机开场动画：3 种时长预设，附 Python 时序规划脚本 | 原创 |
 | [`rn-replica-qc`](skills/rn-replica-qc/) | 复刻质检：五级保真度 + 素材/运行时/交付三道全帧门 | 原创 |
-| [`rn-cover-skill`](skills/rn-cover-skill/) | 编辑工作流风封面：暖白底 + 左侧大字 + 右侧工作流插画，输出 SVG + PNG | 原创 |
+| [`rn-cover-skill`](skills/rn-cover-skill/) | 无参考图生成编辑图解风封面：自适应左文右图、每次重绘概念图，输出可编辑 SVG + PNG | 原创 |
 
 ### dbs 商业工具箱（22 个）
 

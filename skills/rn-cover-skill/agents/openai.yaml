@@ -1,4 +1,4 @@
 interface:
   display_name: "RN Cover Skill"
-  short_description: "无需任何参考图，生成左文右图的暖白编辑工作流风格封面"
+  short_description: "固定暖白背景，自适应图文几何，生成无参考编辑封面"
   default_prompt: "使用 $rn-cover-skill 根据我的标题制作一张全新的编辑工作流风格封面。"

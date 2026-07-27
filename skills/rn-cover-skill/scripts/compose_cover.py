@@ -14,6 +14,16 @@ import subprocess
 import sys
 
 
+BACKGROUND_COLOR = "#FAF9F5"
+GRID_COLOR = "#ECEBE7"
+DEFAULT_GRID_START = 0.40
+DEFAULT_GRID_CELL_HEIGHT_RATIO = 0.09
+
+
+def has_cjk(text: str) -> bool:
+    return any(ord(char) > 0x2E7F for char in text)
+
+
 def visual_units(text: str, cjk: bool = False) -> float:
     units = 0.0
     for char in text:
@@ -44,6 +54,11 @@ def split_title(text: str) -> list[str]:
         return explicit
 
     midpoint = len(text) / 2
+    spaces = [index for index, char in enumerate(text) if char.isspace()]
+    if spaces:
+        split_at = min(spaces, key=lambda index: abs(index - midpoint))
+        return [text[:split_at].strip(), text[split_at:].strip()]
+
     candidates = [
         index + 1
         for index, char in enumerate(text)
@@ -70,10 +85,116 @@ def split_title(text: str) -> list[str]:
     return [text[:split_at].strip(), text[split_at:].strip()]
 
 
+def resolve_artwork_start(title: str, requested: float | None) -> float:
+    if requested is not None:
+        return requested
+    if not has_cjk(title):
+        return 0.50
+    units = visual_units(title, cjk=True)
+    return min(0.72, max(0.54, 0.54 + max(0.0, units - 6.5) * 0.02))
+
+
+def parse_italic_lines(value: str, line_count: int) -> set[int]:
+    if not value.strip():
+        return set()
+    try:
+        result = {int(item.strip()) - 1 for item in value.split(",") if item.strip()}
+    except ValueError as exc:
+        raise ValueError("--italic-title-lines must be comma-separated line numbers.") from exc
+    if any(index < 0 or index >= line_count for index in result):
+        raise ValueError("--italic-title-lines references a missing title line.")
+    return result
+
+
 def data_uri(path: Path) -> str:
     mime = mimetypes.guess_type(path.name)[0] or "image/png"
     encoded = base64.b64encode(path.read_bytes()).decode("ascii")
     return f"data:{mime};base64,{encoded}"
+
+
+def alpha_bounds(path: Path) -> tuple[int, int, int, int, int, int] | None:
+    ffprobe = shutil.which("ffprobe")
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffprobe or not ffmpeg:
+        return None
+
+    probe = subprocess.run(
+        [
+            ffprobe,
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height",
+            "-of",
+            "csv=p=0:s=x",
+            str(path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if probe.returncode != 0 or "x" not in probe.stdout:
+        return None
+    try:
+        image_width, image_height = map(int, probe.stdout.strip().split("x", 1))
+    except ValueError:
+        return None
+
+    decoded = subprocess.run(
+        [
+            ffmpeg,
+            "-v",
+            "error",
+            "-i",
+            str(path),
+            "-frames:v",
+            "1",
+            "-pix_fmt",
+            "rgba",
+            "-f",
+            "rawvideo",
+            "-",
+        ],
+        capture_output=True,
+    )
+    expected = image_width * image_height * 4
+    if decoded.returncode != 0 or len(decoded.stdout) < expected:
+        return None
+
+    min_x = image_width
+    min_y = image_height
+    max_x = -1
+    max_y = -1
+    rgba = decoded.stdout
+    for pixel_index in range(image_width * image_height):
+        if rgba[pixel_index * 4 + 3] <= 8:
+            continue
+        x = pixel_index % image_width
+        y = pixel_index // image_width
+        min_x = min(min_x, x)
+        min_y = min(min_y, y)
+        max_x = max(max_x, x)
+        max_y = max(max_y, y)
+
+    if max_x < min_x or max_y < min_y:
+        return None
+
+    content_width = max_x - min_x + 1
+    content_height = max_y - min_y + 1
+    padding = max(2, round(max(content_width, content_height) * 0.025))
+    min_x = max(0, min_x - padding)
+    min_y = max(0, min_y - padding)
+    max_x = min(image_width - 1, max_x + padding)
+    max_y = min(image_height - 1, max_y + padding)
+    return (
+        image_width,
+        image_height,
+        min_x,
+        min_y,
+        max_x - min_x + 1,
+        max_y - min_y + 1,
+    )
 
 
 def chromium_binary() -> str | None:
@@ -124,51 +245,151 @@ def build_svg(args: argparse.Namespace) -> str:
     scale = height / 1200.0
     left = width * 0.055
     gap = width * 0.04
-    text_right = width * args.artwork_start - gap
+    artwork_start = resolve_artwork_start(args.title, args.artwork_start)
+    text_right = width * artwork_start - gap
     max_text_width = text_right - left
 
     label_size = (
         args.label_size
         if args.label_size is not None
-        else fit_size(args.label, max_text_width, 102 * scale, 68 * scale, cjk=False)
+        else fit_size(args.label, max_text_width, 88 * scale, 58 * scale, cjk=False)
     )
-    preferred_title = 146 * scale
+    title_is_cjk = has_cjk(args.title)
+    preferred_title = (158 if title_is_cjk else 150) * scale
+    minimum_title = 96 * scale
     title_size = (
         args.title_size
         if args.title_size is not None
-        else fit_size(args.title, max_text_width, preferred_title, 88 * scale, cjk=True)
+        else fit_size(
+            args.title,
+            max_text_width,
+            preferred_title,
+            minimum_title,
+            cjk=title_is_cjk,
+        )
     )
 
     title_lines = [args.title]
-    if "\\n" in args.title or title_size <= 88 * scale + 0.01:
+    if (
+        "\\n" in args.title
+        or title_size <= minimum_title + 0.01
+        or (not title_is_cjk and visual_units(args.title) > 10)
+    ):
         title_lines = split_title(args.title)
         title_size = min(
             preferred_title,
             min(
-                fit_size(line, max_text_width, preferred_title, 88 * scale, cjk=True)
+                fit_size(
+                    line,
+                    max_text_width,
+                    preferred_title,
+                    minimum_title,
+                    cjk=title_is_cjk,
+                )
                 for line in title_lines
             ),
         )
 
-    if len(title_lines) == 1:
-        label_y = height * 0.38
-        title_ys = [height * 0.615]
-        underline_y = height * 0.72
+    subtitle_lines = [line for line in args.subtitle.split("\\n") if line.strip()]
+    subtitle_size = (
+        fit_size(
+            max(subtitle_lines, key=visual_units),
+            max_text_width,
+            66 * scale,
+            46 * scale,
+            cjk=has_cjk(args.subtitle),
+        )
+        if subtitle_lines
+        else 0.0
+    )
+    italic_title_lines = parse_italic_lines(args.italic_title_lines, len(title_lines))
+    has_label = bool(args.label.strip())
+    title_leading = title_size * 1.08
+    title_block_height = title_size + (len(title_lines) - 1) * title_leading
+    label_block_height = label_size if has_label else 0.0
+    label_title_gap = title_size * 0.30 if has_label else 0.0
+    subtitle_leading = subtitle_size * 1.34
+    subtitle_block_height = (
+        subtitle_size + (len(subtitle_lines) - 1) * subtitle_leading
+        if subtitle_lines
+        else 0.0
+    )
+    title_subtitle_gap = title_size * 0.45 if subtitle_lines else 0.0
+    text_block_height = (
+        label_block_height
+        + label_title_gap
+        + title_block_height
+        + title_subtitle_gap
+        + subtitle_block_height
+    )
+    text_block_top = (height - text_block_height) / 2
+
+    if has_label:
+        label_y = text_block_top + label_size * 0.78
+        title_block_top = text_block_top + label_block_height + label_title_gap
+        label_node = (
+            f'<text x="{left:.1f}" y="{label_y:.1f}" class="label" '
+            f'font-size="{label_size:.1f}">{html.escape(args.label)}</text>'
+        )
     else:
-        label_y = height * 0.28
-        title_ys = [height * 0.53, height * 0.70]
-        underline_y = height * 0.81
+        title_block_top = text_block_top
+        label_node = ""
+
+    title_ys = [
+        title_block_top + title_size * 0.82 + index * title_leading
+        for index in range(len(title_lines))
+    ]
 
     title_nodes = "".join(
-        f'<text x="{left:.1f}" y="{title_ys[index]:.1f}" class="title" '
+        f'<text x="{left:.1f}" y="{title_ys[index]:.1f}" '
+        f'class="{"title-cjk" if title_is_cjk else "title-latin"}'
+        f'{" title-italic" if index in italic_title_lines else ""}" '
         f'font-size="{title_size:.1f}">{html.escape(line)}</text>'
         for index, line in enumerate(title_lines)
     )
+    subtitle_top = title_block_top + title_block_height + title_subtitle_gap
+    subtitle_nodes = "".join(
+        f'<text x="{left:.1f}" y="{subtitle_top + subtitle_size * 0.78 + index * subtitle_leading:.1f}" '
+        f'class="subtitle" font-size="{subtitle_size:.1f}">{html.escape(line)}</text>'
+        for index, line in enumerate(subtitle_lines)
+    )
     artwork = data_uri(args.artwork)
+    grid_start = width * args.grid_start
+    grid_cell = height * args.grid_cell_ratio
+    artwork_x = width * artwork_start
+    artwork_y = height * args.artwork_y
+    artwork_width = width * 0.985 - artwork_x
+    artwork_height = height * args.artwork_height
+    artwork_bounds = alpha_bounds(args.artwork)
+    if artwork_bounds:
+        (
+            source_width,
+            source_height,
+            crop_x,
+            crop_y,
+            crop_width,
+            crop_height,
+        ) = artwork_bounds
+        artwork_node = f'''
+  <svg x="{artwork_x:.1f}" y="{artwork_y:.1f}" width="{artwork_width:.1f}" height="{artwork_height:.1f}"
+       viewBox="{crop_x} {crop_y} {crop_width} {crop_height}" preserveAspectRatio="xMidYMid meet"
+       overflow="visible">
+    <image x="0" y="0" width="{source_width}" height="{source_height}" href="{artwork}"/>
+  </svg>'''
+    else:
+        artwork_node = f'''
+  <image x="{artwork_x:.1f}" y="{artwork_y:.1f}" width="{artwork_width:.1f}" height="{artwork_height:.1f}"
+         preserveAspectRatio="xMidYMid meet" href="{artwork}"/>'''
 
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
-  <title>{html.escape(args.label)} {html.escape(args.title)}</title>
+  <title>{html.escape(args.label)} {html.escape(args.title)} {html.escape(args.subtitle)}</title>
+  <defs>
+    <pattern id="editorial-grid" width="{grid_cell:.1f}" height="{grid_cell:.1f}" patternUnits="userSpaceOnUse">
+      <path d="M {grid_cell:.1f} 0 L 0 0 0 {grid_cell:.1f}" fill="none"
+            stroke="{args.grid_color}" stroke-width="{1 * scale:.1f}"/>
+    </pattern>
+  </defs>
   <style>
     .label {{
       fill: #171714;
@@ -176,34 +397,91 @@ def build_svg(args: argparse.Namespace) -> str:
       font-weight: 700;
       letter-spacing: -0.032em;
     }}
-    .title {{
+    .title-cjk {{
       fill: #191916;
       font-family: "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
       font-weight: 800;
       letter-spacing: -0.032em;
     }}
+    .title-latin {{
+      fill: #191916;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+    }}
+    .title-italic {{
+      font-style: italic;
+    }}
+    .subtitle {{
+      fill: #3F3E39;
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }}
   </style>
-  <image x="0" y="0" width="{width}" height="{height}" preserveAspectRatio="xMidYMid slice" href="{artwork}"/>
-  <text x="{left:.1f}" y="{label_y:.1f}" class="label" font-size="{label_size:.1f}">{html.escape(args.label)}</text>
+  <rect x="0" y="0" width="{width}" height="{height}" fill="{BACKGROUND_COLOR}"/>
+  {"" if args.no_grid else f'<rect x="{grid_start:.1f}" y="0" width="{width - grid_start:.1f}" height="{height}" fill="url(#editorial-grid)"/>'}
+  {artwork_node}
+  {label_node}
   {title_nodes}
-  <line x1="{left:.1f}" y1="{underline_y:.1f}" x2="{left + 188 * scale:.1f}" y2="{underline_y:.1f}"
-        stroke="#BEBBB3" stroke-width="{6 * scale:.1f}" stroke-linecap="square"/>
+  {subtitle_nodes}
 </svg>
 '''
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Compose a 5:2 editorial workflow cover from generated artwork and exact text."
+        description="Compose a 5:2 editorial cover from transparent artwork and exact text."
     )
     parser.add_argument("--artwork", required=True, type=Path)
-    parser.add_argument("--label", required=True)
+    parser.add_argument("--label", default="", help="Optional short Latin/tool line.")
     parser.add_argument("--title", required=True, help=r"Use literal \\n for an intentional line break.")
+    parser.add_argument("--subtitle", default="", help=r"Optional subtitle; use literal \\n for two lines.")
+    parser.add_argument(
+        "--italic-title-lines",
+        default="",
+        help="Optional comma-separated 1-based title line numbers to italicize.",
+    )
     parser.add_argument("--output", required=True, type=Path, help="Self-contained SVG output.")
     parser.add_argument("--png", type=Path, help="Optional PNG output.")
     parser.add_argument("--width", type=int, default=3000)
     parser.add_argument("--height", type=int, default=1200)
-    parser.add_argument("--artwork-start", type=float, default=0.68)
+    parser.add_argument(
+        "--artwork-start",
+        type=float,
+        help="Artwork x-position as a canvas fraction; defaults adapt to title language and length.",
+    )
+    parser.add_argument(
+        "--grid-start",
+        type=float,
+        default=DEFAULT_GRID_START,
+        help="Grid x-position as a canvas fraction.",
+    )
+    parser.add_argument(
+        "--grid-cell-ratio",
+        type=float,
+        default=DEFAULT_GRID_CELL_HEIGHT_RATIO,
+        help="Grid-cell size as a fraction of canvas height.",
+    )
+    parser.add_argument(
+        "--grid-color",
+        default=GRID_COLOR,
+        help="Grid stroke color as a hex value.",
+    )
+    parser.add_argument("--no-grid", action="store_true", help="Disable the grid.")
+    parser.add_argument(
+        "--artwork-y",
+        type=float,
+        default=0.07,
+        help="Artwork box y-position as a canvas fraction.",
+    )
+    parser.add_argument(
+        "--artwork-height",
+        type=float,
+        default=0.86,
+        help="Artwork box height as a canvas fraction.",
+    )
     parser.add_argument("--label-size", type=float)
     parser.add_argument("--title-size", type=float)
     args = parser.parse_args()
@@ -216,8 +494,24 @@ def parse_args() -> argparse.Namespace:
         parser.error("--png must use .png.")
     if args.width < 1200 or args.height < 480 or args.width / args.height < 1.8:
         parser.error("Use a landscape canvas of at least 1200 × 480 and ratio >= 1.8:1.")
-    if not 0.55 <= args.artwork_start <= 0.75:
-        parser.error("--artwork-start must be between 0.55 and 0.75.")
+    if args.artwork_start is not None and not 0.48 <= args.artwork_start <= 0.75:
+        parser.error("--artwork-start must be between 0.48 and 0.75.")
+    if not 0.30 <= args.grid_start <= 0.65:
+        parser.error("--grid-start must be between 0.30 and 0.65.")
+    if not 0.045 <= args.grid_cell_ratio <= 0.16:
+        parser.error("--grid-cell-ratio must be between 0.045 and 0.16.")
+    if not (
+        len(args.grid_color) == 7
+        and args.grid_color.startswith("#")
+        and all(char in "0123456789abcdefABCDEF" for char in args.grid_color[1:])
+    ):
+        parser.error("--grid-color must be a six-digit hex color.")
+    if not 0.0 <= args.artwork_y <= 0.30:
+        parser.error("--artwork-y must be between 0 and 0.30.")
+    if not 0.45 <= args.artwork_height <= 1.0:
+        parser.error("--artwork-height must be between 0.45 and 1.0.")
+    if args.artwork_y + args.artwork_height > 1.02:
+        parser.error("--artwork-y plus --artwork-height must not exceed 1.02.")
     if args.label_size is not None and args.label_size <= 0:
         parser.error("--label-size must be positive.")
     if args.title_size is not None and args.title_size <= 0:

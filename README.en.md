@@ -14,6 +14,23 @@ With this skill set + Codex + HyperFrames + HeyGen + IndexTTS2, I spent less tha
 
 General-purpose coding skills, more coming soon.
 
+## RN Cover Skill
+
+`rn-cover-skill` creates `5:2` editorial diagram covers from a title and theme—no reference image required. ImageGen invents a new right-side concept for every cover, while the compositor controls exact typography, the warm-white canvas, and editable SVG output. The result keeps a recognizable visual family without repeating one reference layout.
+
+![RN Cover Skill example](docs/assets/rn-cover-skill-example.png)
+
+- Exact `#FAF9F5` warm-white canvas with Chinese and mixed-language headline priority
+- Vertically centered left text block; the right visual yields to headline length
+- Adjustable grid, visual start, density, and height instead of one locked template
+- Fresh isolated artwork per cover, delivered as self-contained SVG and PNG
+
+Example:
+
+```text
+Use $rn-cover-skill to create a 5:2 cover titled "Open-source Claude-style Cover Skill"
+```
+
 ## Requirements
 
 - Codex, Claude Code, or another Agent that supports project-level skills
@@ -141,7 +158,7 @@ Skills marked `⬡` are from or adapted from external open-source projects — s
 | [`rn-dark-saas-video`](skills/rn-dark-saas-video/) | Dark cinematic SaaS product video: 8 scene blueprints, 3 timing presets | Original |
 | [`rn-bw-text-opener`](skills/rn-bw-text-opener/) | Black-white typed text opener with synced SFX, 3 timing presets, Python timing planner | Original |
 | [`rn-replica-qc`](skills/rn-replica-qc/) | Replica QA: 5 fidelity levels + asset/runtime/delivery full-frame gates | Original |
-| [`rn-cover-skill`](skills/rn-cover-skill/) | Editorial workflow cover: warm ivory + left typography + right workflow illustration → SVG + PNG | Original |
+| [`rn-cover-skill`](skills/rn-cover-skill/) | Reference-free editorial diagram covers with adaptive left text, fresh right-side artwork, editable SVG + PNG | Original |
 
 ### dbs Business Toolkit (22 skills)
 
