@@ -12,6 +12,5 @@ The following skills are adapted from or inspired by external open-source projec
 | `chengfeng-videocut-skills` | chengfeng / AI产品自由 | [GitHub](https://github.com/Agentchengfeng/chengfeng-videocut-skills) | Apache-2.0 |
 | `ai-jian-koubo` | Inspired by chengfeng/videocut-skills, rewritten | — | AGPL-3.0 |
 | `video-use` | Browser Use | [Browser Use Cloud](https://cloud.browser-use.com) | MIT |
-| `ian-xiaohei-cat-illustrations` | Ian | [GitHub](https://github.com/helloianneo/ian-xiaohei-illustrations) | MIT |
-| `ian-xiaohei-illustrations` | Ian | [GitHub](https://github.com/helloianneo/ian-xiaohei-illustrations) | MIT |
+| `ian-xiaohei-illustrations` | [Ian / helloianneo](https://github.com/helloianneo) (original, unmodified upstream skill) | [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · [X](https://x.com/ianneo_ai) · [Website](https://www.ianneo.xyz/opc) | MIT |
 | `editorial-collage-motion` | Inspired by Vikash Kumar / Arcads | [buldrr.com](https://buldrr.com/arcads-collage-motion-skill/) | Adapted |

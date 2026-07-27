@@ -4,7 +4,7 @@
 
 AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
 
-Currently **55 skills** in two categories:
+Currently **54 skills** in two categories:
 
 ### 🎬 Content Creation (Video / Image / Article)
 
@@ -130,8 +130,7 @@ Skills marked `⬡` are from or adapted from external open-source projects — s
 
 | Skill | Description | Source |
 |-------|-------------|--------|
-| [`ian-xiaohei-cat-illustrations`](skills/ian-xiaohei-cat-illustrations/) | Xiaohei Cat IP illustrations: white hand-drawn + red/orange/blue annotations for knowledge explainers | ⬡ Adapted from [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
-| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | Xiaohei IP illustrations (non-cat), broader concept visualization | ⬡ Adapted from [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
+| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | Ian's original Xiaohei article illustrations: white hand-drawn 16:9 visuals with restrained red/orange/blue annotations for judgments, processes, and metaphors | ⬡ Original author [Ian / helloianneo](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
 | [`skill-cover`](skills/skill-cover/) | Cover generation with registered styles and dual-ratio assets | Original |
 | [`editorial-dot-cover`](skills/editorial-dot-cover/) | Editorial dot-grid cover: warm gray paper + oversized Chinese title + whitespace + dotted vector icon → SVG + PNG | Original |
 | [`editorial-collage-motion`](skills/editorial-collage-motion/) | Halftone paper collage motion: decode reference → generate stills → assemble-from-empty animation | ⬡ Inspired by [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/), local free edition |
@@ -196,9 +195,9 @@ From [@dontbesilent](https://x.com/dontbesilent)'s open-source [dbskill](https:/
 
 `dbs` and all `dbs-*` skills are from [@dontbesilent](https://x.com/dontbesilent)'s open-source [dbskill](https://github.com/dontbesilent2025/dbskill), CC BY-NC 4.0. Adapted for use as content quality gates in the video production pipeline.
 
-### Xiaohei Cat / Xiaohei Illustrations
+### Ian's Original Xiaohei Illustrations
 
-`ian-xiaohei-cat-illustrations` and `ian-xiaohei-illustrations` are derived from Ian's original [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations), MIT license. Character IP adapted with identity-consistency QA added.
+`ian-xiaohei-illustrations` directly includes the original [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) by **Ian**. The Xiaohei character IP is unmodified and redistributed under the MIT license. Original author: [GitHub @helloianneo](https://github.com/helloianneo) · [X @ianneo_ai](https://x.com/ianneo_ai) · [www.ianneo.xyz](https://www.ianneo.xyz/opc).
 
 ### Halftone Collage Motion
 

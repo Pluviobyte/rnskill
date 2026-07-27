@@ -4,7 +4,7 @@
 
 雪踏乌云维护的 AI Agent Skill 全集，适用于 Codex、Claude Code 等支持 `SKILL.md` 的 Agent 工作流。
 
-当前共 **55 个 Skill**，分为两大类：
+当前共 **54 个 Skill**，分为两大类：
 
 ### 🎬 内容创作（视频 / 图文 / 文章）
 
@@ -130,8 +130,7 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 
 | Skill | 说明 | 来源 |
 |-------|------|------|
-| [`ian-xiaohei-cat-illustrations`](skills/ian-xiaohei-cat-illustrations/) | 小黑猫 IP 概念插画：纯白手绘 + 红橙蓝批注，知识点配图 | ⬡ 改编自 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
-| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | 小黑 IP 概念插画（非猫形象），更广泛的概念可视化 | ⬡ 改编自 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
+| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | Ian（伊恩）原版小黑正文配图：纯白手绘、少量红橙蓝批注，把文章中的判断、流程和隐喻画成 16:9 插图 | ⬡ 原作者 [Ian / helloianneo](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
 | [`skill-cover`](skills/skill-cover/) | 封面生成：注册风格、双比例资产、自动出图 | 原创 |
 | [`editorial-dot-cover`](skills/editorial-dot-cover/) | 点阵编辑风封面：暖灰纸底 + 超大中文标题 + 留白 + 点阵矢量图标，输出 SVG + PNG | 原创 |
 | [`editorial-collage-motion`](skills/editorial-collage-motion/) | 半色调纸张拼贴动效：参考拆解 → 静帧生成 → 逐件组装动画 | ⬡ 灵感源自 [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/)，本地免费兼容版 |
@@ -196,9 +195,9 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 
 `dbs` 及全部 `dbs-*` Skill 来自 [@dontbesilent](https://x.com/dontbesilent) 的开源项目 [dbskill](https://github.com/dontbesilent2025/dbskill)，CC BY-NC 4.0 许可。本仓库在原版基础上做了适配，用于视频生产流水线中的内容质量检查环节。
 
-### 小黑猫 / 小黑正文配图
+### Ian 原版小黑正文配图
 
-`ian-xiaohei-cat-illustrations` 和 `ian-xiaohei-illustrations` 来源于 Ian 的原版 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations)，MIT 许可。保留了文章分析、shot list、白底手绘视觉系统和构图方法，改造角色 IP 并增加身份一致性质检。
+`ian-xiaohei-illustrations` 直接收录原作者 **Ian（伊恩）** 的 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations)，未改造“小黑”角色 IP，按 MIT 许可分发。原作者：[GitHub @helloianneo](https://github.com/helloianneo) · [X @ianneo_ai](https://x.com/ianneo_ai) · [www.ianneo.xyz](https://www.ianneo.xyz/opc)。
 
 ### 半色调拼贴动效
 
