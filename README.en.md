@@ -4,9 +4,15 @@
 
 AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
 
-In the past month, I used this skill set + Codex + HyperFrames + HeyGen + IndexTTS2 with less than 10 hours of total effort — grew 2k followers on Douyin and landed my first paid brand deal.
+Currently **55 skills** in two categories:
 
-Currently **55 skills** covering topic selection, content writing, video download, AI voice cloning, digital avatars, video editing, subtitles, visual/cover design, article-to-image, production orchestration, motion graphics, and business diagnostics.
+### 🎬 Content Creation (Video / Image / Article)
+
+With this skill set + Codex + HyperFrames + HeyGen + IndexTTS2, I spent less than 10 hours total over the past month — grew 2k followers on Douyin and landed my first paid brand deal. Covers topic selection, scriptwriting, AI voice cloning, digital avatars, video editing, subtitles, cover design, article-to-image, production orchestration, motion graphics, and business diagnostics.
+
+### 💻 Coding & Development
+
+General-purpose coding skills, more coming soon.
 
 ## Requirements
 
