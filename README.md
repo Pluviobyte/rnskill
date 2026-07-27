@@ -1,40 +1,40 @@
 # rnskill
 
-[中文](README.zh.md) | English
+[English](README.en.md)
 
-AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
+雪踏乌云维护的 AI Agent Skill 全集，适用于 Codex、Claude Code 等支持 `SKILL.md` 的 Agent 工作流。
 
-In the past month, I used this skill set + Codex + HyperFrames + HeyGen + IndexTTS2 with less than 10 hours of total effort — grew 2k followers on Douyin and landed my first paid brand deal.
+过去一个月，我用这套 Skill + Codex + HyperFrames + HeyGen + IndexTTS2，总投入不到 10 小时，在抖音涨粉 2k 并接到第一个商单。技术选型和 Skill 设计思路见配套文章。
 
-Currently **55 skills** covering topic selection, content writing, video download, AI voice cloning, digital avatars, video editing, subtitles, visual/cover design, article-to-image, production orchestration, motion graphics, and business diagnostics.
+当前共 **55 个 Skill**，覆盖选题策划、内容创作、视频下载、AI 配音、数字人、视频编辑、字幕、视觉封面、图文制作、制作调度、视频动效和商业诊断。
 
-## Requirements
+## 前置要求
 
-- Codex, Claude Code, or another Agent that supports project-level skills
-- A target project that can load `.agents/skills/<skill-name>/SKILL.md`
+- 已安装 Codex、Claude Code 或其他支持项目级 Skill 的 Agent
+- 目标项目可以读取 `.agents/skills/<skill-name>/SKILL.md`
 
-## Installation
+## 安装
 
-### Claude Code Plugin Marketplace
+### Claude Code 插件市场
 
 ```bash
 claude plugin marketplace add Pluviobyte/rnskill
 claude plugin install ra-人话@rnskill
 ```
 
-### Universal (Codex / Claude Code)
+### 通用安装（Codex / Claude Code）
 
 ```bash
 npx -y skills add Pluviobyte/rnskill -g --all
 ```
 
-Or install a single skill:
+安装单个 Skill：
 
 ```bash
 npx -y skills add Pluviobyte/rnskill --skill ra-人话
 ```
 
-### Manual Install
+### 手动安装
 
 ```bash
 # Codex
@@ -46,157 +46,157 @@ mkdir -p <project>/.claude/skills
 cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 ```
 
-## All Skills
+## 全部技能一览
 
-Skills marked `⬡` are from or adapted from external open-source projects — see the Source column and [Credits](#credits-and-adaptations) below.
+标记 `⬡` 的 Skill 来自或改编自外部开源项目，详见表中来源列和底部[致谢](#致谢与改编说明)。
 
-### Topic & Planning
+### 选题与策划
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-选题`](skills/ra-选题/) | Full topic lifecycle: create cards, deepen research, recommend (benchmark + own data), route to video/article/image workbench | Original |
-| [`ra-实操策划`](skills/ra-实操策划/) | Practical long-form planning: test prompts, timeline structure, on-camera script, screen-recording checklist | Original |
-| [`ra-hook`](skills/ra-hook/) | Short video hook selection: 7 types × 3 categories, with prerequisites, templates, and common mistakes | Original |
-| [`ra-video-title`](skills/ra-video-title/) | Video title generation: lock theme → analyze benchmarks → 8-12 two-part candidates + Top 3 picks | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-选题`](skills/ra-选题/) | 选题全生命周期：建卡、深化、推荐（对标+自有数据）、立项路由到视频/图文/文章工作台 | 原创 |
+| [`ra-实操策划`](skills/ra-实操策划/) | 实操长片策划稿：测试题组、结构时间轴、出镜口播稿、录屏操作清单 | 原创 |
+| [`ra-hook`](skills/ra-hook/) | 短视频钩子选型：7 种类型 × 3 大类，带前提条件、句型模板和常见错误 | 原创 |
+| [`ra-video-title`](skills/ra-video-title/) | 视频标题生成：主题锁定 → 对标拆解 → 8-12 个两段式候选 + Top 3 推荐 | 原创 |
 
-### Content Writing
+### 内容创作
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-video-wash-pipeline`](skills/ra-video-wash-pipeline/) | Video script-wash orchestrator: download → transcript → rewrite → QC → queue for production | Original |
-| [`ra-逐字稿提取skill`](skills/ra-逐字稿提取skill/) | Extract verbatim transcript from Douyin/Xiaohongshu videos via watermark removal + Paraformer ASR | Original |
-| [`ra-洗稿`](skills/ra-洗稿/) | Script rewrite: chains ra-人话 → dbs-ai-check → dbs-hook → dbs-resonate → ra-video-title | Original |
-| [`ra-人话`](skills/ra-人话/) | Chinese de-AI writing: bans binary contrast shells, fake insight markers, lecture colons; preserves author judgment | Original |
-| [`ra-公众号提取`](skills/ra-公众号提取/) | WeChat article full-text extraction via MicroMessenger UA spoofing, stdlib only | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-video-wash-pipeline`](skills/ra-video-wash-pipeline/) | 视频洗稿调度器：串联下载 → 逐字稿提取 → 洗稿 → 质量检查 → 排入待制作队列 | 原创 |
+| [`ra-逐字稿提取skill`](skills/ra-逐字稿提取skill/) | 从抖音/小红书视频提取逐字稿，去水印 + Paraformer ASR | 原创 |
+| [`ra-洗稿`](skills/ra-洗稿/) | 视频脚本洗稿：自动串联 ra-人话 → dbs-ai-check → dbs-hook → dbs-resonate → ra-video-title | 原创 |
+| [`ra-人话`](skills/ra-人话/) | 中文去 AI 味写作：硬禁二元对比壳、伪洞察标记、冒号讲义腔，保留作者判断和事实 | 原创 |
+| [`ra-公众号提取`](skills/ra-公众号提取/) | 微信公众号文章全文提取，MicroMessenger UA 伪装，纯标准库 | 原创 |
 
-### Video Download
+### 视频下载
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-video-download`](skills/ra-video-download/) | Download from Douyin/YouTube/Bilibili/Twitter/Xiaohongshu via yt-dlp + TikHub | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-video-download`](skills/ra-video-download/) | 从抖音/YouTube/B站/Twitter/小红书下载视频，底层 yt-dlp + TikHub | 原创 |
 
-### Voice
+### 配音
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`tts-skill`](skills/tts-skill/) | Local IndexTTS2 voice cloning with locked lossless reference, no cloud fallback, voice_manifest.json audit trail | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`tts-skill`](skills/tts-skill/) | 本地 IndexTTS2 声音克隆配音，固定无损参考，禁止云端 fallback，留 voice_manifest.json | 原创 |
 
-### Digital Avatar
+### 数字人
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`heygen-digital-avatar`](skills/heygen-digital-avatar/) | HeyGen Digital Twin generation & compositing: CLI OAuth, circle crop layout, audio approval gate | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`heygen-digital-avatar`](skills/heygen-digital-avatar/) | HeyGen Digital Twin 生成与合成：CLI OAuth 认证、圆形裁切布局、音频确认硬门 | 原创 |
 
-### Video Editing
+### 视频编辑
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-local-talking-head-cut`](skills/ra-local-talking-head-cut/) | Local talking-head rough cut: ASR → pre-cut review → user approval → semantic edit → loudness/cut QC | Original |
-| [`video-use`](skills/video-use/) | Conversational video editing: transcribe, cut, color grade, overlay animations, burn subtitles | ⬡ [Browser Use](https://cloud.browser-use.com) · MIT |
-| [`ai-jian-koubo`](skills/ai-jian-koubo/) | Talking-head transcription + AI stutter detection + waveform review UI + FCPXML export | ⬡ Inspired by [chengfeng/videocut-skills](https://github.com/Agentchengfeng/chengfeng-videocut-skills), rewritten · AGPL-3.0 |
-| [`chengfeng-videocut-skills`](skills/chengfeng-videocut-skills/) | Chengfeng's original talking-head cutter: transcription → stutter detection → review page → FCPXML | ⬡ [chengfeng / AI产品自由](https://github.com/Agentchengfeng/chengfeng-videocut-skills) · Apache-2.0 |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-local-talking-head-cut`](skills/ra-local-talking-head-cut/) | 本地口播粗剪：ASR 转写 → 剪前校对 → 用户确认 → 语义编辑 → 响度/切点 QC | 原创 |
+| [`video-use`](skills/video-use/) | 通用对话式视频编辑：转写、剪辑、调色、叠加动画、烧字幕 | ⬡ [Browser Use](https://cloud.browser-use.com) · MIT |
+| [`ai-jian-koubo`](skills/ai-jian-koubo/) | 口播视频转录 + AI 口误识别 + 网页波形审核 + 导出 FCPXML | ⬡ 灵感源自 [chengfeng/videocut-skills](https://github.com/Agentchengfeng/chengfeng-videocut-skills)，重写扩展 · AGPL-3.0 |
+| [`chengfeng-videocut-skills`](skills/chengfeng-videocut-skills/) | 乘风口播剪辑原版：转录 → 口误识别 → 审核页 → FCPXML 导出 | ⬡ [chengfeng / AI产品自由](https://github.com/Agentchengfeng/chengfeng-videocut-skills) · Apache-2.0 |
 
-### Subtitles
+### 字幕
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-audio-to-subtitles`](skills/ra-audio-to-subtitles/) | Volcengine Doubao-ASR word-level timestamps + alignment/fragment/connector/reading-speed QC | Original |
-| [`skill-captions`](skills/skill-captions/) | Subtitle styling & burn-in: anchor-dark / anchor-light styles, 4K native rendering, render QC | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-audio-to-subtitles`](skills/ra-audio-to-subtitles/) | 火山 Doubao-ASR 词级时间戳字幕 + 对齐/碎片/连接词/阅读速度质检 | 原创 |
+| [`skill-captions`](skills/skill-captions/) | 字幕外观渲染与烧录：anchor-dark / anchor-light 样式，4K 原生重绘，渲染 QC | 原创 |
 
-### Visual & Cover
+### 视觉与封面
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ian-xiaohei-cat-illustrations`](skills/ian-xiaohei-cat-illustrations/) | Xiaohei Cat IP illustrations: white hand-drawn + red/orange/blue annotations for knowledge explainers | ⬡ Adapted from [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
-| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | Xiaohei IP illustrations (non-cat), broader concept visualization | ⬡ Adapted from [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
-| [`skill-cover`](skills/skill-cover/) | Cover generation with registered styles and dual-ratio assets | Original |
-| [`editorial-dot-cover`](skills/editorial-dot-cover/) | Editorial dot-grid cover: warm gray paper + oversized Chinese title + whitespace + dotted vector icon → SVG + PNG | Original |
-| [`editorial-collage-motion`](skills/editorial-collage-motion/) | Halftone paper collage motion: decode reference → generate stills → assemble-from-empty animation | ⬡ Inspired by [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/), local free edition |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ian-xiaohei-cat-illustrations`](skills/ian-xiaohei-cat-illustrations/) | 小黑猫 IP 概念插画：纯白手绘 + 红橙蓝批注，知识点配图 | ⬡ 改编自 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
+| [`ian-xiaohei-illustrations`](skills/ian-xiaohei-illustrations/) | 小黑 IP 概念插画（非猫形象），更广泛的概念可视化 | ⬡ 改编自 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations) · MIT |
+| [`skill-cover`](skills/skill-cover/) | 封面生成：注册风格、双比例资产、自动出图 | 原创 |
+| [`editorial-dot-cover`](skills/editorial-dot-cover/) | 点阵编辑风封面：暖灰纸底 + 超大中文标题 + 留白 + 点阵矢量图标，输出 SVG + PNG | 原创 |
+| [`editorial-collage-motion`](skills/editorial-collage-motion/) | 半色调纸张拼贴动效：参考拆解 → 静帧生成 → 逐件组装动画 | ⬡ 灵感源自 [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/)，本地免费兼容版 |
 
-### Article to Image
+### 图文制作
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`xhs-article-to-images`](skills/xhs-article-to-images/) | Markdown article → Xiaohongshu 3:4 image cards, 5 design skins + 3 feminine themes | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`xhs-article-to-images`](skills/xhs-article-to-images/) | Markdown 长文转小红书 3:4 图片组，5 套设计皮肤 + 3 个女性向主题 | 原创 |
 
-### Production & QC
+### 制作调度与质检
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`ra-video-production-director`](skills/ra-video-production-director/) | Production director: reads handoff contract → dispatches downstream skills → manages state/archive/QC | Original |
-| [`ra-复盘`](skills/ra-复盘/) | Content review: collect data → viral grading (R/M) → attribution → asset archiving → topic card writeback | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`ra-video-production-director`](skills/ra-video-production-director/) | 制作总导演：读交接稿契约 → 调下游 Skill → 管状态/归档/质检 | 原创 |
+| [`ra-复盘`](skills/ra-复盘/) | 内容复盘：取数 → 爆款分级(R/M) → 归因 → 资产沉淀 → 选题卡回写 | 原创 |
 
-### Motion Graphics (HyperFrames)
+### 视频动效（HyperFrames）
 
-| Skill | Description | Source |
-|-------|-------------|--------|
-| [`rn-motion-director`](skills/rn-motion-director/) | Motion-first AI video director: topic → motion concept, visual metaphors, beat graph, anti-PPT QC | Original |
-| [`rn-motion-replica`](skills/rn-motion-replica/) | Reference motion study: builds original editable HyperFrames project from authorized reference + QC | Original |
-| [`rn-dark-saas-video`](skills/rn-dark-saas-video/) | Dark cinematic SaaS product video: 8 scene blueprints, 3 timing presets | Original |
-| [`rn-bw-text-opener`](skills/rn-bw-text-opener/) | Black-white typed text opener with synced SFX, 3 timing presets, Python timing planner | Original |
-| [`rn-replica-qc`](skills/rn-replica-qc/) | Replica QA: 5 fidelity levels + asset/runtime/delivery full-frame gates | Original |
-| [`rn-cover-skill`](skills/rn-cover-skill/) | Editorial workflow cover: warm ivory + left typography + right workflow illustration → SVG + PNG | Original |
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`rn-motion-director`](skills/rn-motion-director/) | 动效导演：选题/脚本 → 动效视频概念、视觉隐喻、运动语法、Anti-PPT 质量门 | 原创 |
+| [`rn-motion-replica`](skills/rn-motion-replica/) | 参考动效复刻：从获授权参考片段构建原创可编辑 HyperFrames 工程 + QC | 原创 |
+| [`rn-dark-saas-video`](skills/rn-dark-saas-video/) | 暗色 SaaS 产品视频：8 套场景蓝图、3 种时长预设 | 原创 |
+| [`rn-bw-text-opener`](skills/rn-bw-text-opener/) | 黑白打字机开场动画：3 种时长预设，附 Python 时序规划脚本 | 原创 |
+| [`rn-replica-qc`](skills/rn-replica-qc/) | 复刻质检：五级保真度 + 素材/运行时/交付三道全帧门 | 原创 |
+| [`rn-cover-skill`](skills/rn-cover-skill/) | 编辑工作流风封面：暖白底 + 左侧大字 + 右侧工作流插画，输出 SVG + PNG | 原创 |
 
-### dbs Business Toolkit (22 skills)
+### dbs 商业工具箱（22 个）
 
-From [@dontbesilent](https://x.com/dontbesilent)'s open-source [dbskill](https://github.com/dontbesilent2025/dbskill), CC BY-NC 4.0. Used as automated quality gates in the video production pipeline; also available standalone.
+来自 [@dontbesilent](https://x.com/dontbesilent) 的 [dbskill](https://github.com/dontbesilent2025/dbskill) 开源项目，CC BY-NC 4.0 许可。
 
-| Skill | Description |
-|-------|-------------|
-| [`dbs`](skills/dbs/) | Main router: pre-task routing + post-task navigation |
-| [`dbs-hook`](skills/dbs-hook/) | Hook diagnosis: pairs with ra-hook (ra-hook picks type, dbs-hook polishes execution) |
-| [`dbs-resonate`](skills/dbs-resonate/) | Draft resonance diagnosis via communication psychology framework |
-| [`dbs-ai-check`](skills/dbs-ai-check/) | AI writing fingerprint detection |
-| [`dbs-content`](skills/dbs-content/) | Content creation diagnosis |
-| [`dbs-spread`](skills/dbs-spread/) | Transmission psychology decoder: 5 communication theories |
-| [`dbs-diagnosis`](skills/dbs-diagnosis/) | Business model diagnosis: consultation + checkup modes |
-| [`dbs-benchmark`](skills/dbs-benchmark/) | Benchmark analysis: five-filter method |
-| [`dbs-goal`](skills/dbs-goal/) | Goal clarification via Wittgenstein's philosophy of language |
-| [`dbs-deconstruct`](skills/dbs-deconstruct/) | Concept deconstruction to atomic level |
-| [`dbs-action`](skills/dbs-action/) | Execution block diagnosis via Adlerian psychology |
-| [`dbs-slowisfast`](skills/dbs-slowisfast/) | Slow-is-fast diagnosis: find seemingly slower methods that build lasting assets |
-| [`dbs-good-question`](skills/dbs-good-question/) | Fuzzy problems → agent-solvable problem briefs |
-| [`dbs-learning`](skills/dbs-learning/) | Interactive learning with feedback-driven depth/pace adjustment |
-| [`dbs-chatroom`](skills/dbs-chatroom/) | Topic-based expert chatroom with multi-role dialogue |
-| [`dbs-chatroom-austrian`](skills/dbs-chatroom-austrian/) | Austrian economics chatroom: Hayek × Mises × Claude |
-| [`dbs-content-system`](skills/dbs-content-system/) | Content structuring system: turn archives into reusable assets |
-| [`dbs-decision`](skills/dbs-decision/) | Personal decision system: local knowledge project for long-running domains |
-| [`dbs-xhs-title`](skills/dbs-xhs-title/) | Xiaohongshu article titles: 75 proven viral formulas |
-| [`dbs-save`](skills/dbs-save/) | Save diagnosis state to disk |
-| [`dbs-restore`](skills/dbs-restore/) | Restore last saved diagnosis state |
-| [`dbs-report`](skills/dbs-report/) | Package multiple diagnoses into a deliverable Markdown report |
-| [`dbs-agent-migration`](skills/dbs-agent-migration/) | Agent workspace migration: Claude Code / Codex / Grok three-host consistency |
+| Skill | 说明 |
+|-------|------|
+| [`dbs`](skills/dbs/) | 主入口：任务前路由 + 任务后导航 |
+| [`dbs-hook`](skills/dbs-hook/) | 视频开头诊断：和 ra-hook 配对，ra-hook 选类型，dbs-hook 诊断执行 |
+| [`dbs-resonate`](skills/dbs-resonate/) | 文稿共鸣诊断：传播心理学框架检查内容能否打中观众 |
+| [`dbs-ai-check`](skills/dbs-ai-check/) | AI 写作特征扫描：检测文稿中的 AI 生成痕迹 |
+| [`dbs-content`](skills/dbs-content/) | 内容创作诊断：选题通过后诊断怎么做成好内容 |
+| [`dbs-spread`](skills/dbs-spread/) | 传播心理解码：5 个传播学理论分析内容为什么能引起共鸣 |
+| [`dbs-diagnosis`](skills/dbs-diagnosis/) | 商业模式诊断：问诊（消解问题）和体检（拆解模式）两种模式 |
+| [`dbs-benchmark`](skills/dbs-benchmark/) | 对标分析：五重过滤法找值得模仿的对标 |
+| [`dbs-goal`](skills/dbs-goal/) | 目标清晰化：维特根斯坦语言哲学审计模糊目标 |
+| [`dbs-deconstruct`](skills/dbs-deconstruct/) | 概念拆解：把模糊商业概念拆到原子级别 |
+| [`dbs-action`](skills/dbs-action/) | 执行力诊断：阿德勒心理学框架 |
+| [`dbs-slowisfast`](skills/dbs-slowisfast/) | 慢就是快诊断：找看起来更慢但长期更快的方法 |
+| [`dbs-good-question`](skills/dbs-good-question/) | 好问题生成器：模糊问题 → Agent 可推理的问题说明书 |
+| [`dbs-learning`](skills/dbs-learning/) | 交互式学习：按用户反馈调整深度和节奏的连续学习 |
+| [`dbs-chatroom`](skills/dbs-chatroom/) | 定向聊天室：按话题推荐专家，模拟多角色对话 |
+| [`dbs-chatroom-austrian`](skills/dbs-chatroom-austrian/) | 奥派经济学聊天室：哈耶克 × 米塞斯 × Claude |
+| [`dbs-content-system`](skills/dbs-content-system/) | 内容结构化系统：把大量文稿搭成可复用内容工程 |
+| [`dbs-decision`](skills/dbs-decision/) | 个人决策系统：长期跟踪领域的本地知识工程 |
+| [`dbs-xhs-title`](skills/dbs-xhs-title/) | 小红书图文标题：75 个验证爆款公式 |
+| [`dbs-save`](skills/dbs-save/) | 诊断存档：保存当前诊断状态到本地 |
+| [`dbs-restore`](skills/dbs-restore/) | 诊断续读：拉取上次保存的诊断状态 |
+| [`dbs-report`](skills/dbs-report/) | 诊断报告：打包多次诊断为可交付 Markdown |
+| [`dbs-agent-migration`](skills/dbs-agent-migration/) | Agent 工作台迁移：整理成 Claude Code / Codex / Grok 三端一致的工作台 |
 
-## Credits and Adaptations
+## 致谢与改编说明
 
-### dbs Business Toolkit
+### dbs 商业工具箱
 
-`dbs` and all `dbs-*` skills are from [@dontbesilent](https://x.com/dontbesilent)'s open-source [dbskill](https://github.com/dontbesilent2025/dbskill), CC BY-NC 4.0. Adapted for use as content quality gates in the video production pipeline.
+`dbs` 及全部 `dbs-*` Skill 来自 [@dontbesilent](https://x.com/dontbesilent) 的开源项目 [dbskill](https://github.com/dontbesilent2025/dbskill)，CC BY-NC 4.0 许可。本仓库在原版基础上做了适配，用于视频生产流水线中的内容质量检查环节。
 
-### Xiaohei Cat / Xiaohei Illustrations
+### 小黑猫 / 小黑正文配图
 
-`ian-xiaohei-cat-illustrations` and `ian-xiaohei-illustrations` are derived from Ian's original [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations), MIT license. Character IP adapted with identity-consistency QA added.
+`ian-xiaohei-cat-illustrations` 和 `ian-xiaohei-illustrations` 来源于 Ian 的原版 [Ian Xiaohei Illustrations](https://github.com/helloianneo/ian-xiaohei-illustrations)，MIT 许可。保留了文章分析、shot list、白底手绘视觉系统和构图方法，改造角色 IP 并增加身份一致性质检。
 
-### Halftone Collage Motion
+### 半色调拼贴动效
 
-`editorial-collage-motion` is inspired by Vikash Kumar's [Arcads Collage Motion Skill](https://buldrr.com/arcads-collage-motion-skill/). Original requires Arcads MCP + Nano Banana + Seedance; this edition uses Codex built-in image generation + local FFmpeg/HyperFrames rendering.
+`editorial-collage-motion` 灵感源自 Vikash Kumar 的 [Arcads Collage Motion Skill](https://buldrr.com/arcads-collage-motion-skill/)。原版需要 Arcads MCP + Nano Banana + Seedance；本版替换为 Codex 内置生图 + 本地 FFmpeg/HyperFrames 渲染。
 
-### Chengfeng Videocut
+### 乘风口播剪辑
 
-`chengfeng-videocut-skills` is from chengfeng / AI产品自由's [chengfeng-videocut-skills](https://github.com/Agentchengfeng/chengfeng-videocut-skills), Apache-2.0.
+`chengfeng-videocut-skills` 来自 chengfeng / AI产品自由 的 [chengfeng-videocut-skills](https://github.com/Agentchengfeng/chengfeng-videocut-skills)，Apache-2.0 许可。
 
-### AI Jian Koubo
+### AI 剪口播
 
-`ai-jian-koubo` was inspired by chengfeng's videocut-skills, then rewritten with expanded FCPXML export, frontend interaction, video preview, editing logic, and ASR support. AGPL-3.0.
+`ai-jian-koubo` 灵感源自 chengfeng 的 videocut-skills，重写扩展了工程导出、前端交互、视频预览、剪辑逻辑和字幕功能。AGPL-3.0 许可。
 
-### Video Use
+### 通用视频编辑
 
-`video-use` is from [Browser Use](https://cloud.browser-use.com)'s video-use project, MIT license. Content-system variant with Volcengine Doubao ASR word timestamps.
+`video-use` 来自 [Browser Use](https://cloud.browser-use.com) 的 video-use 项目，MIT 许可。
 
-## License
+## 许可证
 
-CC BY-NC 4.0 unless otherwise noted. See [LICENSE](LICENSE). Third-party components retain their upstream licenses.
+除另有说明外，仓库采用 CC BY-NC 4.0，详见 [LICENSE](LICENSE)。改编自第三方的内容保留其上游许可。
 
-## Author
+## 作者
 
 雪踏乌云 · [@Pluvio9yte](https://x.com/Pluvio9yte)
