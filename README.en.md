@@ -4,7 +4,7 @@
 
 AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
 
-Currently **54 skills** in two categories:
+Currently **55 skills** in two categories:
 
 ### 🎬 Content Creation (Video / Image / Article)
 
@@ -72,6 +72,12 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 ## All Skills
 
 Skills marked `⬡` are from or adapted from external open-source projects — see the Source column and [Credits](#credits-and-adaptations) below.
+
+### Agent & Tool Invocation
+
+| Skill | Description | Source |
+|-------|-------------|--------|
+| [`grok-build-cli`](skills/grok-build-cli/) | Let Codex invoke the local Grok Build CLI: verify login and models, choose single-turn or agentic mode, monitor long calls, and return results reliably | Original |
 
 ### Topic & Planning
 

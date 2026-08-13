@@ -4,7 +4,7 @@
 
 雪踏乌云维护的 AI Agent Skill 全集，适用于 Codex、Claude Code 等支持 `SKILL.md` 的 Agent 工作流。
 
-当前共 **54 个 Skill**，分为两大类：
+当前共 **55 个 Skill**，分为两大类：
 
 ### 🎬 内容创作（视频 / 图文 / 文章）
 
@@ -72,6 +72,12 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 ## 全部技能一览
 
 标记 `⬡` 的 Skill 来自或改编自外部开源项目，详见表中来源列和底部[致谢](#致谢与改编说明)。
+
+### Agent 与工具调用
+
+| Skill | 说明 | 来源 |
+|-------|------|------|
+| [`grok-build-cli`](skills/grok-build-cli/) | 让 Codex 调用本机 Grok Build CLI：检查登录与模型、选择单轮或 Agentic 调用、轮询长任务并可靠返回结果 | 原创 |
 
 ### 选题与策划
 

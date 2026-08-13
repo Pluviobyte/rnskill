@@ -1,0 +1,4 @@
+interface:
+  display_name: "调用 Grok Build"
+  short_description: "让 Codex 通过本机 CLI 调用 Grok Build"
+  default_prompt: "Use $grok-build-cli to send this task to Grok Build and return its result."
