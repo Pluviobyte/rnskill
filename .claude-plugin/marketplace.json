@@ -1,8 +1,8 @@
 {
   "name": "rnskill",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "owner": "Pluviobyte",
-  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 动效制作 + 参考复刻 + 全帧质检",
+  "description": "雪踏乌云的 AI Agent Skills 集合 — 写作精修 + 动效制作 + 参考复刻 + 全帧质检 + 图片风格生成",
   "repository": "https://github.com/Pluviobyte/rnskill",
   "license": "CC-BY-NC-4.0",
   "plugins": [
@@ -75,6 +75,16 @@
       "category": "design",
       "keywords": ["封面", "编辑设计", "图解", "cover", "editorial", "diagram"],
       "skills": ["./skills/rn-cover-skill"]
+    },
+    {
+      "name": "rn-niulai-style-image",
+      "description": "把实拍或电影画面转成《牛来》正片那种粗粝充气人偶 3D。默认学公开正片截帧，不学水墨海报。\nTransform photos or film stills into the observed rough film-3D grammar of 《牛来》.\nTrigger: /rn-niulai-style-image, 牛来风格, 把这张改成牛来",
+      "source": "./",
+      "strict": false,
+      "version": "1.0.0",
+      "category": "image-generation",
+      "keywords": ["牛来", "风格转换", "3D", "生图", "niulai", "style-transfer", "image"],
+      "skills": ["./skills/rn-niulai-style-image"]
     }
   ]
 }

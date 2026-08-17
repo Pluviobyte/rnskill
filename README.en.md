@@ -4,7 +4,7 @@
 
 AI Agent Skills by 雪踏乌云 for Codex, Claude Code, and other `SKILL.md`-compatible agents.
 
-Currently **55 skills** in two categories:
+Currently **56 skills** in two categories:
 
 ### 🎬 Content Creation (Video / Image / Article)
 
@@ -140,6 +140,7 @@ Skills marked `⬡` are from or adapted from external open-source projects — s
 | [`skill-cover`](skills/skill-cover/) | Cover generation with registered styles and dual-ratio assets | Original |
 | [`editorial-dot-cover`](skills/editorial-dot-cover/) | Editorial dot-grid cover: warm gray paper + oversized Chinese title + whitespace + dotted vector icon → SVG + PNG | Original |
 | [`editorial-collage-motion`](skills/editorial-collage-motion/) | Halftone paper collage motion: decode reference → generate stills → assemble-from-empty animation | ⬡ Inspired by [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/), local free edition |
+| [`rn-niulai-style-image`](skills/rn-niulai-style-image/) | Rebuild photos or film stills in the observed rough inflatable-suit 3D grammar of 《牛来》. Default is film-3D; ink-poster mode is explicit only | Original |
 
 ### Article to Image
 

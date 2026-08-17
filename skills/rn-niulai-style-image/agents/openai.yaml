@@ -1,0 +1,4 @@
+interface:
+  display_name: "牛来风格图片生成"
+  short_description: "把实拍或电影画面转换为《牛来》式粗粝低模 3D 动画画面"
+  default_prompt: "Use $rn-niulai-style-image to transform this image into a deliberately rough, low-budget 3D scene matching the observed Niulai film-frame visual grammar."

@@ -4,7 +4,7 @@
 
 雪踏乌云维护的 AI Agent Skill 全集，适用于 Codex、Claude Code 等支持 `SKILL.md` 的 Agent 工作流。
 
-当前共 **55 个 Skill**，分为两大类：
+当前共 **56 个 Skill**，分为两大类：
 
 ### 🎬 内容创作（视频 / 图文 / 文章）
 
@@ -140,6 +140,7 @@ cp -R skills/ra-人话 <project>/.claude/skills/ra-人话
 | [`skill-cover`](skills/skill-cover/) | 封面生成：注册风格、双比例资产、自动出图 | 原创 |
 | [`editorial-dot-cover`](skills/editorial-dot-cover/) | 点阵编辑风封面：暖灰纸底 + 超大中文标题 + 留白 + 点阵矢量图标，输出 SVG + PNG | 原创 |
 | [`editorial-collage-motion`](skills/editorial-collage-motion/) | 半色调纸张拼贴动效：参考拆解 → 静帧生成 → 逐件组装动画 | ⬡ 灵感源自 [Vikash Kumar / Arcads Collage Motion](https://buldrr.com/arcads-collage-motion-skill/)，本地免费兼容版 |
+| [`rn-niulai-style-image`](skills/rn-niulai-style-image/) | 把实拍或电影画面转成《牛来》正片那种粗粝充气人偶 3D。默认学公开正片截帧，水墨海报模式需明确指定 | 原创 |
 
 ### 图文制作
 
